@@ -607,12 +607,12 @@
                         <div class="osd-box bd-y">
                             <div class="osd-title bg-y">CH1(L)</div>
                             <div class="txt-dim" style="font-size:9px;" id="osd-cpl1">AC</div>
-                            <div class="txt-y" style="font-weight:bold;" id="osd-ch1-scale">1.00V</div>
+                            <div class="txt-y" style="font-weight:bold;" id="osd-ch1-scale">0.25V</div>
                         </div>
                         <div class="osd-box bd-c">
                             <div class="osd-title bg-c">CH2(R)</div>
                             <div class="txt-dim" style="font-size:9px;" id="osd-cpl2">AC</div>
-                            <div class="txt-c" style="font-weight:bold;" id="osd-ch2-scale">1.00V</div>
+                            <div class="txt-c" style="font-weight:bold;" id="osd-ch2-scale">0.25V</div>
                         </div>
                         <div id="osd-math-box" class="osd-box" style="border-color:#9333ea; display:none;">
                             <div class="osd-title bg-p" style="color:#fff;">MATH</div>
@@ -648,33 +648,52 @@
                         <button id="btn-ch1" class="hw-btn active txt-y bd-y">CH1</button>
                         <div class="flex-col">
                             <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>POS</span><span id="lbl-pos1">0.00</span></div>
-                            <input type="range" id="knob-pos1" min="-2" max="2" step="0.05" value="0" class="knob-slider">
+                            <input type="range" id="knob-pos1" min="-1" max="1" step="0.01" value="0" class="knob-slider">
                         </div>
-                        <div class="flex-col">
-                            <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>SCALE</span><span id="lbl-scale1">1.00V</span></div>
-                            <input type="range" id="knob-scale1" min="0.1" max="5" step="0.1" value="1" class="knob-slider" dir="rtl">
+
+                        <div style="display: flex; gap: 6px; align-items: flex-end;">
+                            <div class="flex-col" style="flex: 1;">
+                                <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>SCALE</span></div>
+                                <div style="display:flex; align-items:center; background:#0a0a0c; padding:0 4px; border:1px solid #333; border-radius:2px; height: 24px;">
+                                    <input type="number" id="num-scale1" value="0.25" step="0.05" min="0.001" style="flex:1; width:0; background:transparent; border:none; color:#eab308; font-family:monospace; font-size:12px; font-weight:bold; text-align:right; outline:none; padding-right: 4px;">
+                                    <span class="txt-dim font-mono" style="font-size:9px;">V/DIV</span>
+                                </div>
+                            </div>
+                            <div class="flex-col" style="width: 50px;">
+                                <div class="txt-dim font-mono" style="font-size:9px; text-align: center;">CPL</div>
+                                <select id="cpl-ch1" class="hw-select" style="padding: 2px 4px; height: 24px;">
+                                    <option value="AC">AC</option>
+                                    <option value="DC">DC</option>
+                                    <option value="GND">GND</option>
+                                </select>
+                            </div>
                         </div>
-                        <select id="cpl-ch1" class="hw-select">
-                            <option value="AC">AC</option>
-                            <option value="DC">DC</option>
-                            <option value="GND">GND</option>
-                        </select>
                     </div>
+
                     <div class="ch-box ch2">
                         <button id="btn-ch2" class="hw-btn active txt-c bd-c">CH2</button>
                         <div class="flex-col">
                             <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>POS</span><span id="lbl-pos2">0.00</span></div>
-                            <input type="range" id="knob-pos2" min="-2" max="2" step="0.05" value="0" class="knob-slider">
+                            <input type="range" id="knob-pos2" min="-1" max="1" step="0.01" value="0" class="knob-slider">
                         </div>
-                        <div class="flex-col">
-                            <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>SCALE</span><span id="lbl-scale2">1.00V</span></div>
-                            <input type="range" id="knob-scale2" min="0.1" max="5" step="0.1" value="1" class="knob-slider" dir="rtl">
+
+                        <div style="display: flex; gap: 6px; align-items: flex-end;">
+                            <div class="flex-col" style="flex: 1;">
+                                <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>SCALE</span></div>
+                                <div style="display:flex; align-items:center; background:#0a0a0c; padding:0 4px; border:1px solid #333; border-radius:2px; height: 24px;">
+                                    <input type="number" id="num-scale2" value="0.25" step="0.05" min="0.001" style="flex:1; width:0; background:transparent; border:none; color:#06b6d4; font-family:monospace; font-size:12px; font-weight:bold; text-align:right; outline:none; padding-right: 4px;">
+                                    <span class="txt-dim font-mono" style="font-size:9px;">V/DIV</span>
+                                </div>
+                            </div>
+                            <div class="flex-col" style="width: 50px;">
+                                <div class="txt-dim font-mono" style="font-size:9px; text-align: center;">CPL</div>
+                                <select id="cpl-ch2" class="hw-select" style="padding: 2px 4px; height: 24px;">
+                                    <option value="AC">AC</option>
+                                    <option value="DC">DC</option>
+                                    <option value="GND">GND</option>
+                                </select>
+                            </div>
                         </div>
-                        <select id="cpl-ch2" class="hw-select">
-                            <option value="AC">AC</option>
-                            <option value="DC">DC</option>
-                            <option value="GND">GND</option>
-                        </select>
                     </div>
                 </div>
                 <button id="btn-math" class="hw-btn txt-p">MATH (CH1 + CH2)</button>
@@ -683,9 +702,16 @@
             <div class="grid-2">
                 <div class="hw-group">
                     <div class="group-title">HORIZONTAL (水平)</div>
-                    <div class="flex-col" style="margin-top: 4px;">
-                        <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>POS</span><span id="lbl-hpos">0</span></div>
-                        <input type="range" id="knob-hpos" min="-50" max="50" step="1" value="0" class="knob-slider">
+
+                    <div style="position:relative; width:100%; height:44px; background:#050505; border:1px solid #333; border-radius:4px; margin-top:4px; overflow:hidden;" id="minimap-container">
+                        <canvas id="minimap-canvas" style="width:100%; height:100%; position:absolute; left:0; top:0;"></canvas>
+                        <div id="minimap-highlight" style="position:absolute; left:0%; width:10%; height:100%; background:rgba(56, 189, 248, 0.25); border-left:1px solid #38bdf8; border-right:1px solid #38bdf8; pointer-events:none;"></div>
+                        <div style="position:absolute; left:50%; top:0; width:1px; height:100%; background:transparent; border-left:1px dashed rgba(255,255,255,0.4); pointer-events:none;"></div>
+                    </div>
+
+                    <div class="flex-col" style="margin-top: 6px;">
+                        <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>POS (视口位置)</span><span id="lbl-hpos">50.0%</span></div>
+                        <input type="range" id="knob-hpos" min="0" max="100" step="0.1" value="50" class="knob-slider">
                     </div>
                     <div class="flex-col mt-1">
                         <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>SEC/DIV</span><span id="lbl-timebase">5.0ms</span></div>
@@ -829,10 +855,10 @@
             power: true,
             run: true,
             mode: 'YT',
-            ch1: { on: true, pos: 0, scale: 1.0, cpl: 'AC' },
-            ch2: { on: true, pos: 0, scale: 1.0, cpl: 'AC' },
+            ch1: { on: true, pos: 0, scale: 4.0, cpl: 'AC' },
+            ch2: { on: true, pos: 0, scale: 4.0, cpl: 'AC' },
             math: { on: false },
-            hpos: 0,
+            hpos: 50,
             secPerDiv: 5,
             trigger: { src: 'CH1', edge: 1, level: 0.0, enabled: false },
             measure: false,
@@ -1098,9 +1124,9 @@
                 ch1Mixer.connect(analyserL_DC); ch1Mixer.connect(hpL); hpL.connect(analyserL_AC);
                 ch2Mixer.connect(analyserR_DC); ch2Mixer.connect(hpR); hpR.connect(analyserR_AC);
 
-                window.dcBias1 = audioCtx.createConstantSource(); window.dcBias1.offset.value = 0.5;
+                window.dcBias1 = audioCtx.createConstantSource(); window.dcBias1.offset.value = 0.000001;
                 window.dcBias1.connect(ch1Mixer); window.dcBias1.start();
-                window.dcBias2 = audioCtx.createConstantSource(); window.dcBias2.offset.value = 0.5;
+                window.dcBias2 = audioCtx.createConstantSource(); window.dcBias2.offset.value = 0.000001;
                 window.dcBias2.connect(ch2Mixer); window.dcBias2.start();
 
                 splitter = audioCtx.createChannelSplitter(2);
@@ -1288,37 +1314,26 @@
          * 5. 信号处理与波形测量
          */
         function findTriggerIndex(data, ptsNeeded, offset, targetLevel) {
-            const dir = STATE.trigger.edge;
-            const hys = 0.02;
-            let searchStart = offset, searchEnd = CONFIG.fftSize - (ptsNeeded - offset);
+            const dir = STATE.trigger.edge, hys = 0.02;
 
-            if (searchEnd <= searchStart) return -1;
+            // 🚀 核心修复 1：永远在物理内存的最中心（16384附近）寻找触发点
+            // 这样无论你怎么放大缩小，中心点左右两边都永远有绝对充裕的数据！
+            let searchEnd = Math.floor(CONFIG.fftSize / 2) + 2000;
+            let searchStart = 1000;
+
+            if (searchEnd <= searchStart || searchEnd >= CONFIG.fftSize) return -1;
 
             for (let i = searchEnd - 1; i >= searchStart; i--) {
                 let curr = data[i], prev = data[i - 1];
-
                 if (dir === 1 && prev < targetLevel && curr >= targetLevel) {
                     let isReal = false;
-                    for (let j = i - 1; j >= Math.max(0, i - 16000); j--) {
-                        if (data[j] <= targetLevel - hys) { isReal = true; break; }
-                        if (data[j] >= targetLevel) break;
-                    }
-                    if (isReal) {
-                        let diff = curr - prev;
-                        return (i - 1) + (diff !== 0 ? (targetLevel - prev) / diff : 0);
-                    }
+                    for (let j = i - 1; j >= Math.max(0, i - 16000); j--) { if (data[j] <= targetLevel - hys) { isReal = true; break; } if (data[j] >= targetLevel) break; }
+                    if (isReal) return (i - 1) + (curr - prev !== 0 ? (targetLevel - prev) / (curr - prev) : 0);
                 }
-
                 if (dir === -1 && prev > targetLevel && curr <= targetLevel) {
                     let isReal = false;
-                    for (let j = i - 1; j >= Math.max(0, i - 16000); j--) {
-                        if (data[j] >= targetLevel + hys) { isReal = true; break; }
-                        if (data[j] <= targetLevel) break;
-                    }
-                    if (isReal) {
-                        let diff = curr - prev;
-                        return (i - 1) + (diff !== 0 ? (targetLevel - prev) / diff : 0);
-                    }
+                    for (let j = i - 1; j >= Math.max(0, i - 16000); j--) { if (data[j] >= targetLevel + hys) { isReal = true; break; } if (data[j] <= targetLevel) break; }
+                    if (isReal) return (i - 1) + (curr - prev !== 0 ? (targetLevel - prev) / (curr - prev) : 0);
                 }
             }
             return -1;
@@ -1370,7 +1385,7 @@
         document.body.appendChild(fpsNode);
 
         /**
-         * 6. 界面事件监听器绑定
+         * 6. 界面事件监听器绑定 (包含全新的百分比视口平移)
          */
         DOM.btnRunstop.addEventListener('click', function () {
             STATE.run = !STATE.run;
@@ -1457,15 +1472,32 @@
             });
         }
 
+        // 🚀 CH1 新的绑定逻辑
         bindKnob(DOM.knobPos1, DOM.lblPos1, null, v => v.toFixed(2), v => STATE.ch1.pos = v);
-        bindKnob(DOM.knobScale1, DOM.lblScale1, DOM.osdCh1Scale, v => v.toFixed(2) + 'V', v => { STATE.ch1.scale = 1 / v; updateTriggerUI(); });
+        DOM.numScale1.addEventListener('change', (e) => {
+            let v = parseFloat(e.target.value);
+            if (isNaN(v) || v <= 0) v = 0.25; // 防护：非法值恢复到 0.25
+            e.target.value = v.toFixed(2);
+            STATE.ch1.scale = 1 / v;
+            DOM.osdCh1Scale.innerText = v.toFixed(2) + 'V';
+            updateTriggerUI();
+        });
         DOM.cplCh1.addEventListener('change', e => { STATE.ch1.cpl = e.target.value; DOM.osdCpl1.innerText = e.target.value; });
 
+        // 🚀 CH2 新的绑定逻辑
         bindKnob(DOM.knobPos2, DOM.lblPos2, null, v => v.toFixed(2), v => STATE.ch2.pos = v);
-        bindKnob(DOM.knobScale2, DOM.lblScale2, DOM.osdCh2Scale, v => v.toFixed(2) + 'V', v => { STATE.ch2.scale = 1 / v; updateTriggerUI(); });
+        DOM.numScale2.addEventListener('change', (e) => {
+            let v = parseFloat(e.target.value);
+            if (isNaN(v) || v <= 0) v = 0.25;
+            e.target.value = v.toFixed(2);
+            STATE.ch2.scale = 1 / v;
+            DOM.osdCh2Scale.innerText = v.toFixed(2) + 'V';
+            updateTriggerUI();
+        });
         DOM.cplCh2.addEventListener('change', e => { STATE.ch2.cpl = e.target.value; DOM.osdCpl2.innerText = e.target.value; });
 
-        bindKnob(DOM.knobHpos, DOM.lblHpos, null, v => v, v => STATE.hpos = v);
+        // 视口水平平移 (0-100% 百分比)
+        bindKnob(DOM.knobHpos, DOM.lblHpos, null, v => v.toFixed(1) + '%', v => STATE.hpos = v);
 
         DOM.knobTimebase.addEventListener('input', (e) => {
             let v = parseFloat(e.target.value);
@@ -1497,25 +1529,104 @@
         });
 
         DOM.btnAutoset.addEventListener('click', () => {
-            ['pos1', 'pos2', 'tlevel', 'hpos'].forEach(k => {
+            // 复位 POS
+            ['pos1', 'pos2'].forEach(k => {
+                DOM['knob' + k.charAt(0).toUpperCase() + k.slice(1)].value = 0;
+                DOM['lbl' + k.charAt(0).toUpperCase() + k.slice(1)].innerText = '0.00';
+            });
+
+            // 复位 SCALE 为 0.25
+            ['scale1', 'scale2'].forEach((k, i) => {
+                let numDom = DOM['num' + k.charAt(0).toUpperCase() + k.slice(1)];
+                numDom.value = '0.25';
+                DOM['osdCh' + (i + 1) + 'Scale'].innerText = '0.25V';
+                STATE['ch' + (i + 1)].scale = 4.0;
+            });
+
+            STATE.ch1.pos = 0;
+            STATE.ch2.pos = 0;
+
+            STATE.trigger.level = 0;
+            DOM.knobTlevel.value = 0;
+            DOM.lblTlevel.innerText = '0.00V';
+
+            STATE.hpos = 50;
+            DOM.knobHpos.value = 50;
+            DOM.lblHpos.innerText = '50.0%';
+
+            DOM.osdTriggerLevel.innerText = '0.00V';
+            DOM.knobTimebase.value = 5;
+            STATE.secPerDiv = 5;
+            DOM.osdTimebase.innerText = '5.0ms';
+            if (DOM.lblTimebase) DOM.lblTimebase.innerText = '5.0ms';
+
+            updateTriggerUI();
+            if (!STATE.run) DOM.btnRunstop.click();
+        });
+
+        // 视口水平平移 (0-100% 百分比)
+        bindKnob(DOM.knobHpos, DOM.lblHpos, null, v => v.toFixed(1) + '%', v => STATE.hpos = v);
+
+        DOM.knobTimebase.addEventListener('input', (e) => {
+            let v = parseFloat(e.target.value);
+            let maxMemoryMs = (CONFIG.fftSize / (CONFIG.sampleRate / 1000)) * 0.9;
+            let maxSecPerDiv = maxMemoryMs / CONFIG.gridX;
+            if (v > maxSecPerDiv) v = maxSecPerDiv;
+            DOM.osdTimebase.innerText = v.toFixed(1) + 'ms';
+            if (DOM.lblTimebase) DOM.lblTimebase.innerText = v.toFixed(1) + 'ms';
+            STATE.secPerDiv = v;
+        });
+
+        DOM.trigSrc.addEventListener('change', e => {
+            STATE.trigger.src = e.target.value;
+            DOM.osdTriggerSrc.innerText = e.target.value;
+            updateTriggerUI();
+        });
+
+        DOM.btnEdge.addEventListener('click', function () {
+            STATE.trigger.edge *= -1;
+            this.innerText = '边沿: ' + (STATE.trigger.edge === 1 ? '↗ 上升沿' : '↘ 下降沿');
+            DOM.osdTriggerEdge.innerText = STATE.trigger.edge === 1 ? '↗' : '↘';
+        });
+
+        DOM.knobTlevel.addEventListener('input', (e) => {
+            let v = parseFloat(e.target.value);
+            STATE.trigger.level = v;
+            DOM.lblTlevel.innerText = v.toFixed(2) + 'V';
+            DOM.osdTriggerLevel.innerText = v.toFixed(2) + 'V';
+        });
+
+        DOM.btnAutoset.addEventListener('click', () => {
+            ['pos1', 'pos2', 'tlevel'].forEach(k => {
                 DOM['knob' + k.charAt(0).toUpperCase() + k.slice(1)].value = 0;
                 DOM['lbl' + k.charAt(0).toUpperCase() + k.slice(1)].innerText = '0';
             });
             ['scale1', 'scale2'].forEach((k, i) => {
                 DOM['knob' + k.charAt(0).toUpperCase() + k.slice(1)].value = 1;
                 DOM['osdCh' + (i + 1) + 'Scale'].innerText = '1.00V';
-                if (DOM['lbl' + k.charAt(0).toUpperCase() + k.slice(1)]) DOM['lbl' + k.charAt(0).toUpperCase() + k.slice(1)].innerText = '1.00V'; // 👉 加这行
+                if (DOM['lbl' + k.charAt(0).toUpperCase() + k.slice(1)]) DOM['lbl' + k.charAt(0).toUpperCase() + k.slice(1)].innerText = '1.00V';
                 STATE['ch' + (i + 1)].scale = 1;
             });
-            STATE.ch1.pos = 0; STATE.ch2.pos = 0; STATE.trigger.level = 0; STATE.hpos = 0;
+
+            STATE.ch1.pos = 0;
+            STATE.ch2.pos = 0;
+            STATE.trigger.level = 0;
+
+            // 🚀 Autoset 时恢复视口居中
+            STATE.hpos = 50;
+            DOM.knobHpos.value = 50;
+            DOM.lblHpos.innerText = '50.0%';
+
             DOM.osdTriggerLevel.innerText = '0.00V';
             DOM.knobTimebase.value = 5;
             STATE.secPerDiv = 5;
             DOM.osdTimebase.innerText = '5.0ms';
             if (DOM.lblTimebase) DOM.lblTimebase.innerText = '5.0ms';
+
             updateTriggerUI();
             if (!STATE.run) DOM.btnRunstop.click();
         });
+
 
         DOM.btnMic.addEventListener('click', async function () {
             initAudio();
@@ -1587,9 +1698,6 @@
         window.addEventListener('touchmove', doCursorDrag, { passive: false });
         window.addEventListener('touchend', endCursorDrag);
 
-        /**
-         * 7. 媒体文件加载与播放控制
-         */
         let audioBuffer = null, bufferSource = null, startTime = 0, startOffset = 0, isSeeking = false, isMusicPlaying = false;
 
         function getLogSpeed(sliderVal) {
@@ -1725,372 +1833,6 @@
         DOM.cplCh2.dispatchEvent(new Event('change'));
         updateTriggerUI();
 
-        /**
-         * 8. 核心渲染引擎与数据刷新
-         */
-        function draw() {
-            frameCount++;
-            let now = performance.now();
-            if (now - lastTime >= 1000) {
-                fpsNode.innerText = `JS FPS: ${frameCount}`;
-                frameCount = 0;
-                lastTime = now;
-            }
-            if (STATE.power) requestAnimationFrame(draw);
-
-            if (DOM.glCanvas.width !== currentFboWidth || DOM.glCanvas.height !== currentFboHeight) {
-                currentFboWidth = DOM.glCanvas.width;
-                currentFboHeight = DOM.glCanvas.height;
-                resizeFBO(currentFboWidth, currentFboHeight);
-            }
-
-            gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-            gl.viewport(0, 0, currentFboWidth, currentFboHeight);
-            gl.clearColor(0.0, 0.0, 0.0, 1.0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.useProgram(shaderProgram);
-
-            const w = DOM.oscilloscope.width / (window.devicePixelRatio || 1);
-            const h = DOM.oscilloscope.height / (window.devicePixelRatio || 1);
-            ctx2d.clearRect(0, 0, w, h);
-
-            const stepX = w / CONFIG.gridX, stepY = h / CONFIG.gridY;
-            ctx2d.save();
-            ctx2d.translate(0.5, 0.5);
-            ctx2d.strokeStyle = '#1e2920';
-            ctx2d.lineWidth = 1;
-            ctx2d.beginPath();
-
-            for (let i = 1; i < CONFIG.gridX; i++) {
-                ctx2d.moveTo(i * stepX, 0); ctx2d.lineTo(i * stepX, h);
-            }
-            for (let i = 1; i < CONFIG.gridY; i++) {
-                ctx2d.moveTo(0, i * stepY); ctx2d.lineTo(w, i * stepY);
-            }
-            ctx2d.stroke();
-            ctx2d.strokeStyle = '#2d4a30';
-            ctx2d.beginPath();
-            ctx2d.moveTo(w / 2, 0); ctx2d.lineTo(w / 2, h);
-            ctx2d.moveTo(0, h / 2); ctx2d.lineTo(w, h / 2);
-            for (let i = 0; i < w; i += stepX / 5) { ctx2d.moveTo(i, h / 2 - 3); ctx2d.lineTo(i, h / 2 + 3); }
-            for (let i = 0; i < h; i += stepY / 5) { ctx2d.moveTo(w / 2 - 3, i); ctx2d.lineTo(w / 2 + 3, i); }
-            ctx2d.stroke();
-            ctx2d.restore();
-
-            if (STATE.run) {
-                if (window.SerialEngine && window.SerialEngine.isActive) {
-                    window.SerialEngine.fillData(dataL, dataR, STATE.ch1.cpl, STATE.ch2.cpl);
-                } else if (audioCtx && analyserL_DC) {
-                    if (STATE.ch1.cpl === 'AC') analyserL_AC.getFloatTimeDomainData(dataL);
-                    else analyserL_DC.getFloatTimeDomainData(dataL);
-
-                    if (STATE.ch2.cpl === 'AC') analyserR_AC.getFloatTimeDomainData(dataR);
-                    else analyserR_DC.getFloatTimeDomainData(dataR);
-                }
-            }
-
-            processData(dataL, STATE.ch1, pData1);
-            processData(dataR, STATE.ch2, pData2);
-            updateMeasurements(dataL, dataR);
-
-            let ptsPerDiv = (STATE.secPerDiv) * (CONFIG.sampleRate / 1000);
-            let ptsToShow = Math.floor(ptsPerDiv * CONFIG.gridX);
-            let trigData = STATE.trigger.src === 'CH1' ? pData1 : pData2;
-            let tScale = STATE.trigger.src === 'CH1' ? STATE.ch1.scale : STATE.ch2.scale;
-            let tPos = STATE.trigger.src === 'CH1' ? STATE.ch1.pos : STATE.ch2.pos;
-            const ndcPerDiv = 2.0 / CONFIG.gridY;
-            let mappedLevel = STATE.trigger.level * tScale * ndcPerDiv + tPos;
-            let offset = Math.floor(ptsToShow / 2) + Math.floor((STATE.hpos / 100) * ptsToShow);
-
-            if (offset < 0) offset = 0;
-            if (offset > ptsToShow) offset = ptsToShow;
-
-            if (STATE.trigger.enabled) {
-                if (!window._frozenTriggerIdx || STATE.run) {
-                    window._frozenTriggerIdx = findTriggerIndex(trigData, ptsToShow, offset, mappedLevel);
-                }
-            } else {
-                window._frozenTriggerIdx = -1;
-            }
-
-            let triggerIndexFloat = window._frozenTriggerIdx;
-            let startIdxFloat = triggerIndexFloat !== -1 ? triggerIndexFloat - offset : CONFIG.fftSize - ptsToShow;
-            startIdxFloat = Math.max(0, Math.min(startIdxFloat, CONFIG.fftSize - ptsToShow));
-            let startIdxInt = Math.floor(startIdxFloat);
-            let endIdxInt = Math.min(startIdxInt + ptsToShow + 2, CONFIG.fftSize);
-
-            let curTStateTxt, curTStateColor;
-            if (!STATE.run) {
-                curTStateTxt = "stop"; curTStateColor = "#ef4444";
-            } else if (!STATE.trigger.enabled) {
-                curTStateTxt = "free"; curTStateColor = "#9ca3af";
-            } else if (triggerIndexFloat !== -1) {
-                curTStateTxt = "trigger"; curTStateColor = "#4ade80";
-            } else {
-                curTStateTxt = "auto"; curTStateColor = "#eab308";
-            }
-
-            if (CACHE.tStateTxt !== curTStateTxt) {
-                DOM.osdTriggerState.innerText = curTStateTxt;
-                CACHE.tStateTxt = curTStateTxt;
-            }
-            if (CACHE.tStateColor !== curTStateColor) {
-                DOM.osdTriggerState.style.color = curTStateColor;
-                CACHE.tStateColor = curTStateColor;
-            }
-
-            if (STATE.mode === 'YT' && STATE.trigger.enabled) {
-                ctx2d.strokeStyle = 'rgba(255, 165, 0, 0.4)';
-                ctx2d.setLineDash([4, 4]);
-                ctx2d.beginPath();
-                let ty = h / 2 - mappedLevel * (h / 2);
-                ctx2d.moveTo(0, ty);
-                ctx2d.lineTo(w, ty);
-                ctx2d.stroke();
-
-                if (triggerIndexFloat !== -1) {
-                    let tx = (offset / ptsToShow) * w;
-                    ctx2d.beginPath();
-                    ctx2d.moveTo(tx, 0);
-                    ctx2d.lineTo(tx, h);
-                    ctx2d.stroke();
-                }
-                ctx2d.setLineDash([]);
-            }
-
-            const renderGLTrace = (dataBuffer, colorArr, isXY, pData2_XY) => {
-                let aspect = DOM.glCanvas.height / DOM.glCanvas.width, vIdx = 0, pointCount = 0;
-
-                // 依据渲染模式独立配置线宽与发光强度
-                let uSize = isXY ? 0.002 : 0.002;
-                let uIntensity = isXY ? 0.4 : 1.3;
-
-                const pushV = (vx, vy, lx, ly, len) => {
-                    glDataArray[vIdx++] = vx;
-                    glDataArray[vIdx++] = vy;
-                    glDataArray[vIdx++] = lx;
-                    glDataArray[vIdx++] = ly;
-                    glDataArray[vIdx++] = len;
-                    pointCount++;
-                };
-
-                const addPt = (p0x, p0y, p1x, p1y) => {
-                    let dx = p1x - p0x, dy = p1y - p0y, z = Math.sqrt(dx * dx + dy * dy);
-                    let dirX = (z > 1E-6 ? dx / z : 1.0) * uSize, dirY = (z > 1E-6 ? dy / z : 0.0) * uSize;
-                    let normX = -dirY, normY = dirX;
-
-                    pushV(p0x - dirX - normX, p0y - dirY - normY, -uSize, -uSize, z);
-                    pushV(p0x - dirX + normX, p0y - dirY + normY, -uSize, uSize, z);
-                    pushV(p1x + dirX - normX, p1y + dirY - normY, z + uSize, -uSize, z);
-
-                    pushV(p0x - dirX + normX, p0y - dirY + normY, -uSize, uSize, z);
-                    pushV(p1x + dirX - normX, p1y + dirY - normY, z + uSize, -uSize, z);
-                    pushV(p1x + dirX + normX, p1y + dirY + normY, z + uSize, uSize, z);
-                };
-
-                const sinc = (x) => (x === 0) ? 1.0 : Math.sin(Math.PI * x) / (Math.PI * x);
-                const a = 4;
-                const lanczos = (x) => {
-                    if (x === 0) return 1.0;
-                    if (Math.abs(x) >= a) return 0.0;
-                    return sinc(x) * sinc(x / a);
-                };
-
-                if (!isXY) {
-                    if (ptsToShow > 1500) {
-                        // 模式 A: 长时基状态下启用峰值检波 (Peak Detect) 算法
-                        const chunks = Math.min(ptsToShow, 1000);
-                        let step = ptsToShow / chunks;
-                        let lastX = -1.0;
-                        let lastY = dataBuffer[startIdxInt];
-
-                        for (let i = 0; i < chunks; i++) {
-                            let idxStart = Math.floor(startIdxFloat + i * step);
-                            let idxEnd = Math.floor(startIdxFloat + (i + 1) * step);
-                            idxStart = Math.max(0, Math.min(idxStart, CONFIG.fftSize - 1));
-                            idxEnd = Math.max(0, Math.min(idxEnd, CONFIG.fftSize));
-
-                            let min = 999, max = -999;
-                            // 扫描当前区间内的极值数据
-                            for (let j = idxStart; j < idxEnd; j++) {
-                                let v = dataBuffer[j];
-                                if (v < min) min = v;
-                                if (v > max) max = v;
-                            }
-                            if (min === 999 || max === -999) { min = lastY; max = lastY; }
-
-                            let curX = ((i + 0.5) / chunks) * 2.0 - 1.0;
-                            addPt(lastX, lastY, curX, max);
-                            addPt(curX, max, curX, min);
-                            lastX = curX;
-                            lastY = min;
-                        }
-                    } else {
-                        // 模式 B: 短时基状态下使用 Lanczos-Sinc 卷积进行插值重建
-                        let startX = ((startIdxInt - startIdxFloat) / ptsToShow) * 2.0 - 1.0;
-                        let lastX = startX, lastY = dataBuffer[startIdxInt];
-                        const steps = 6;
-
-                        for (let i = startIdxInt; i < endIdxInt - 1; i++) {
-                            for (let step = 1; step <= steps; step++) {
-                                let t = step / steps;
-                                let curY = 0;
-                                for (let j = -a + 1; j <= a; j++) {
-                                    let idx = i + j;
-                                    if (idx >= 0 && idx < CONFIG.fftSize) {
-                                        curY += dataBuffer[idx] * lanczos(j - t);
-                                    }
-                                }
-                                let curX = (((i - startIdxFloat) + t) / ptsToShow) * 2.0 - 1.0;
-                                addPt(lastX, lastY, curX, curY);
-                                lastX = curX;
-                                lastY = curY;
-                            }
-                        }
-                    }
-                } else {
-                    // XY 模式: 双通道联合 Sinc 插值重建
-                    let sIdx = Math.max(0, CONFIG.fftSize - XY_PTS - 1);
-                    for (let i = 1; i < XY_PTS - 2; i++) {
-                        let rawAlpha = ALPHA_LUT[i];
-                        if (rawAlpha < 0.02) continue;
-
-                        let currIdx = sIdx + i;
-                        let x0 = dataBuffer[currIdx] * aspect, y0 = pData2_XY[currIdx];
-                        let lastX = x0, lastY = y0;
-                        const steps = 4;
-
-                        for (let step = 1; step <= steps; step++) {
-                            let t = step / steps;
-                            let mX = 0, mY = 0;
-                            for (let j = -a + 1; j <= a; j++) {
-                                let idx = currIdx + j;
-                                if (idx >= 0 && idx < CONFIG.fftSize) {
-                                    let w = lanczos(j - t);
-                                    mX += (dataBuffer[idx] * aspect) * w;
-                                    mY += pData2_XY[idx] * w;
-                                }
-                            }
-                            addPt(lastX, lastY, mX, mY);
-                            lastX = mX;
-                            lastY = mY;
-                        }
-                    }
-                }
-
-                if (pointCount > 0) {
-                    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-                    gl.bufferData(gl.ARRAY_BUFFER, glDataArray.subarray(0, vIdx), gl.STREAM_DRAW);
-                    gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, GL_CONST.BYTES_PER_VERTEX, GL_CONST.POS_OFFSET);
-                    gl.enableVertexAttribArray(posAttr);
-                    gl.vertexAttribPointer(dataAttr, 3, gl.FLOAT, false, GL_CONST.BYTES_PER_VERTEX, GL_CONST.DATA_OFFSET);
-                    gl.enableVertexAttribArray(dataAttr);
-                    gl.uniform1f(sizeUni, uSize);
-                    gl.uniform1f(intensityUni, uIntensity);
-                    gl.uniform3fv(colorUni, colorArr);
-                    gl.drawArrays(gl.TRIANGLES, 0, pointCount);
-                }
-            };
-
-            if (STATE.mode === 'YT') {
-                if (STATE.ch1.on) renderGLTrace(pData1, CONFIG.c1, false);
-                if (STATE.ch2.on) renderGLTrace(pData2, CONFIG.c2, false);
-                if (STATE.math.on) {
-                    for (let i = 0; i < dataMath.length; i++) dataMath[i] = pData1[i] + pData2[i];
-                    renderGLTrace(dataMath, CONFIG.cM, false);
-                }
-            } else if (STATE.mode === 'XY') {
-                renderGLTrace(pData1, [0.1, 1.0, 0.2], true, pData2);
-            }
-
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(0, 0, currentFboWidth, currentFboHeight);
-            gl.clearColor(0.0, 0.0, 0.0, 1.0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.useProgram(bloomProgram);
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
-            gl.enableVertexAttribArray(posAttrBloom);
-            gl.vertexAttribPointer(posAttrBloom, 2, gl.FLOAT, false, 0, 0);
-            gl.uniform2f(texSizeUniBloom, currentFboWidth, currentFboHeight);
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, fboTexture);
-            gl.uniform1i(texUniBloom, 0);
-            gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-            if (STATE.cursor.mode > 0) {
-                ctx2d.save();
-                ctx2d.translate(0.5, 0.5);
-                ctx2d.fillStyle = 'rgba(0, 0, 0, 0.75)';
-                ctx2d.lineWidth = 1;
-
-                if (STATE.cursor.mode === 1) {
-                    let y1 = h / 2 - STATE.cursor.v1 * (h / 2), y2 = h / 2 - STATE.cursor.v2 * (h / 2);
-                    ctx2d.strokeStyle = '#a855f7';
-                    ctx2d.setLineDash([4, 4]);
-                    ctx2d.beginPath();
-                    ctx2d.moveTo(0, y1);
-                    ctx2d.lineTo(w, y1);
-                    ctx2d.stroke();
-                    ctx2d.beginPath();
-                    ctx2d.moveTo(0, y2);
-                    ctx2d.lineTo(w, y2);
-                    ctx2d.stroke();
-
-                    let dv1 = Math.abs(STATE.cursor.v1 - STATE.cursor.v2) / (2.0 / CONFIG.gridY) * (1 / STATE.ch1.scale);
-                    let dv2 = Math.abs(STATE.cursor.v1 - STATE.cursor.v2) / (2.0 / CONFIG.gridY) * (1 / STATE.ch2.scale);
-                    ctx2d.fillRect(10, 40, 140, 50);
-                    ctx2d.strokeStyle = '#444';
-                    ctx2d.strokeRect(10, 40, 140, 50);
-                    ctx2d.fillStyle = '#a855f7';
-                    ctx2d.font = 'bold 12px Courier New';
-                    ctx2d.fillText(`ΔCH1: ${dv1.toFixed(2)} V`, 20, 60);
-                    ctx2d.fillText(`ΔCH2: ${dv2.toFixed(2)} V`, 20, 80);
-                } else if (STATE.cursor.mode === 2) {
-                    let x1 = w / 2 + STATE.cursor.t1 * (w / 2), x2 = w / 2 + STATE.cursor.t2 * (w / 2);
-                    ctx2d.strokeStyle = '#38bdf8';
-                    ctx2d.setLineDash([4, 4]);
-                    ctx2d.beginPath();
-                    ctx2d.moveTo(x1, 0);
-                    ctx2d.lineTo(x1, h);
-                    ctx2d.stroke();
-                    ctx2d.beginPath();
-                    ctx2d.moveTo(x2, 0);
-                    ctx2d.lineTo(x2, h);
-                    ctx2d.stroke();
-
-                    let dt = Math.abs(STATE.cursor.t1 - STATE.cursor.t2) / (2.0 / CONFIG.gridX) * STATE.secPerDiv;
-                    let f = dt > 0 ? 1000 / dt : 0;
-                    ctx2d.fillRect(10, 40, 160, 50);
-                    ctx2d.strokeStyle = '#444';
-                    ctx2d.strokeRect(10, 40, 160, 50);
-                    ctx2d.fillStyle = '#38bdf8';
-                    ctx2d.font = 'bold 12px Courier New';
-                    ctx2d.fillText(`ΔT : ${dt.toFixed(2)} ms`, 20, 60);
-                    ctx2d.fillText(`1/ΔT: ${f.toFixed(1)} Hz`, 20, 80);
-                }
-                ctx2d.restore();
-            }
-
-            if (audioBuffer && !isSeeking) {
-                let cur = getCurrentTime(), dur = audioBuffer.duration;
-                let newVal = (cur / dur) * 100;
-                let newTimeStr = `${new Date(cur * 1000).toISOString().substring(14, 19)} / ${new Date(dur * 1000).toISOString().substring(14, 19)}`;
-
-                if (Math.abs(CACHE.audioSeekVal - newVal) > 0.1) {
-                    DOM.audioSeekBar.value = newVal;
-                    CACHE.audioSeekVal = newVal;
-                }
-                if (CACHE.audioTimeStr !== newTimeStr) {
-                    DOM.lblAudioTime.innerText = newTimeStr;
-                    CACHE.audioTimeStr = newTimeStr;
-                }
-            }
-        }
-
-        /**
-         * 9. 硬件串口通信模块
-         */
         window.SerialEngine = {
             isActive: false,
             bufferSize: 32768,
@@ -2197,7 +1939,6 @@
                         buf += value;
                         let lines = buf.split('\n');
                         buf = lines.pop();
-
                         for (let l of lines) {
                             let pts = l.split(',');
                             if (pts.length > 0) {
@@ -2221,6 +1962,7 @@
         DOM.btnSerialSim.addEventListener('click', () => {
             window.SerialEngine.isActive && DOM.btnSerialSim.innerText.includes('停止') ? window.SerialEngine.stopAll() : window.SerialEngine.startSimulator();
         });
+
         DOM.btnSerialReal.addEventListener('click', () => {
             if (window.SerialEngine.isActive && DOM.btnSerialReal.innerText.includes('断开')) {
                 window.SerialEngine.stopAll();
@@ -2236,13 +1978,406 @@
                     "三、 性能瓶颈限制\n" +
                     "受限于 115200 波特率的物理带宽、ASCII 字符串解析开销，以及 JS 单线程 GC (垃圾回收) 机制，本模式有效采样率通常 <3kSa/s，且必定伴随微观丢帧与触发相位抖动。仅适用于超低频慢变信号 (如生理电、气压环境等) 的趋势观测。\n\n" +
                     "点击确认即代表您已知晓上述技术局限与硬件风险。";
-
                 showSysModal('⚠️ 串口连接规范说明', warningText, () => {
                     window.SerialEngine.startSerial();
                 });
             }
         });
 
+
+        /**
+         * 8. 完全展开、逻辑清晰的核心渲染引擎
+         */
+        function draw() {
+            frameCount++;
+            let now = performance.now();
+            if (now - lastTime >= 1000) {
+                fpsNode.innerText = `JS FPS: ${frameCount}`;
+                frameCount = 0;
+                lastTime = now;
+            }
+
+            if (STATE.power) requestAnimationFrame(draw);
+
+            if (DOM.glCanvas.width !== currentFboWidth || DOM.glCanvas.height !== currentFboHeight) {
+                currentFboWidth = DOM.glCanvas.width;
+                currentFboHeight = DOM.glCanvas.height;
+                resizeFBO(currentFboWidth, currentFboHeight);
+            }
+
+            // 清理并准备 WebGL 缓冲区
+            gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+            gl.viewport(0, 0, currentFboWidth, currentFboHeight);
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.useProgram(shaderProgram);
+
+            // 绘制 2D 背景网格
+            const w = DOM.oscilloscope.width / (window.devicePixelRatio || 1);
+            const h = DOM.oscilloscope.height / (window.devicePixelRatio || 1);
+            ctx2d.clearRect(0, 0, w, h);
+
+            const stepX = w / CONFIG.gridX;
+            const stepY = h / CONFIG.gridY;
+
+            ctx2d.save();
+            ctx2d.translate(0.5, 0.5);
+            ctx2d.strokeStyle = '#1e2920';
+            ctx2d.lineWidth = 1;
+            ctx2d.beginPath();
+
+            for (let i = 1; i < CONFIG.gridX; i++) {
+                ctx2d.moveTo(i * stepX, 0);
+                ctx2d.lineTo(i * stepX, h);
+            }
+            for (let i = 1; i < CONFIG.gridY; i++) {
+                ctx2d.moveTo(0, i * stepY);
+                ctx2d.lineTo(w, i * stepY);
+            }
+            ctx2d.stroke();
+
+            ctx2d.strokeStyle = '#2d4a30';
+            ctx2d.beginPath();
+            ctx2d.moveTo(w / 2, 0); ctx2d.lineTo(w / 2, h);
+            ctx2d.moveTo(0, h / 2); ctx2d.lineTo(w, h / 2);
+
+            for (let i = 0; i < w; i += stepX / 5) {
+                ctx2d.moveTo(i, h / 2 - 3);
+                ctx2d.lineTo(i, h / 2 + 3);
+            }
+            for (let i = 0; i < h; i += stepY / 5) {
+                ctx2d.moveTo(w / 2 - 3, i);
+                ctx2d.lineTo(w / 2 + 3, i);
+            }
+            ctx2d.stroke();
+            ctx2d.restore();
+
+            // 抓取底层真实数据
+            if (STATE.run) {
+                if (window.SerialEngine && window.SerialEngine.isActive) {
+                    window.SerialEngine.fillData(dataL, dataR, STATE.ch1.cpl, STATE.ch2.cpl);
+                } else if (audioCtx && analyserL_DC) {
+                    if (STATE.ch1.cpl === 'AC') analyserL_AC.getFloatTimeDomainData(dataL);
+                    else analyserL_DC.getFloatTimeDomainData(dataL);
+
+                    if (STATE.ch2.cpl === 'AC') analyserR_AC.getFloatTimeDomainData(dataR);
+                    else analyserR_DC.getFloatTimeDomainData(dataR);
+                }
+            }
+
+            processData(dataL, STATE.ch1, pData1);
+            processData(dataR, STATE.ch2, pData2);
+            updateMeasurements(dataL, dataR);
+
+            // 触发器与视口计算逻辑
+            let ptsPerDiv = (STATE.secPerDiv) * (CONFIG.sampleRate / 1000);
+            let ptsToShow = Math.floor(ptsPerDiv * CONFIG.gridX);
+            let trigData = STATE.trigger.src === 'CH1' ? pData1 : pData2;
+            let tScale = STATE.trigger.src === 'CH1' ? STATE.ch1.scale : STATE.ch2.scale;
+            let tPos = STATE.trigger.src === 'CH1' ? STATE.ch1.pos : STATE.ch2.pos;
+            const ndcPerDiv = 2.0 / CONFIG.gridY;
+            let mappedLevel = STATE.trigger.level * tScale * ndcPerDiv + tPos;
+
+            // 调用之前修复过的独立搜索锚点，不再随偏移漂移
+            if (STATE.trigger.enabled) {
+                if (!window._frozenTriggerIdx || STATE.run) {
+                    window._frozenTriggerIdx = findTriggerIndex(trigData, ptsToShow, 0, mappedLevel);
+                }
+            } else {
+                window._frozenTriggerIdx = -1;
+            }
+            let triggerIndexFloat = window._frozenTriggerIdx;
+
+            let anchorIdx = triggerIndexFloat !== -1 ? triggerIndexFloat : CONFIG.fftSize / 2;
+
+            // hpos (0~100) 决定了你当前屏幕的正中心，在锚点两侧多远的地方。50% 时，中心与锚点完美重合。
+            let viewCenterIdx = anchorIdx + (STATE.hpos / 100 - 0.5) * CONFIG.fftSize;
+
+            // 视口的起止点，围绕着 viewCenterIdx 展开
+            let startIdxFloat = viewCenterIdx - ptsToShow / 2;
+            let startIdxInt = Math.floor(startIdxFloat);
+            let endIdxInt = Math.ceil(startIdxFloat + ptsToShow) + 1;
+
+            // 更新顶部 OSD 触发状态
+            let curTStateTxt, curTStateColor;
+            if (!STATE.run) {
+                curTStateTxt = "Stop"; curTStateColor = "#ef4444";
+            } else if (!STATE.trigger.enabled) {
+                curTStateTxt = "Free"; curTStateColor = "#9ca3af";
+            } else if (triggerIndexFloat !== -1) {
+                curTStateTxt = "Trig'd"; curTStateColor = "#4ade80";
+            } else {
+                curTStateTxt = "Auto"; curTStateColor = "#eab308";
+            }
+
+            if (CACHE.tStateTxt !== curTStateTxt) {
+                DOM.osdTriggerState.innerText = curTStateTxt;
+                CACHE.tStateTxt = curTStateTxt;
+            }
+            if (CACHE.tStateColor !== curTStateColor) {
+                DOM.osdTriggerState.style.color = curTStateColor;
+                CACHE.tStateColor = curTStateColor;
+            }
+
+            // 绘制画布内的触发水平线和垂直标识 T
+            if (STATE.mode === 'YT' && STATE.trigger.enabled) {
+                ctx2d.strokeStyle = 'rgba(255, 165, 0, 0.4)';
+                ctx2d.setLineDash([4, 4]);
+                ctx2d.beginPath();
+
+                let ty = h / 2 - mappedLevel * (h / 2);
+                ctx2d.moveTo(0, ty);
+                ctx2d.lineTo(w, ty);
+                ctx2d.stroke();
+
+                if (triggerIndexFloat !== -1) {
+                    let tx = ((triggerIndexFloat - startIdxFloat) / ptsToShow) * w;
+                    // 只有 T 标记在屏幕内时才画，真实反映被平移走的状态
+                    if (tx >= 0 && tx <= w) {
+                        ctx2d.beginPath();
+                        ctx2d.moveTo(tx, 0);
+                        ctx2d.lineTo(tx, h);
+                        ctx2d.stroke();
+                    }
+                }
+                ctx2d.setLineDash([]);
+            }
+            // 绘制 Minimap 缩略图与高亮观察窗
+            const minimapCanvas = document.getElementById('minimap-canvas');
+            if (minimapCanvas) {
+                if (minimapCanvas.width === 0 || minimapCanvas.width !== minimapCanvas.clientWidth) {
+                    minimapCanvas.width = minimapCanvas.clientWidth;
+                    minimapCanvas.height = minimapCanvas.clientHeight;
+                }
+                const mCtx = minimapCanvas.getContext('2d');
+                const mW = minimapCanvas.width;
+                const mH = minimapCanvas.height;
+                mCtx.clearRect(0, 0, mW, mH);
+                mCtx.lineWidth = 1;
+
+                mCtx.globalCompositeOperation = 'lighter';
+
+                // 使用绝对内存坐标 (0 到 fftSize) 映射缩略图，杜绝下标越界
+                // 修复：Canvas Y轴反转Bug，使用标准上下极值连线，完美还原高频包络
+                const drawMiniTrace = (data, color) => {
+                    mCtx.strokeStyle = color;
+                    mCtx.beginPath();
+                    let minimapStep = CONFIG.fftSize / mW;
+                    let started = false;
+                    for (let x = 0; x < mW; x++) {
+                        let mIdxStart = Math.floor(x * minimapStep);
+                        let mIdxEnd = Math.floor((x + 1) * minimapStep);
+                        let min = 999, max = -999;
+                        for (let j = mIdxStart; j < mIdxEnd; j++) {
+                            let v = data[j];
+                            if (v < min) min = v;
+                            if (v > max) max = v;
+                        }
+                        if (min !== 999) {
+                            // min 对应屏幕底部(Y值大)，max 对应屏幕顶部(Y值小)
+                            let yBottom = mH / 2 - min * (mH / 2);
+                            let yTop = mH / 2 - max * (mH / 2);
+                            if (!started) { mCtx.moveTo(x, yBottom); started = true; }
+                            mCtx.lineTo(x, yBottom);
+                            mCtx.lineTo(x, yTop); // 上下极值相连，画出完整波峰波谷
+                        }
+                    }
+                    mCtx.stroke();
+                };
+
+                if (STATE.ch1.on) drawMiniTrace(pData1, 'rgba(234,179,8,0.8)');
+                if (STATE.ch2.on) drawMiniTrace(pData2, 'rgba(6,182,212,0.8)');
+
+                mCtx.globalCompositeOperation = 'source-over';
+
+                // 计算高亮区：完全抛弃边界束缚，允许负数和超大数，交由 CSS 的 overflow:hidden 自然裁切
+                let leftPercent = (startIdxFloat / CONFIG.fftSize) * 100;
+                let widthPercent = (ptsToShow / CONFIG.fftSize) * 100;
+
+                let highlightDiv = document.getElementById('minimap-highlight');
+                if (highlightDiv) {
+                    highlightDiv.style.left = leftPercent + '%';
+                    highlightDiv.style.width = widthPercent + '%';
+                }
+            }
+
+            // WebGL 波形轨迹绘制函数
+            const renderGLTrace = (dataBuffer, colorArr, isXY, pData2_XY) => {
+                let aspect = DOM.glCanvas.height / DOM.glCanvas.width;
+                let vIdx = 0, pointCount = 0;
+                let uSize = 0.002;
+                let uIntensity = 0.4;
+
+                const pushV = (vx, vy, lx, ly, len) => {
+                    glDataArray[vIdx++] = vx;
+                    glDataArray[vIdx++] = vy;
+                    glDataArray[vIdx++] = lx;
+                    glDataArray[vIdx++] = ly;
+                    glDataArray[vIdx++] = len;
+                    pointCount++;
+                };
+
+                const addPt = (p0x, p0y, p1x, p1y) => {
+                    let dx = p1x - p0x, dy = p1y - p0y, z = Math.sqrt(dx * dx + dy * dy);
+                    let dirX = (z > 1E-6 ? dx / z : 1.0) * uSize;
+                    let dirY = (z > 1E-6 ? dy / z : 0.0) * uSize;
+                    let normX = -dirY, normY = dirX;
+
+                    pushV(p0x - dirX - normX, p0y - dirY - normY, -uSize, -uSize, z);
+                    pushV(p0x - dirX + normX, p0y - dirY + normY, -uSize, uSize, z);
+                    pushV(p1x + dirX - normX, p1y + dirY - normY, z + uSize, -uSize, z);
+
+                    pushV(p0x - dirX + normX, p0y - dirY + normY, -uSize, uSize, z);
+                    pushV(p1x + dirX - normX, p1y + dirY - normY, z + uSize, -uSize, z);
+                    pushV(p1x + dirX + normX, p1y + dirY + normY, z + uSize, uSize, z);
+                };
+
+                if (!isXY) {
+                    // YT 模式：保留暴力直接连线，完美重现物理荧光余辉
+                    for (let i = startIdxInt; i < endIdxInt - 1; i++) {
+                        // Math.max/min 保护平移越界时产生的数组错误
+                        let v1 = dataBuffer[Math.max(0, Math.min(CONFIG.fftSize - 1, i))];
+                        let v2 = dataBuffer[Math.max(0, Math.min(CONFIG.fftSize - 1, i + 1))];
+                        addPt(
+                            ((i - startIdxFloat) / ptsToShow) * 2.0 - 1.0, v1,
+                            ((i + 1 - startIdxFloat) / ptsToShow) * 2.0 - 1.0, v2
+                        );
+                    }
+                } else {
+                    // XY 模式：剔除所有圆滑插值，直接直线相连，消灭星形线伪影
+                    let sIdx = Math.max(0, CONFIG.fftSize - XY_PTS - 1);
+                    for (let i = 1; i < XY_PTS - 1; i++) {
+                        let rawAlpha = ALPHA_LUT[i];
+                        if (rawAlpha < 0.02) continue;
+
+                        let i1 = sIdx + i;
+                        let i2 = sIdx + i + 1;
+
+                        let x1 = dataBuffer[i1] * aspect;
+                        let y1 = pData2_XY[i1];
+                        let x2 = dataBuffer[i2] * aspect;
+                        let y2 = pData2_XY[i2];
+
+                        addPt(x1, y1, x2, y2);
+                    }
+                }
+
+                if (pointCount > 0) {
+                    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+                    gl.bufferData(gl.ARRAY_BUFFER, glDataArray.subarray(0, vIdx), gl.STREAM_DRAW);
+                    gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, GL_CONST.BYTES_PER_VERTEX, GL_CONST.POS_OFFSET);
+                    gl.enableVertexAttribArray(posAttr);
+                    gl.vertexAttribPointer(dataAttr, 3, gl.FLOAT, false, GL_CONST.BYTES_PER_VERTEX, GL_CONST.DATA_OFFSET);
+                    gl.enableVertexAttribArray(dataAttr);
+                    gl.uniform1f(sizeUni, uSize);
+                    gl.uniform1f(intensityUni, uIntensity);
+                    gl.uniform3fv(colorUni, colorArr);
+                    gl.drawArrays(gl.TRIANGLES, 0, pointCount);
+                }
+            };
+
+            // 渲染通道
+            if (STATE.mode === 'YT') {
+                if (STATE.ch1.on) renderGLTrace(pData1, CONFIG.c1, false);
+                if (STATE.ch2.on) renderGLTrace(pData2, CONFIG.c2, false);
+                if (STATE.math.on) {
+                    for (let i = 0; i < dataMath.length; i++) dataMath[i] = pData1[i] + pData2[i];
+                    renderGLTrace(dataMath, CONFIG.cM, false);
+                }
+            } else if (STATE.mode === 'XY') {
+                renderGLTrace(pData1, [0.1, 1.0, 0.2], true, pData2);
+            }
+
+            // 辉光后期处理 (Bloom)
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.viewport(0, 0, currentFboWidth, currentFboHeight);
+            gl.clearColor(0.0, 0.0, 0.0, 1.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            gl.useProgram(bloomProgram);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
+            gl.enableVertexAttribArray(posAttrBloom);
+            gl.vertexAttribPointer(posAttrBloom, 2, gl.FLOAT, false, 0, 0);
+            gl.uniform2f(texSizeUniBloom, currentFboWidth, currentFboHeight);
+
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, fboTexture);
+            gl.uniform1i(texUniBloom, 0);
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+            // 绘制测量光标 (Cursors)
+            if (STATE.cursor.mode > 0) {
+                ctx2d.save();
+                ctx2d.translate(0.5, 0.5);
+                ctx2d.fillStyle = 'rgba(0, 0, 0, 0.75)';
+                ctx2d.lineWidth = 1;
+
+                if (STATE.cursor.mode === 1) {
+                    let y1 = h / 2 - STATE.cursor.v1 * (h / 2);
+                    let y2 = h / 2 - STATE.cursor.v2 * (h / 2);
+
+                    ctx2d.strokeStyle = '#a855f7';
+                    ctx2d.setLineDash([4, 4]);
+                    ctx2d.beginPath();
+                    ctx2d.moveTo(0, y1); ctx2d.lineTo(w, y1); ctx2d.stroke();
+                    ctx2d.beginPath();
+                    ctx2d.moveTo(0, y2); ctx2d.lineTo(w, y2); ctx2d.stroke();
+
+                    let dv1 = Math.abs(STATE.cursor.v1 - STATE.cursor.v2) / (2.0 / CONFIG.gridY) * (1 / STATE.ch1.scale);
+                    let dv2 = Math.abs(STATE.cursor.v1 - STATE.cursor.v2) / (2.0 / CONFIG.gridY) * (1 / STATE.ch2.scale);
+
+                    ctx2d.fillRect(10, 40, 140, 50);
+                    ctx2d.strokeStyle = '#444';
+                    ctx2d.strokeRect(10, 40, 140, 50);
+                    ctx2d.fillStyle = '#a855f7';
+                    ctx2d.font = 'bold 12px Courier New';
+                    ctx2d.fillText(`ΔCH1: ${dv1.toFixed(2)} V`, 20, 60);
+                    ctx2d.fillText(`ΔCH2: ${dv2.toFixed(2)} V`, 20, 80);
+
+                } else if (STATE.cursor.mode === 2) {
+                    let x1 = w / 2 + STATE.cursor.t1 * (w / 2);
+                    let x2 = w / 2 + STATE.cursor.t2 * (w / 2);
+
+                    ctx2d.strokeStyle = '#38bdf8';
+                    ctx2d.setLineDash([4, 4]);
+                    ctx2d.beginPath();
+                    ctx2d.moveTo(x1, 0); ctx2d.lineTo(x1, h); ctx2d.stroke();
+                    ctx2d.beginPath();
+                    ctx2d.moveTo(x2, 0); ctx2d.lineTo(x2, h); ctx2d.stroke();
+
+                    let dt = Math.abs(STATE.cursor.t1 - STATE.cursor.t2) / (2.0 / CONFIG.gridX) * STATE.secPerDiv;
+                    let f = dt > 0 ? 1000 / dt : 0;
+
+                    ctx2d.fillRect(10, 40, 160, 50);
+                    ctx2d.strokeStyle = '#444';
+                    ctx2d.strokeRect(10, 40, 160, 50);
+                    ctx2d.fillStyle = '#38bdf8';
+                    ctx2d.font = 'bold 12px Courier New';
+                    ctx2d.fillText(`ΔT : ${dt.toFixed(2)} ms`, 20, 60);
+                    ctx2d.fillText(`1/ΔT: ${f.toFixed(1)} Hz`, 20, 80);
+                }
+                ctx2d.restore();
+            }
+
+            // 更新底部音频播放进度条
+            if (audioBuffer && !isSeeking) {
+                let cur = getCurrentTime();
+                let dur = audioBuffer.duration;
+                let newVal = (cur / dur) * 100;
+                let newTimeStr = `${new Date(cur * 1000).toISOString().substring(14, 19)} / ${new Date(dur * 1000).toISOString().substring(14, 19)}`;
+
+                if (Math.abs(CACHE.audioSeekVal - newVal) > 0.1) {
+                    DOM.audioSeekBar.value = newVal;
+                    CACHE.audioSeekVal = newVal;
+                }
+                if (CACHE.audioTimeStr !== newTimeStr) {
+                    DOM.lblAudioTime.innerText = newTimeStr;
+                    CACHE.audioTimeStr = newTimeStr;
+                }
+            }
+        }
+
+        // 初始化启动显示
         DOM.osdSamplerate.innerText = (CONFIG.sampleRate / 1000).toFixed(1) + 'kSa/s (Audio)';
         draw();
     </script>
