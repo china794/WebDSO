@@ -4,578 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>WebDSO - 纯原生网页示波器</title>
-    <style>
-        /* ==========================================
-           基础样式与主题变量
-           ========================================== */
-        :root {
-            --bg-main: #151619;
-            --bg-panel: #22252a;
-            --bg-box: #181a1f;
-            --border-dark: #2a2d35;
-            --border-light: #363a43;
-            --text-main: #e2e8f0;
-            --text-dim: #6b7280;
-            --ch1-color: #eab308;
-            --ch2-color: #06b6d4;
-            --math-color: #c084fc;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background: var(--bg-main);
-            color: var(--text-main);
-            font-family: system-ui, -apple-system, sans-serif;
-            font-size: 12px;
-            user-select: none;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            overflow-x: hidden;
-            touch-action: manipulation;
-        }
-
-        ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 2px;
-        }
-
-        /* ==========================================
-           主体布局配置
-           ========================================== */
-        .main-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-            gap: 10px;
-            max-width: 1600px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        @media (min-width: 1024px) {
-            .main-container {
-                flex-direction: row;
-                padding: 20px;
-                gap: 20px;
-            }
-        }
-
-        /* ==========================================
-           屏幕与渲染容器
-           ========================================== */
-        .left-panel {
-            flex: 3;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .screen-wrapper {
-            background: #111215;
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-dark);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        .screen-container {
-            width: 100%;
-            max-width: 1100px;
-            aspect-ratio: 5/4;
-            background: #050505;
-            border: 4px solid var(--bg-box);
-            border-radius: 6px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.8);
-            cursor: crosshair;
-        }
-
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* ==========================================
-           屏幕悬浮显示层 (OSD)
-           ========================================== */
-        .osd-top {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0,0,0,0.8);
-            border-bottom: 1px solid #333;
-            padding: 4px 10px;
-            display: flex;
-            justify-content: space-between;
-            font-family: monospace;
-            font-size: 11px;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .osd-side {
-            position: absolute;
-            right: 0;
-            top: 30px;
-            bottom: 30px;
-            width: 60px;
-            background: rgba(0,0,0,0.6);
-            border-left: 1px solid #333;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            padding: 4px;
-            font-family: monospace;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .osd-box {
-            border: 1px solid #555;
-            background: rgba(0,0,0,0.9);
-            border-radius: 3px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-bottom: 3px;
-        }
-
-        .osd-title {
-            width: 100%;
-            text-align: center;
-            font-weight: bold;
-            color: #000;
-            padding: 2px 0;
-        }
-
-        .measure-panel {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            right: 75px;
-            background: rgba(0,0,0,0.8);
-            border: 1px solid #444;
-            border-radius: 4px;
-            padding: 6px 10px;
-            display: none;
-            justify-content: space-between;
-            font-family: monospace;
-            font-size: 11px;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        /* ==========================================
-           右侧控制面板
-           ========================================== */
-        .right-panel {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            background: var(--bg-panel);
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border-light);
-            overflow-y: auto;
-        }
-
-        @media (min-width: 1024px) {
-            .right-panel {
-                width: 380px;
-                flex-shrink: 0;
-            }
-        }
-
-        .hw-group {
-            background: linear-gradient(145deg, #22252a, #1e2025);
-            border: 1px solid var(--border-light);
-            border-radius: 6px;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .group-title {
-            font-size: 10px;
-            font-weight: bold;
-            color: #9ca3af;
-            letter-spacing: 1px;
-            border-bottom: 1px solid #444;
-            padding-bottom: 4px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* ==========================================
-           布局辅助与颜色分类
-           ========================================== */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .flex-row {
-            display: flex;
-            gap: 8px;
-        }
-
-        .items-center {
-            align-items: center;
-        }
-
-        .flex-col {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .flex-between {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .ch-box {
-            background: var(--bg-box);
-            padding: 8px;
-            border-radius: 4px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-            .ch-box.ch1 {
-                border: 1px solid rgba(234,179,8,0.3);
-            }
-
-            .ch-box.ch2 {
-                border: 1px solid rgba(6,182,212,0.3);
-            }
-
-        .txt-y {
-            color: var(--ch1-color);
-        }
-
-        .bg-y {
-            background: var(--ch1-color);
-        }
-
-        .bd-y {
-            border-color: #a16207;
-        }
-
-        .txt-c {
-            color: var(--ch2-color);
-        }
-
-        .bg-c {
-            background: var(--ch2-color);
-        }
-
-        .bd-c {
-            border-color: #0e7490;
-        }
-
-        .txt-p {
-            color: var(--math-color);
-        }
-
-        .bg-p {
-            background: var(--math-color);
-        }
-
-        .txt-g {
-            color: #4ade80;
-        }
-
-        .txt-r {
-            color: #ef4444;
-        }
-
-        .txt-dim {
-            color: var(--text-dim);
-        }
-
-        .font-mono {
-            font-family: monospace;
-        }
-
-        /* ==========================================
-           交互组件样式
-           ========================================== */
-        .hw-btn {
-            background: linear-gradient(to bottom, #434752, #34373f);
-            border: 1px solid #0a0a0c;
-            border-top: 1px solid #5a5f6b;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-            color: #d1d5db;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.1s;
-            padding: 8px 4px;
-            text-align: center;
-            display: block;
-            width: 100%;
-            font-size: 11px;
-        }
-
-            .hw-btn:active {
-                background: #2a2d35;
-                box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
-                border-top: 1px solid #0a0a0c;
-                transform: translateY(1px);
-            }
-
-            .hw-btn.active {
-                background: #2563eb;
-                color: #fff;
-                text-shadow: 0 0 5px rgba(255,255,255,0.6);
-                border-top: 1px solid #60a5fa;
-                box-shadow: inset 0 2px 4px rgba(0,0,0,0.5), 0 0 10px rgba(37,99,235,0.4);
-            }
-
-        .btn-run {
-            background: linear-gradient(to bottom, #16a34a, #15803d);
-            border-top: 1px solid #4ade80;
-            color: white;
-            border: 1px solid #111;
-        }
-
-            .btn-run.stopped {
-                background: linear-gradient(to bottom, #dc2626, #b91c1c);
-                border-top: 1px solid #f87171;
-            }
-
-        .hw-select {
-            background: #0a0a0c;
-            border: 1px solid #333;
-            color: #d1d5db;
-            padding: 6px;
-            border-radius: 4px;
-            font-family: monospace;
-            outline: none;
-            width: 100%;
-            font-size: 11px;
-        }
-
-        input[type=range] {
-            touch-action: none;
-        }
-
-            input[type=range].knob-slider {
-                -webkit-appearance: none;
-                background: transparent;
-                height: 16px;
-                width: 100%;
-            }
-
-                input[type=range].knob-slider::-webkit-slider-runnable-track {
-                    height: 4px;
-                    background: #0a0a0c;
-                    border-radius: 2px;
-                    border: 1px solid #2a2d35;
-                }
-
-                input[type=range].knob-slider::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    height: 16px;
-                    width: 10px;
-                    border-radius: 2px;
-                    background: linear-gradient(to bottom, #94a3b8, #64748b);
-                    cursor: pointer;
-                    margin-top: -6px;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.8);
-                    border: 1px solid #cbd5e1;
-                }
-
-                input[type=range].knob-slider:focus {
-                    outline: none;
-                }
-
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        .audio-control-cluster {
-            background: #0f172a;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #334155;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
-            font-family: 'Courier New', monospace;
-        }
-
-        .audio-panel-row {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-            .audio-panel-row.secondary {
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-                margin-bottom: 0;
-            }
-
-        .osd-label {
-            color: #64748b;
-            font-size: 11px;
-            margin-right: 4px;
-        }
-
-        .osd-value {
-            color: #38bdf8;
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-            .osd-value.speed {
-                color: #facc15;
-            }
-
-        .osd-btn-primary {
-            background: #1e293b;
-            border: 1px solid #475569;
-            color: #f8fafc;
-            padding: 6px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s;
-        }
-
-            .osd-btn-primary:hover {
-                background: #334155;
-                border-color: #38bdf8;
-            }
-
-        .seek-slider {
-            width: 100%;
-            height: 4px;
-            cursor: pointer;
-            accent-color: #38bdf8;
-        }
-
-        .speed-control-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-grow: 1;
-            margin-left: 20px;
-        }
-
-        .speed-slider {
-            flex-grow: 1;
-            height: 4px;
-            accent-color: #facc15;
-        }
-
-        /* ==========================================
-           定制化系统弹窗
-           ========================================== */
-        .sys-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(4px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.2s ease-out;
-        }
-
-            .sys-modal-overlay.show {
-                display: flex;
-                opacity: 1;
-            }
-
-        .sys-modal-box {
-            background: #1e293b;
-            border: 1px solid #3b82f6;
-            border-radius: 8px;
-            padding: 24px;
-            width: 90%;
-            max-width: 420px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 2px 4px rgba(255,255,255,0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .sys-modal-title {
-            font-size: 15px;
-            font-weight: bold;
-            color: #38bdf8;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-bottom: 1px solid #334155;
-            padding-bottom: 8px;
-        }
-
-        .sys-modal-text {
-            color: #d1d5db;
-            font-size: 13px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-        }
-
-        .sys-modal-btn {
-            background: #2563eb;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            align-self: flex-end;
-            transition: all 0.2s;
-        }
-
-            .sys-modal-btn:hover {
-                background: #3b82f6;
-                box-shadow: 0 0 10px rgba(59,130,246,0.5);
-            }
-    </style>
+    <link rel="stylesheet" href="./styles/layout.css">
+    <link rel="stylesheet" href="./styles/osd.css">
+    <link rel="stylesheet" href="./styles/controls.css">
 </head>
 <body>
-
     <div id="sys-modal" class="sys-modal-overlay">
         <div class="sys-modal-box">
             <div class="sys-modal-title"><span>⚠️</span> <span id="sys-modal-title-text">系统提示</span></div>
@@ -606,12 +39,12 @@
                     <div class="osd-side">
                         <div class="osd-box bd-y">
                             <div class="osd-title bg-y">CH1(L)</div>
-                            <div class="txt-dim" style="font-size:9px;" id="osd-cpl1">AC</div>
+                            <div class="txt-dim" style="font-size:9px;" id="osd-cpl1">DC</div>
                             <div class="txt-y" style="font-weight:bold;" id="osd-ch1-scale">0.25V</div>
                         </div>
                         <div class="osd-box bd-c">
                             <div class="osd-title bg-c">CH2(R)</div>
-                            <div class="txt-dim" style="font-size:9px;" id="osd-cpl2">AC</div>
+                            <div class="txt-dim" style="font-size:9px;" id="osd-cpl2">DC</div>
                             <div class="txt-c" style="font-weight:bold;" id="osd-ch2-scale">0.25V</div>
                         </div>
                         <div id="osd-math-box" class="osd-box" style="border-color:#9333ea; display:none;">
@@ -626,19 +59,37 @@
                     </div>
                 </div>
             </div>
-
-            <div class="flex-row" style="flex-shrink: 0;">
-                <button id="btn-measure" class="hw-btn" style="flex:1">测量 (MEASURE)</button>
-                <button id="btn-cursors" class="hw-btn" style="flex:1">光标: 关</button>
-                <button id="btn-display" class="hw-btn active" style="flex:1">Y-T 模式</button>
-                <button id="btn-xy" class="hw-btn" style="flex:1">X-Y 模式</button>
-            </div>
         </div>
 
         <div class="right-panel">
             <div class="flex-row" style="flex-shrink: 0;">
+                <button id="btn-measure" class="hw-btn" style="flex:1">测量</button>
+                <button id="btn-cursors" class="hw-btn" style="flex:1">光标: 关</button>
+                <button id="btn-display" class="hw-btn active" style="flex:1">Y-T 模式</button>
+                <button id="btn-xy" class="hw-btn" style="flex:1">X-Y 模式</button>
+            </div>
+            <div class="flex-row" style="flex-shrink: 0;">
                 <button id="btn-runstop" class="hw-btn btn-run" style="flex: 1.5; font-size: 13px;">运行/停止 (RUN/STOP)</button>
-                <button id="btn-autoset" class="hw-btn" style="flex: 1; color: #60a5fa; border-color: #2563eb;">自动设置 (AUTO)</button>
+                <button id="btn-autoset" class="hw-btn" style="flex: 1; color: #60a5fa; border-color: #3b82f6;">自动设置 (AUTO)</button>
+
+            </div>
+
+            <div class="flex-row" style="gap: 4px; margin-top: 4px;">
+                <button id="btn-fft-toggle" class="hw-btn" style="flex: 1; background: #6366f1;">
+                    📊 频谱模式 (OFF)
+                </button>
+            </div>
+
+            <div id="fft-controls" class="flex-col" style="display:none; background:#181a1f; padding:8px; border-radius:4px; border:1px solid #333; margin-top:4px;">
+                <div class="flex-between txt-dim font-mono" style="font-size:9px;">
+                    <span>量程上限(Hz)</span><span id="lbl-fft-max">8000Hz</span>
+                </div>
+                <input type="range" id="knob-fft-max" min="100" max="24000" step="100" value="8000" class="knob-slider">
+
+                <div class="flex-between txt-dim font-mono" style="font-size:9px; margin-top:6px;">
+                    <span>增益(Gain)</span><span id="lbl-fft-gain">x100</span>
+                </div>
+                <input type="range" id="knob-fft-gain" min="10" max="2000" step="10" value="100" class="knob-slider">
             </div>
 
             <div class="hw-group">
@@ -650,12 +101,15 @@
                             <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>POS</span><span id="lbl-pos1">0.00</span></div>
                             <input type="range" id="knob-pos1" min="-1" max="1" step="0.01" value="0" class="knob-slider">
                         </div>
-
                         <div style="display: flex; gap: 6px; align-items: flex-end;">
                             <div class="flex-col" style="flex: 1;">
                                 <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>SCALE</span></div>
                                 <div style="display:flex; align-items:center; background:#0a0a0c; padding:0 4px; border:1px solid #333; border-radius:2px; height: 24px;">
                                     <input type="number" id="num-scale1" value="0.25" step="0.05" min="0.001" style="flex:1; width:0; background:transparent; border:none; color:#eab308; font-family:monospace; font-size:12px; font-weight:bold; text-align:right; outline:none; padding-right: 4px;">
+                                    <div style="display:flex; flex-direction:column; margin-right:4px;">
+                                        <div id="btn-s1-up" style="color:#9ca3af; font-size:8px; cursor:pointer; line-height:1.2; user-select:none;">▲</div>
+                                        <div id="btn-s1-dn" style="color:#9ca3af; font-size:8px; cursor:pointer; line-height:1.2; user-select:none;">▼</div>
+                                    </div>
                                     <span class="txt-dim font-mono" style="font-size:9px;">V/DIV</span>
                                 </div>
                             </div>
@@ -663,25 +117,27 @@
                                 <div class="txt-dim font-mono" style="font-size:9px; text-align: center;">CPL</div>
                                 <select id="cpl-ch1" class="hw-select" style="padding: 2px 4px; height: 24px;">
                                     <option value="AC">AC</option>
-                                    <option value="DC">DC</option>
+                                    <option value="DC" selected>DC</option>
                                     <option value="GND">GND</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-
                     <div class="ch-box ch2">
                         <button id="btn-ch2" class="hw-btn active txt-c bd-c">CH2</button>
                         <div class="flex-col">
                             <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>POS</span><span id="lbl-pos2">0.00</span></div>
                             <input type="range" id="knob-pos2" min="-1" max="1" step="0.01" value="0" class="knob-slider">
                         </div>
-
                         <div style="display: flex; gap: 6px; align-items: flex-end;">
                             <div class="flex-col" style="flex: 1;">
                                 <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>SCALE</span></div>
                                 <div style="display:flex; align-items:center; background:#0a0a0c; padding:0 4px; border:1px solid #333; border-radius:2px; height: 24px;">
                                     <input type="number" id="num-scale2" value="0.25" step="0.05" min="0.001" style="flex:1; width:0; background:transparent; border:none; color:#06b6d4; font-family:monospace; font-size:12px; font-weight:bold; text-align:right; outline:none; padding-right: 4px;">
+                                    <div style="display:flex; flex-direction:column; margin-right:4px;">
+                                        <div id="btn-s2-up" style="color:#9ca3af; font-size:8px; cursor:pointer; line-height:1.2; user-select:none;">▲</div>
+                                        <div id="btn-s2-dn" style="color:#9ca3af; font-size:8px; cursor:pointer; line-height:1.2; user-select:none;">▼</div>
+                                    </div>
                                     <span class="txt-dim font-mono" style="font-size:9px;">V/DIV</span>
                                 </div>
                             </div>
@@ -689,7 +145,7 @@
                                 <div class="txt-dim font-mono" style="font-size:9px; text-align: center;">CPL</div>
                                 <select id="cpl-ch2" class="hw-select" style="padding: 2px 4px; height: 24px;">
                                     <option value="AC">AC</option>
-                                    <option value="DC">DC</option>
+                                    <option value="DC" selected>DC</option>
                                     <option value="GND">GND</option>
                                 </select>
                             </div>
@@ -697,18 +153,16 @@
                     </div>
                 </div>
                 <button id="btn-math" class="hw-btn txt-p">MATH (CH1 + CH2)</button>
-            </div>
 
+            </div>
             <div class="grid-2">
                 <div class="hw-group">
                     <div class="group-title">HORIZONTAL (水平)</div>
-
                     <div style="position:relative; width:100%; height:44px; background:#050505; border:1px solid #333; border-radius:4px; margin-top:4px; overflow:hidden;" id="minimap-container">
                         <canvas id="minimap-canvas" style="width:100%; height:100%; position:absolute; left:0; top:0;"></canvas>
                         <div id="minimap-highlight" style="position:absolute; left:0%; width:10%; height:100%; background:rgba(56, 189, 248, 0.25); border-left:1px solid #38bdf8; border-right:1px solid #38bdf8; pointer-events:none;"></div>
                         <div style="position:absolute; left:50%; top:0; width:1px; height:100%; background:transparent; border-left:1px dashed rgba(255,255,255,0.4); pointer-events:none;"></div>
                     </div>
-
                     <div class="flex-col" style="margin-top: 6px;">
                         <div class="flex-between txt-dim font-mono" style="font-size:9px;"><span>POS (视口位置)</span><span id="lbl-hpos">50.0%</span></div>
                         <input type="range" id="knob-hpos" min="0" max="100" step="0.1" value="50" class="knob-slider">
@@ -718,7 +172,6 @@
                         <input type="range" id="knob-timebase" min="1" max="34" step="1" value="5" class="knob-slider" dir="rtl">
                     </div>
                 </div>
-
                 <div class="hw-group">
                     <div class="group-title">TRIGGER (触发)</div>
                     <button id="btn-trig-en" class="hw-btn" style="color:#d1d5db; margin-top: 4px; margin-bottom: 4px;">触发: 关</button>
@@ -733,10 +186,8 @@
                     </div>
                 </div>
             </div>
-
             <div class="hw-group" style="margin-top: auto; border-top: 2px solid #1e3a8a;">
                 <div class="group-title"><span>输入</span><span style="color:#3b82f6;">input</span></div>
-
                 <div class="flex-col" style="background:#181a1f; padding:8px; border-radius:4px; border:1px solid #333;">
                     <div class="flex-row items-center">
                         <div class="txt-y font-mono" style="font-size:9px; font-weight:bold; width:35px;">CH1(L)</div>
@@ -755,7 +206,6 @@
                                 </div>
                             </div>
                             <input type="range" id="knob-gen-freq1" min="0" max="448" step="0.1" value="300" class="knob-slider" style="height:10px;">
-
                             <div class="flex-between txt-dim font-mono" style="font-size:9px; margin-top:2px; margin-bottom:-4px;">
                                 <span>AMP</span>
                                 <div style="display:flex; align-items:center; gap:2px; background:#0a0a0c; padding:1px 4px; border:1px solid #333; border-radius:2px;">
@@ -766,7 +216,6 @@
                             <input type="range" id="knob-gen-amp1" min="0" max="20" step="0.01" value="0.5" class="knob-slider" style="height:10px;">
                         </div>
                     </div>
-
                     <div class="flex-row items-center mt-1" style="border-top: 1px dashed #333; padding-top: 8px;">
                         <div class="txt-c font-mono" style="font-size:9px; font-weight:bold; width:35px;">CH2(R)</div>
                         <select id="gen-type2" class="hw-select" style="width:55px; padding:4px; font-size:9px;">
@@ -784,7 +233,6 @@
                                 </div>
                             </div>
                             <input type="range" id="knob-gen-freq2" min="0" max="448" step="0.1" value="300" class="knob-slider" style="height:10px;">
-
                             <div class="flex-between txt-dim font-mono" style="font-size:9px; margin-top:2px; margin-bottom:-4px;">
                                 <span>AMP</span>
                                 <div style="display:flex; align-items:center; gap:2px; background:#0a0a0c; padding:1px 4px; border:1px solid #333; border-radius:2px;">
@@ -795,35 +243,29 @@
                             <input type="range" id="knob-gen-amp2" min="0" max="20" step="0.01" value="0.5" class="knob-slider" style="height:10px;">
                         </div>
                     </div>
-
                     <button id="btn-awg-spk" class="hw-btn txt-dim font-mono" style="font-size:10px; padding:6px; margin-top:8px;">
                         🔈 扬声器: 关
                     </button>
                 </div>
-
                 <div class="flex-row">
                     <button id="btn-mic" class="hw-btn" style="background:#2a2d35; flex: 1;">声卡输入</button>
-                    <button id="btn-serial-sim" class="hw-btn" style="background:#15803d; flex: 1;">测试源</button>
-                    <button id="btn-serial-real" class="hw-btn" style="background: #2a2d35; flex: 1;">串口输入</button>
-
                     <select id="file-select" class="hw-select" style="flex: 1.2; text-align: center; font-weight: bold; cursor: pointer; background: #2a2d35; border: 1px solid #0a0a0c;">
                         <option value="" disabled selected hidden>📂 文件</option>
                         <option value="LOCAL">↳ 📁 本地上传...</option>
-                        <option value="./audio/oscillofun-wave.flac">🎵 oscillofun-wave.flac</option>
+                        <option value="https://wanghaohan.com/audio/oscillofun-wave.flac">🎵 oscillofun-wave.flac</option>
+                        <option value="https://wanghaohan.com/audio/primer-final.flac">🎵 primer-final.flac</option>
                     </select>
                     <input type="file" id="file-input" accept="audio/*" style="display:none;" />
                 </div>
-
                 <div class="audio-control-cluster" style="position: relative; min-height: 80px;">
                     <div id="audio-loading-overlay" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(20,20,20,0.95); z-index:100; flex-direction:column; justify-content:center; align-items:center; border-radius:8px; border:1px solid #00ff88; box-sizing: border-box;">
                         <div id="audio-loading-text" style="color:#00ff88; font-family:'Courier New', monospace; margin-bottom:10px; font-size:12px; font-weight:bold; letter-spacing:1px;">加载数据中...</div>
-                        <div style="width:70%; height:6px; background:#111; border-radius:3px; overflow:hidden; border:1px solid #333;">
+                        <div style="width:70%; height:6px; background:#111; border-radius:3px; overflow:hidden; border:1px solid #333; margin-bottom: 12px;">
                             <div id="audio-progress-bar" style="width:0%; height:100%; background:linear-gradient(90deg, #0088ff, #00ff88); box-shadow: 0 0 10px #00ff88; transition: width 0.1s;"></div>
                         </div>
+                        <button id="btn-cancel-download" class="hw-btn" style="width: 80px; padding: 6px; font-size: 11px; background: #ef4444; color: #fff; border-color: #b91c1c;">取消下载</button>
                     </div>
-
                     <audio id="audio-player" style="display:none"></audio>
-
                     <div class="audio-panel-row">
                         <div class="audio-time-display">
                             <span class="osd-label">TIME:</span>
@@ -831,7 +273,6 @@
                         </div>
                         <input type="range" id="audio-seek-bar" class="seek-slider" min="0" max="100" step="0.01" value="0">
                     </div>
-
                     <div class="audio-panel-row secondary">
                         <button id="btn-audio-toggle" class="osd-btn-primary"> ⏸ </button>
                         <div class="speed-control-box">
@@ -843,1543 +284,56 @@
                         </div>
                     </div>
                 </div>
+                <div class="hw-group">
+                    <div class="hw-group-title flex-between">
+                        <span>串口连接 SERIAL</span>
+                        <span id="serial-status-dot" style="font-size: 9px; transition: all 0.3s;">● DISCONNECTED</span>
+                    </div>
+                    <div class="hw-group-body" id="serial-control-module">
+                        <div class="flex-col" style="gap: 8px;">
+                            <div class="flex-row" style="gap: 4px; align-items: center;">
+                                <span class="txt-dim" style="font-size: 10px; width: 30px;">BPS</span>
+                                <select id="serial-baud" class="hw-select" style="flex: 1;">
+                                    <option value="9600">9600</option>
+                                    <option value="19200">19200</option>
+                                    <option value="38400">38400</option>
+                                    <option value="57600">57600</option>
+                                    <option value="115200" selected>115200</option>
+                                    <option value="230400">230400</option>
+                                    <option value="460800">460800</option>
+                                    <option value="921600">921600</option>
+                                    <option value="2000000">2M (CH34x/CP2102)</option>
+                                    <option value="3000000">3M (FT232R)</option>
+                                    <option value="6000000">6M (CP2102N)</option>
+                                    <option value="12000000">12M (FT232H 极限)</option>
+                                    <option value="20000000">20M (仅限 com0com)</option>
+                                    <option value="50000000">50M (测试性能极限)</option>
+                                </select>
+                            </div>
+
+                            <div class="flex-row" style="gap: 4px; align-items: center;">
+                                <span class="txt-dim" style="font-size: 10px; width: 30px;">PROT</span>
+                                <select id="serial-protocol" class="hw-select" style="flex: 1;">
+                                    <option value="justfloat">JustFloat (Binary)</option>
+                                    <option value="firewater">FireWater (ASCII)</option>
+                                    <option value="custom">自定义协议/HEX</option>
+                                </select>
+                            </div>
+
+                            <div class="flex-row" style="gap: 4px; margin-top: 4px;">
+                                <button id="btn-serial-open" class="hw-btn" style="flex: 1; background: #1d4ed8; color: #fff;">
+                                    ⚡ 连接设备
+                                </button>
+                                <button id="btn-serial-close" class="hw-btn" style="flex: 1; display: none; background: #7f1d1d; color: #fecaca;">
+                                    断开连接
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
-
-    <script>
-        /**
-         * 1. 全局状态与系统配置
-         */
-        const STATE = {
-            power: true,
-            run: true,
-            mode: 'YT',
-            ch1: { on: true, pos: 0, scale: 4.0, cpl: 'AC' },
-            ch2: { on: true, pos: 0, scale: 4.0, cpl: 'AC' },
-            math: { on: false },
-            hpos: 50,
-            secPerDiv: 5,
-            trigger: { src: 'CH1', edge: 1, level: 0.0, enabled: false },
-            measure: false,
-            awgMonitor: false,
-            cursor: { mode: 0, v1: 0.25, v2: -0.25, t1: -0.25, t2: 0.25, dragging: null }
-        };
-
-        const CONFIG = {
-            fftSize: 32768,
-            sampleRate: 96000,
-            gridX: 10,
-            gridY: 8,
-            c1: [0.91, 0.7, 0.04],
-            c2: [0.02, 0.71, 0.83],
-            cM: [0.75, 0.51, 0.98]
-        };
-
-        const XY_PTS = 16384;
-        const ALPHA_LUT = new Float32Array(XY_PTS);
-        for (let i = 0; i < XY_PTS; i++) {
-            ALPHA_LUT[i] = Math.pow(i / XY_PTS, 30);
-        }
-
-        const GL_CONST = {
-            BYTES_PER_VERTEX: 20,
-            POS_OFFSET: 0,
-            DATA_OFFSET: 8
-        };
-
-        /**
-         * 2. DOM 节点缓存与界面交互逻辑
-         */
-        const DOM = {};
-        document.querySelectorAll('[id]').forEach(el => {
-            const camelCaseId = el.id.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-            DOM[camelCaseId] = el;
-        });
-
-        const CACHE = {
-            tStateTxt: '',
-            tStateColor: '',
-            mCh1Vpp: '',
-            mCh1Freq: '',
-            mCh2Vpp: '',
-            mCh2Freq: '',
-            audioTimeStr: '',
-            audioSeekVal: -1
-        };
-
-        const updateTriggerUI = () => {
-            let src = STATE.trigger.src.toLowerCase();
-            let vPerDiv = 1.0 / STATE[src].scale;
-            let range = 4.0 * vPerDiv;
-
-            DOM.knobTlevel.min = -range;
-            DOM.knobTlevel.max = range;
-            DOM.knobTlevel.step = range / 100;
-
-            STATE.trigger.level = Math.max(-range, Math.min(range, STATE.trigger.level));
-            DOM.knobTlevel.value = STATE.trigger.level;
-
-            if (DOM.lblTlevel) DOM.lblTlevel.innerText = STATE.trigger.level.toFixed(2) + 'V';
-            if (DOM.osdTriggerLevel) DOM.osdTriggerLevel.innerText = STATE.trigger.level.toFixed(2) + 'V';
-        };
-
-        function showSysModal(title, text, onConfirm) {
-            DOM.sysModalTitleText.innerText = title;
-            DOM.sysModalText.innerText = text;
-            DOM.sysModal.classList.add('show');
-
-            const oldBtn = DOM.sysModalBtn;
-            const newBtn = oldBtn.cloneNode(true);
-            oldBtn.replaceWith(newBtn);
-            DOM.sysModalBtn = newBtn;
-
-            DOM.sysModalBtn.onclick = () => {
-                DOM.sysModal.classList.remove('show');
-                if (onConfirm) setTimeout(onConfirm, 50);
-            };
-        }
-
-        /**
-         * 3. 渲染管线初始化 (Canvas 2D & WebGL)
-         */
-        const ctx2d = DOM.oscilloscope.getContext('2d', { alpha: true });
-        const gl = DOM.glCanvas.getContext('webgl', { alpha: false, antialias: true, premultipliedAlpha: false });
-
-        const vsSource = `
-                attribute vec2 a_position;
-                attribute vec3 a_data;
-                varying vec3 v_data;
-                void main() {
-                    gl_Position = vec4(a_position, 0.0, 1.0);
-                    v_data = a_data;
-                }
-            `;
-
-        const fsSource = `
-                precision highp float;
-                varying vec3 v_data;
-                uniform vec3 u_color;
-                uniform float u_size;
-                uniform float u_intensity;
-                #define EPS 1E-6
-                #define SQRT2 1.4142135623730951
-
-                float erf(float x) {
-                    float s = sign(x), a = abs(x);
-                    x = 1.0 + (0.278393 + (0.230389 + (0.000972 + 0.078108 * a) * a) * a) * a;
-                    x *= x;
-                    return s - s / (x * x);
-                }
-
-                void main() {
-                    float len = v_data.z;
-                    vec2 xy = v_data.xy;
-                    float alpha;
-                    float sigma = u_size / (2.0 + 2.0 * 1000.0 * u_size / 50.0 + 0.0 * pow(u_intensity, 2.0));
-
-                    if (len < EPS) {
-                        alpha = exp(-pow(length(xy), 2.0) / (2.0 * sigma * sigma)) / 2.0 / sqrt(u_size);
-                    } else {
-                        alpha = erf(xy.x / SQRT2 / sigma) - erf((xy.x - len) / SQRT2 / sigma);
-                        alpha *= exp(-xy.y * xy.y / (2.0 * sigma * sigma)) / 2.0 / len * u_size;
-                    }
-
-                    float intens = max(0.0, u_intensity - 0.4) * 0.7 - 1000.0 * u_size / 500.0;
-                    alpha = pow(alpha, 1.0 - intens) * (0.01 + min(0.99, u_intensity * 3.0));
-                    gl_FragColor = vec4(u_color * alpha, alpha);
-                }
-            `;
-
-        const vsBloom = `
-                attribute vec2 a_pos;
-                varying vec2 v_texCoord;
-                void main() {
-                    gl_Position = vec4(a_pos, 0.0, 1.0);
-                    v_texCoord = a_pos * 0.5 + 0.5;
-                }
-            `;
-
-        const fsBloom = `
-                precision highp float;
-                varying vec2 v_texCoord;
-                uniform sampler2D u_texture;
-                uniform vec2 u_texSize;
-
-                void main() {
-                    vec4 baseColor = texture2D(u_texture, v_texCoord);
-                    vec2 offset = 1.0 / u_texSize;
-                    vec4 bloom = vec4(0.0);
-                    float blurSize = 1.5;
-
-                    bloom += texture2D(u_texture, v_texCoord + vec2(-blurSize, -blurSize) * offset) * 0.0625;
-                    bloom += texture2D(u_texture, v_texCoord + vec2( 0.0, -blurSize) * offset) * 0.125;
-                    bloom += texture2D(u_texture, v_texCoord + vec2( blurSize, -blurSize) * offset) * 0.0625;
-                    bloom += texture2D(u_texture, v_texCoord + vec2(-blurSize,  0.0) * offset) * 0.125;
-                    bloom += baseColor * 0.25;
-                    bloom += texture2D(u_texture, v_texCoord + vec2( blurSize,  0.0) * offset) * 0.125;
-                    bloom += texture2D(u_texture, v_texCoord + vec2(-blurSize,  blurSize) * offset) * 0.0625;
-                    bloom += texture2D(u_texture, v_texCoord + vec2( 0.0,  blurSize) * offset) * 0.125;
-                    bloom += texture2D(u_texture, v_texCoord + vec2( blurSize,  blurSize) * offset) * 0.0625;
-
-                    vec4 wideBloom = vec4(0.0);
-                    float spread = 4.0;
-                    wideBloom += texture2D(u_texture, v_texCoord + vec2(-spread, 0.0) * offset);
-                    wideBloom += texture2D(u_texture, v_texCoord + vec2( spread, 0.0) * offset);
-                    wideBloom += texture2D(u_texture, v_texCoord + vec2(0.0, -spread) * offset);
-                    wideBloom += texture2D(u_texture, v_texCoord + vec2(0.0,  spread) * offset);
-                    wideBloom *= 0.02;
-
-                    gl_FragColor = baseColor + bloom * 0.6 + wideBloom;
-                }
-            `;
-
-        function createShader(gl, type, source) {
-            const shader = gl.createShader(type);
-            gl.shaderSource(shader, source);
-            gl.compileShader(shader);
-            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return null;
-            return shader;
-        }
-
-        const shaderProgram = gl.createProgram();
-        gl.attachShader(shaderProgram, createShader(gl, gl.VERTEX_SHADER, vsSource));
-        gl.attachShader(shaderProgram, createShader(gl, gl.FRAGMENT_SHADER, fsSource));
-        gl.linkProgram(shaderProgram);
-
-        const bloomProgram = gl.createProgram();
-        gl.attachShader(bloomProgram, createShader(gl, gl.VERTEX_SHADER, vsBloom));
-        gl.attachShader(bloomProgram, createShader(gl, gl.FRAGMENT_SHADER, fsBloom));
-        gl.linkProgram(bloomProgram);
-
-        const posAttr = gl.getAttribLocation(shaderProgram, 'a_position');
-        const dataAttr = gl.getAttribLocation(shaderProgram, 'a_data');
-        const colorUni = gl.getUniformLocation(shaderProgram, 'u_color');
-        const sizeUni = gl.getUniformLocation(shaderProgram, 'u_size');
-        const intensityUni = gl.getUniformLocation(shaderProgram, 'u_intensity');
-
-        const posAttrBloom = gl.getAttribLocation(bloomProgram, 'a_pos');
-        const texUniBloom = gl.getUniformLocation(bloomProgram, 'u_texture');
-        const texSizeUniBloom = gl.getUniformLocation(bloomProgram, 'u_texSize');
-
-        const vbo = gl.createBuffer();
-        const glDataArray = new Float32Array(CONFIG.fftSize * 30);
-        const quadVBO = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0]), gl.STATIC_DRAW);
-
-        let fbo = gl.createFramebuffer(), fboTexture = gl.createTexture(), currentFboWidth = 0, currentFboHeight = 0;
-
-        function resizeFBO(w, h) {
-            gl.bindTexture(gl.TEXTURE_2D, fboTexture);
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, fboTexture, 0);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        }
-
-        gl.enable(gl.BLEND);
-        gl.blendFunc(gl.ONE, gl.ONE);
-
-        function resize() {
-            const dpr = window.devicePixelRatio || 1;
-            const rect = DOM.oscilloscope.parentElement.getBoundingClientRect();
-            DOM.oscilloscope.width = rect.width * dpr;
-            DOM.oscilloscope.height = rect.height * dpr;
-            DOM.glCanvas.width = rect.width * dpr;
-            DOM.glCanvas.height = rect.height * dpr;
-            ctx2d.setTransform(dpr, 0, 0, dpr, 0, 0);
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        /**
-         * 4. 硬件路由与音频上下文管理
-         */
-        let audioCtx, splitter, merger, micSource = null, micStream = null;
-        let fileSourceNode = null, musicGainNode = null;
-        let awgOsc1 = null, awgGain1 = null, awgOsc2 = null, awgGain2 = null, awgSpeakerGain = null;
-        let analyserL_DC, analyserR_DC, analyserL_AC, analyserR_AC, ch1Mixer, ch2Mixer;
-        let dataL = new Float32Array(CONFIG.fftSize), dataR = new Float32Array(CONFIG.fftSize);
-        let dataMath = new Float32Array(CONFIG.fftSize), pData1 = new Float32Array(CONFIG.fftSize), pData2 = new Float32Array(CONFIG.fftSize);
-
-        function initAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: CONFIG.sampleRate, latencyHint: 'interactive' });
-                ch1Mixer = audioCtx.createGain();
-                ch2Mixer = audioCtx.createGain();
-
-                analyserL_DC = audioCtx.createAnalyser(); analyserL_DC.fftSize = CONFIG.fftSize;
-                analyserR_DC = audioCtx.createAnalyser(); analyserR_DC.fftSize = CONFIG.fftSize;
-                analyserL_AC = audioCtx.createAnalyser(); analyserL_AC.fftSize = CONFIG.fftSize;
-                analyserR_AC = audioCtx.createAnalyser(); analyserR_AC.fftSize = CONFIG.fftSize;
-
-                let hpL = audioCtx.createBiquadFilter(); hpL.type = 'highpass'; hpL.frequency.value = 10;
-                let hpR = audioCtx.createBiquadFilter(); hpR.type = 'highpass'; hpR.frequency.value = 10;
-
-                ch1Mixer.connect(analyserL_DC); ch1Mixer.connect(hpL); hpL.connect(analyserL_AC);
-                ch2Mixer.connect(analyserR_DC); ch2Mixer.connect(hpR); hpR.connect(analyserR_AC);
-
-                window.dcBias1 = audioCtx.createConstantSource(); window.dcBias1.offset.value = 0.000001;
-                window.dcBias1.connect(ch1Mixer); window.dcBias1.start();
-                window.dcBias2 = audioCtx.createConstantSource(); window.dcBias2.offset.value = 0.000001;
-                window.dcBias2.connect(ch2Mixer); window.dcBias2.start();
-
-                splitter = audioCtx.createChannelSplitter(2);
-                splitter.connect(ch1Mixer, 0); splitter.connect(ch2Mixer, 1);
-
-                merger = audioCtx.createChannelMerger(2);
-                awgSpeakerGain = audioCtx.createGain(); awgSpeakerGain.gain.value = 0;
-                merger.connect(awgSpeakerGain); awgSpeakerGain.connect(audioCtx.destination);
-
-                musicGainNode = audioCtx.createGain(); musicGainNode.gain.value = 1;
-                musicGainNode.connect(splitter); musicGainNode.connect(audioCtx.destination);
-            }
-        }
-
-        function ensureFileRouting() {
-            initAudio();
-            if (!fileSourceNode) {
-                fileSourceNode = audioCtx.createMediaElementSource(DOM.audioPlayer);
-                fileSourceNode.connect(splitter);
-                fileSourceNode.connect(audioCtx.destination);
-            }
-        }
-
-        function rebuildChannel(ch) {
-            let type = DOM['genType' + ch].value;
-            let target = ch === 1 ? ch1Mixer : ch2Mixer;
-
-            if (ch === 1 && awgOsc1) {
-                awgOsc1.stop(); awgOsc1.disconnect(); awgOsc1 = null;
-                if (awgGain1) { awgGain1.disconnect(); awgGain1 = null; }
-            }
-            if (ch === 2 && awgOsc2) {
-                awgOsc2.stop(); awgOsc2.disconnect(); awgOsc2 = null;
-                if (awgGain2) { awgGain2.disconnect(); awgGain2 = null; }
-            }
-
-            if (type === 'off') return;
-
-            let freq = parseFloat(DOM['numGenFreq' + ch].value);
-            let amp = parseFloat(DOM['knobGenAmp' + ch].value);
-
-            let osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-            gain.gain.value = amp;
-            osc.type = type;
-            osc.frequency.value = freq;
-            osc.connect(gain);
-            gain.connect(target);
-            gain.connect(merger, 0, ch === 1 ? 0 : 1);
-            osc.start();
-
-            if (ch === 1) {
-                awgOsc1 = osc; awgGain1 = gain;
-            } else {
-                awgOsc2 = osc; awgGain2 = gain;
-            }
-        }
-
-        function updateAWG(ch, freq) {
-            initAudio();
-            let otherCh = ch === 1 ? 2 : 1;
-            let type = DOM['genType' + ch].value;
-            let otherType = DOM['genType' + otherCh].value;
-            let otherFreqElem = DOM['numGenFreq' + otherCh];
-            let otherFreq = otherFreqElem ? parseFloat(otherFreqElem.value) : 0;
-            let lock = (type !== 'off' && otherType !== 'off' && Math.abs(freq - otherFreq) < 0.5);
-
-            if (lock) {
-                if (window._lockActive && window._lockFreq === freq && window._lockType1 === type && window._lockType2 === otherType) return;
-
-                if (awgOsc1) { awgOsc1.stop(); awgOsc1.disconnect(); awgOsc1 = null; }
-                if (awgOsc2) { awgOsc2.stop(); awgOsc2.disconnect(); awgOsc2 = null; }
-                if (awgGain1) { awgGain1.disconnect(); awgGain1 = null; }
-                if (awgGain2) { awgGain2.disconnect(); awgGain2 = null; }
-
-                let baseTime = audioCtx.currentTime + 0.01;
-
-                let osc1 = audioCtx.createOscillator();
-                osc1.type = type; osc1.frequency.value = freq;
-                let gain1 = audioCtx.createGain();
-                gain1.gain.value = parseFloat(DOM.knobGenAmp1.value);
-                osc1.connect(gain1); gain1.connect(ch1Mixer); gain1.connect(merger, 0, 0);
-                osc1.start(baseTime);
-                awgOsc1 = osc1; awgGain1 = gain1;
-
-                let osc2 = audioCtx.createOscillator();
-                osc2.type = otherType; osc2.frequency.value = freq;
-                let gain2 = audioCtx.createGain();
-                gain2.gain.value = parseFloat(DOM.knobGenAmp2.value);
-                osc2.connect(gain2); gain2.connect(ch2Mixer); gain2.connect(merger, 0, 1);
-                osc2.start(baseTime + 0.25 / freq);
-                awgOsc2 = osc2; awgGain2 = gain2;
-
-                window._lockActive = true;
-                window._lockFreq = freq;
-                window._lockType1 = type;
-                window._lockType2 = otherType;
-                return;
-            }
-
-            if (window._lockActive) {
-                if (awgOsc1) { awgOsc1.stop(); awgOsc1.disconnect(); awgOsc1 = null; }
-                if (awgOsc2) { awgOsc2.stop(); awgOsc2.disconnect(); awgOsc2 = null; }
-                if (awgGain1) { awgGain1.disconnect(); awgGain1 = null; }
-                if (awgGain2) { awgGain2.disconnect(); awgGain2 = null; }
-                window._lockActive = false;
-                rebuildChannel(1);
-                rebuildChannel(2);
-                return;
-            }
-            rebuildChannel(ch);
-        }
-
-        const bindFreqControl = (ch) => {
-            const slider = DOM[`knobGenFreq${ch}`], numBox = DOM[`numGenFreq${ch}`];
-            slider.addEventListener('input', (e) => {
-                let freq = Math.round(Math.pow(10, e.target.value / 100));
-                numBox.value = freq;
-                updateAWG(ch, freq);
-            });
-            numBox.addEventListener('change', (e) => {
-                let freq = parseFloat(e.target.value);
-                if (isNaN(freq) || freq < 1) freq = 1;
-                let maxFreq = CONFIG.sampleRate / 2;
-                if (freq > maxFreq) freq = maxFreq;
-                numBox.value = freq;
-                slider.value = Math.log10(freq) * 100;
-                updateAWG(ch, freq);
-            });
-            DOM[`genType${ch}`].addEventListener('change', () => {
-                updateAWG(ch, parseFloat(numBox.value));
-            });
-        };
-        bindFreqControl(1);
-        bindFreqControl(2);
-
-        const bindAmpControl = (ch) => {
-            const slider = DOM[`knobGenAmp${ch}`], numBox = DOM[`numGenAmp${ch}`];
-
-            slider.addEventListener('input', (e) => {
-                let amp = parseFloat(e.target.value);
-                numBox.value = amp.toFixed(2);
-                if (ch === 1 && awgGain1) awgGain1.gain.setValueAtTime(amp, audioCtx.currentTime);
-                if (ch === 2 && awgGain2) awgGain2.gain.setValueAtTime(amp, audioCtx.currentTime);
-            });
-
-            numBox.addEventListener('change', (e) => {
-                let amp = parseFloat(e.target.value);
-                if (isNaN(amp) || amp < 0) amp = 0;
-                if (amp > 20) amp = 20;
-
-                numBox.value = amp.toFixed(2);
-                slider.value = amp;
-
-                if (ch === 1 && awgGain1) awgGain1.gain.setValueAtTime(amp, audioCtx.currentTime);
-                if (ch === 2 && awgGain2) awgGain2.gain.setValueAtTime(amp, audioCtx.currentTime);
-            });
-        };
-        bindAmpControl(1);
-        bindAmpControl(2);
-
-        DOM.btnAwgSpk.addEventListener('click', function () {
-            initAudio();
-            STATE.awgMonitor = !STATE.awgMonitor;
-            if (STATE.awgMonitor) {
-                this.style.color = '#4ade80';
-                this.innerText = '🔊 扬声器: 开';
-                awgSpeakerGain.gain.value = 1.0;
-            } else {
-                this.style.color = '#6b7280';
-                this.innerText = '🔈 扬声器: 关';
-                awgSpeakerGain.gain.value = 0;
-            }
-        });
-
-        const unlockAudio = () => {
-            initAudio();
-            rebuildChannel(1);
-            rebuildChannel(2);
-            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-            document.removeEventListener('click', unlockAudio);
-        };
-        document.addEventListener('click', unlockAudio);
-
-        /**
-         * 5. 信号处理与波形测量
-         */
-        function findTriggerIndex(data, ptsNeeded, offset, targetLevel) {
-            const dir = STATE.trigger.edge, hys = 0.02;
-
-            // 🚀 核心修复 1：永远在物理内存的最中心（16384附近）寻找触发点
-            // 这样无论你怎么放大缩小，中心点左右两边都永远有绝对充裕的数据！
-            let searchEnd = Math.floor(CONFIG.fftSize / 2) + 2000;
-            let searchStart = 1000;
-
-            if (searchEnd <= searchStart || searchEnd >= CONFIG.fftSize) return -1;
-
-            for (let i = searchEnd - 1; i >= searchStart; i--) {
-                let curr = data[i], prev = data[i - 1];
-                if (dir === 1 && prev < targetLevel && curr >= targetLevel) {
-                    let isReal = false;
-                    for (let j = i - 1; j >= Math.max(0, i - 16000); j--) { if (data[j] <= targetLevel - hys) { isReal = true; break; } if (data[j] >= targetLevel) break; }
-                    if (isReal) return (i - 1) + (curr - prev !== 0 ? (targetLevel - prev) / (curr - prev) : 0);
-                }
-                if (dir === -1 && prev > targetLevel && curr <= targetLevel) {
-                    let isReal = false;
-                    for (let j = i - 1; j >= Math.max(0, i - 16000); j--) { if (data[j] >= targetLevel + hys) { isReal = true; break; } if (data[j] <= targetLevel) break; }
-                    if (isReal) return (i - 1) + (curr - prev !== 0 ? (targetLevel - prev) / (curr - prev) : 0);
-                }
-            }
-            return -1;
-        }
-
-        function processData(rawArray, stateObj, out) {
-            if (stateObj.cpl === 'GND') { out.fill(0); return; }
-            const ndcPerDiv = 2.0 / CONFIG.gridY;
-            for (let i = 0; i < rawArray.length; i++) {
-                out[i] = rawArray[i] * stateObj.scale * ndcPerDiv + stateObj.pos;
-            }
-        }
-
-        function updateMeasurements(ch1Raw, ch2Raw) {
-            if (!STATE.measure) return;
-            const scanLen = 8000;
-            const calc = (arr, cpl) => {
-                let max = -999, min = 999, crossings = 0, offset = 0;
-                if (cpl === 'AC') {
-                    let sum = 0;
-                    for (let i = 0; i < scanLen && i < arr.length; i++) sum += arr[i];
-                    offset = sum / scanLen;
-                }
-                let prevVal = arr[0] - offset;
-                for (let i = 1; i < scanLen && i < arr.length; i++) {
-                    let val = arr[i] - offset;
-                    if (val > max) max = val;
-                    if (val < min) min = val;
-                    if (prevVal < 0 && val >= 0) crossings++;
-                    prevVal = val;
-                }
-                return {
-                    vpp: (max === -999) ? '0.00 V' : (max - min).toFixed(2) + ' V',
-                    freq: crossings > 1 ? (crossings * (CONFIG.sampleRate / scanLen)).toFixed(0) + ' Hz' : '0 Hz'
-                };
-            };
-
-            let r1 = calc(ch1Raw, STATE.ch1.cpl), r2 = calc(ch2Raw, STATE.ch2.cpl);
-
-            if (CACHE.mCh1Vpp !== r1.vpp) { DOM.measCh1Vpp.innerText = r1.vpp; CACHE.mCh1Vpp = r1.vpp; }
-            if (CACHE.mCh1Freq !== r1.freq) { DOM.measCh1Freq.innerText = r1.freq; CACHE.mCh1Freq = r1.freq; }
-            if (CACHE.mCh2Vpp !== r2.vpp) { DOM.measCh2Vpp.innerText = r2.vpp; CACHE.mCh2Vpp = r2.vpp; }
-            if (CACHE.mCh2Freq !== r2.freq) { DOM.measCh2Freq.innerText = r2.freq; CACHE.mCh2Freq = r2.freq; }
-        }
-
-        let lastTime = performance.now(), frameCount = 0;
-        let fpsNode = document.createElement('div');
-        fpsNode.style = "position:absolute; top:10px; left:10px; color:#00ff00; font-weight:bold; font-family:monospace; z-index:9999;";
-        document.body.appendChild(fpsNode);
-
-        /**
-         * 6. 界面事件监听器绑定 (包含全新的百分比视口平移)
-         */
-        DOM.btnRunstop.addEventListener('click', function () {
-            STATE.run = !STATE.run;
-            if (STATE.run) {
-                this.classList.remove('stopped');
-                DOM.osdRunState.innerText = "run";
-                DOM.osdRunState.style.background = "#22c55e";
-                DOM.osdRunState.style.color = "#000";
-            } else {
-                this.classList.add('stopped');
-                DOM.osdRunState.innerText = "stop";
-                DOM.osdRunState.style.background = "#ef4444";
-                DOM.osdRunState.style.color = "#fff";
-            }
-        });
-
-        const bindToggle = (domEl, prop, cb) => {
-            domEl.addEventListener('click', () => {
-                prop.on = !prop.on;
-                domEl.classList.toggle('active', prop.on);
-                if (cb) cb();
-            });
-        }
-
-        bindToggle(DOM.btnCh1, STATE.ch1);
-        bindToggle(DOM.btnCh2, STATE.ch2);
-        bindToggle(DOM.btnMath, STATE.math, () => {
-            DOM.osdMathBox.style.display = STATE.math.on ? 'flex' : 'none';
-        });
-
-        DOM.btnXy.addEventListener('click', function () {
-            STATE.mode = 'XY';
-            this.classList.add('active');
-            DOM.btnDisplay.classList.remove('active');
-        });
-
-        DOM.btnDisplay.addEventListener('click', function () {
-            STATE.mode = 'YT';
-            this.classList.add('active');
-            DOM.btnXy.classList.remove('active');
-        });
-
-        DOM.btnMeasure.addEventListener('click', function () {
-            STATE.measure = !STATE.measure;
-            this.classList.toggle('active');
-            DOM.measurePanel.style.display = STATE.measure ? 'flex' : 'none';
-        });
-
-        DOM.btnCursors.addEventListener('click', function () {
-            STATE.cursor.mode = (STATE.cursor.mode + 1) % 3;
-            this.innerText = ['光标: 关', '光标: Y轴(电压)', '光标: X轴(时间)'][STATE.cursor.mode];
-            if (STATE.cursor.mode === 0) {
-                this.classList.remove('active');
-                this.style.color = '#d1d5db';
-            } else if (STATE.cursor.mode === 1) {
-                this.classList.add('active');
-                this.style.color = '#a855f7';
-            } else {
-                this.classList.add('active');
-                this.style.color = '#38bdf8';
-            }
-        });
-
-        DOM.btnTrigEn.addEventListener('click', function () {
-            STATE.trigger.enabled = !STATE.trigger.enabled;
-            if (STATE.trigger.enabled) {
-                this.innerText = '触发: 开';
-                this.style.color = '#4ade80';
-                this.classList.add('active');
-            } else {
-                this.innerText = '触发: 关';
-                this.style.color = '#d1d5db';
-                this.classList.remove('active');
-                window._frozenTriggerIdx = -1;
-            }
-        });
-
-        const bindKnob = (domInput, domLbl, domOsd, fmt, act) => {
-            domInput.addEventListener('input', (e) => {
-                let v = parseFloat(e.target.value);
-                if (domLbl) domLbl.innerText = fmt(v);
-                if (domOsd) domOsd.innerText = fmt(v);
-                act(v);
-            });
-        }
-
-        // 🚀 CH1 新的绑定逻辑
-        bindKnob(DOM.knobPos1, DOM.lblPos1, null, v => v.toFixed(2), v => STATE.ch1.pos = v);
-        DOM.numScale1.addEventListener('change', (e) => {
-            let v = parseFloat(e.target.value);
-            if (isNaN(v) || v <= 0) v = 0.25; // 防护：非法值恢复到 0.25
-            e.target.value = v.toFixed(2);
-            STATE.ch1.scale = 1 / v;
-            DOM.osdCh1Scale.innerText = v.toFixed(2) + 'V';
-            updateTriggerUI();
-        });
-        DOM.cplCh1.addEventListener('change', e => { STATE.ch1.cpl = e.target.value; DOM.osdCpl1.innerText = e.target.value; });
-
-        // 🚀 CH2 新的绑定逻辑
-        bindKnob(DOM.knobPos2, DOM.lblPos2, null, v => v.toFixed(2), v => STATE.ch2.pos = v);
-        DOM.numScale2.addEventListener('change', (e) => {
-            let v = parseFloat(e.target.value);
-            if (isNaN(v) || v <= 0) v = 0.25;
-            e.target.value = v.toFixed(2);
-            STATE.ch2.scale = 1 / v;
-            DOM.osdCh2Scale.innerText = v.toFixed(2) + 'V';
-            updateTriggerUI();
-        });
-        DOM.cplCh2.addEventListener('change', e => { STATE.ch2.cpl = e.target.value; DOM.osdCpl2.innerText = e.target.value; });
-
-        // 视口水平平移 (0-100% 百分比)
-        bindKnob(DOM.knobHpos, DOM.lblHpos, null, v => v.toFixed(1) + '%', v => STATE.hpos = v);
-
-        DOM.knobTimebase.addEventListener('input', (e) => {
-            let v = parseFloat(e.target.value);
-            let maxMemoryMs = (CONFIG.fftSize / (CONFIG.sampleRate / 1000)) * 0.9;
-            let maxSecPerDiv = maxMemoryMs / CONFIG.gridX;
-            if (v > maxSecPerDiv) v = maxSecPerDiv;
-            DOM.osdTimebase.innerText = v.toFixed(1) + 'ms';
-            if (DOM.lblTimebase) DOM.lblTimebase.innerText = v.toFixed(1) + 'ms';
-            STATE.secPerDiv = v;
-        });
-
-        DOM.trigSrc.addEventListener('change', e => {
-            STATE.trigger.src = e.target.value;
-            DOM.osdTriggerSrc.innerText = e.target.value;
-            updateTriggerUI();
-        });
-
-        DOM.btnEdge.addEventListener('click', function () {
-            STATE.trigger.edge *= -1;
-            this.innerText = '边沿: ' + (STATE.trigger.edge === 1 ? '↗ 上升沿' : '↘ 下降沿');
-            DOM.osdTriggerEdge.innerText = STATE.trigger.edge === 1 ? '↗' : '↘';
-        });
-
-        DOM.knobTlevel.addEventListener('input', (e) => {
-            let v = parseFloat(e.target.value);
-            STATE.trigger.level = v;
-            DOM.lblTlevel.innerText = v.toFixed(2) + 'V';
-            DOM.osdTriggerLevel.innerText = v.toFixed(2) + 'V';
-        });
-
-        DOM.btnAutoset.addEventListener('click', () => {
-            // 复位 POS
-            ['pos1', 'pos2'].forEach(k => {
-                DOM['knob' + k.charAt(0).toUpperCase() + k.slice(1)].value = 0;
-                DOM['lbl' + k.charAt(0).toUpperCase() + k.slice(1)].innerText = '0.00';
-            });
-
-            // 复位 SCALE 为 0.25
-            ['scale1', 'scale2'].forEach((k, i) => {
-                let numDom = DOM['num' + k.charAt(0).toUpperCase() + k.slice(1)];
-                numDom.value = '0.25';
-                DOM['osdCh' + (i + 1) + 'Scale'].innerText = '0.25V';
-                STATE['ch' + (i + 1)].scale = 4.0;
-            });
-
-            STATE.ch1.pos = 0;
-            STATE.ch2.pos = 0;
-
-            STATE.trigger.level = 0;
-            DOM.knobTlevel.value = 0;
-            DOM.lblTlevel.innerText = '0.00V';
-
-            STATE.hpos = 50;
-            DOM.knobHpos.value = 50;
-            DOM.lblHpos.innerText = '50.0%';
-
-            DOM.osdTriggerLevel.innerText = '0.00V';
-            DOM.knobTimebase.value = 5;
-            STATE.secPerDiv = 5;
-            DOM.osdTimebase.innerText = '5.0ms';
-            if (DOM.lblTimebase) DOM.lblTimebase.innerText = '5.0ms';
-
-            updateTriggerUI();
-            if (!STATE.run) DOM.btnRunstop.click();
-        });
-
-        // 视口水平平移 (0-100% 百分比)
-        bindKnob(DOM.knobHpos, DOM.lblHpos, null, v => v.toFixed(1) + '%', v => STATE.hpos = v);
-
-        DOM.knobTimebase.addEventListener('input', (e) => {
-            let v = parseFloat(e.target.value);
-            let maxMemoryMs = (CONFIG.fftSize / (CONFIG.sampleRate / 1000)) * 0.9;
-            let maxSecPerDiv = maxMemoryMs / CONFIG.gridX;
-            if (v > maxSecPerDiv) v = maxSecPerDiv;
-            DOM.osdTimebase.innerText = v.toFixed(1) + 'ms';
-            if (DOM.lblTimebase) DOM.lblTimebase.innerText = v.toFixed(1) + 'ms';
-            STATE.secPerDiv = v;
-        });
-
-        DOM.trigSrc.addEventListener('change', e => {
-            STATE.trigger.src = e.target.value;
-            DOM.osdTriggerSrc.innerText = e.target.value;
-            updateTriggerUI();
-        });
-
-        DOM.btnEdge.addEventListener('click', function () {
-            STATE.trigger.edge *= -1;
-            this.innerText = '边沿: ' + (STATE.trigger.edge === 1 ? '↗ 上升沿' : '↘ 下降沿');
-            DOM.osdTriggerEdge.innerText = STATE.trigger.edge === 1 ? '↗' : '↘';
-        });
-
-        DOM.knobTlevel.addEventListener('input', (e) => {
-            let v = parseFloat(e.target.value);
-            STATE.trigger.level = v;
-            DOM.lblTlevel.innerText = v.toFixed(2) + 'V';
-            DOM.osdTriggerLevel.innerText = v.toFixed(2) + 'V';
-        });
-
-        DOM.btnAutoset.addEventListener('click', () => {
-            ['pos1', 'pos2', 'tlevel'].forEach(k => {
-                DOM['knob' + k.charAt(0).toUpperCase() + k.slice(1)].value = 0;
-                DOM['lbl' + k.charAt(0).toUpperCase() + k.slice(1)].innerText = '0';
-            });
-            ['scale1', 'scale2'].forEach((k, i) => {
-                DOM['knob' + k.charAt(0).toUpperCase() + k.slice(1)].value = 1;
-                DOM['osdCh' + (i + 1) + 'Scale'].innerText = '1.00V';
-                if (DOM['lbl' + k.charAt(0).toUpperCase() + k.slice(1)]) DOM['lbl' + k.charAt(0).toUpperCase() + k.slice(1)].innerText = '1.00V';
-                STATE['ch' + (i + 1)].scale = 1;
-            });
-
-            STATE.ch1.pos = 0;
-            STATE.ch2.pos = 0;
-            STATE.trigger.level = 0;
-
-            // 🚀 Autoset 时恢复视口居中
-            STATE.hpos = 50;
-            DOM.knobHpos.value = 50;
-            DOM.lblHpos.innerText = '50.0%';
-
-            DOM.osdTriggerLevel.innerText = '0.00V';
-            DOM.knobTimebase.value = 5;
-            STATE.secPerDiv = 5;
-            DOM.osdTimebase.innerText = '5.0ms';
-            if (DOM.lblTimebase) DOM.lblTimebase.innerText = '5.0ms';
-
-            updateTriggerUI();
-            if (!STATE.run) DOM.btnRunstop.click();
-        });
-
-
-        DOM.btnMic.addEventListener('click', async function () {
-            initAudio();
-            if (audioCtx.state === 'suspended') await audioCtx.resume();
-            if (micSource) {
-                micSource.disconnect();
-                if (micStream) micStream.getTracks().forEach(t => t.stop());
-                micSource = null; micStream = null;
-                this.style.background = '#2a2d35';
-                this.innerText = '声卡输入';
-                return;
-            }
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                return showSysModal('环境不支持', '当前浏览器禁止在非 HTTPS 下获取物理音频。');
-            }
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: { ideal: 2 }, echoCancellation: false, noiseSuppression: false, autoGainControl: false, latency: 0 } });
-                micStream = stream;
-                micSource = audioCtx.createMediaStreamSource(stream);
-                micSource.channelCount = 2;
-                micSource.channelCountMode = 'explicit';
-                micSource.connect(splitter);
-                this.style.background = '#2563eb';
-                this.innerText = '已连接';
-            } catch (e) {
-                showSysModal('设备连接失败', e.message);
-            }
-        });
-
-        const getNDC = (e) => {
-            const rect = DOM.glCanvas.getBoundingClientRect();
-            let cX = e.clientX, cY = e.clientY;
-            if (e.touches && e.touches.length > 0) {
-                cX = e.touches[0].clientX;
-                cY = e.touches[0].clientY;
-            }
-            return { x: (cX - rect.left) / rect.width * 2.0 - 1.0, y: -((cY - rect.top) / rect.height * 2.0 - 1.0) };
-        };
-
-        const startCursorDrag = (e) => {
-            if (STATE.cursor.mode === 0) return;
-            const { x, y } = getNDC(e);
-            const thr = 0.15;
-            if (STATE.cursor.mode === 1) {
-                if (Math.abs(y - STATE.cursor.v1) < thr) STATE.cursor.dragging = 'v1';
-                else if (Math.abs(y - STATE.cursor.v2) < thr) STATE.cursor.dragging = 'v2';
-            } else if (STATE.cursor.mode === 2) {
-                if (Math.abs(x - STATE.cursor.t1) < thr) STATE.cursor.dragging = 't1';
-                else if (Math.abs(x - STATE.cursor.t2) < thr) STATE.cursor.dragging = 't2';
-            }
-        };
-
-        const doCursorDrag = (e) => {
-            if (!STATE.cursor.dragging) return;
-            e.preventDefault();
-            const { x, y } = getNDC(e);
-            if (STATE.cursor.dragging.startsWith('v')) {
-                STATE.cursor[STATE.cursor.dragging] = Math.max(-1, Math.min(1, y));
-            } else {
-                STATE.cursor[STATE.cursor.dragging] = Math.max(-1, Math.min(1, x));
-            }
-        };
-        const endCursorDrag = () => { STATE.cursor.dragging = null; };
-
-        DOM.glCanvas.addEventListener('mousedown', startCursorDrag);
-        window.addEventListener('mousemove', doCursorDrag, { passive: false });
-        window.addEventListener('mouseup', endCursorDrag);
-        DOM.glCanvas.addEventListener('touchstart', startCursorDrag, { passive: true });
-        window.addEventListener('touchmove', doCursorDrag, { passive: false });
-        window.addEventListener('touchend', endCursorDrag);
-
-        let audioBuffer = null, bufferSource = null, startTime = 0, startOffset = 0, isSeeking = false, isMusicPlaying = false;
-
-        function getLogSpeed(sliderVal) {
-            const spd = 0.001 * Math.pow((2.0 / 0.001), sliderVal / 100);
-            return (spd > 0.97 && spd < 1.03) ? 1.0 : spd;
-        }
-
-        function getCurrentTime() {
-            if (!isMusicPlaying || !audioBuffer || !bufferSource || audioCtx.state !== 'running') return startOffset;
-            return (startOffset + (audioCtx.currentTime - startTime) * bufferSource.playbackRate.value) % audioBuffer.duration;
-        }
-
-        function fetchWithProgress(url, onProgress) {
-            return new Promise((resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.open('GET', url);
-                xhr.responseType = 'arraybuffer';
-                xhr.onprogress = (e) => {
-                    if (e.lengthComputable) onProgress(Math.floor((e.loaded / e.total) * 100));
-                };
-                xhr.onload = () => resolve(xhr.response);
-                xhr.onerror = () => reject(new Error("网络请求失败"));
-                xhr.send();
-            });
-        }
-
-        async function playBuffer(fileOrUrl, offset = 0) {
-            initAudio();
-            const overlay = document.getElementById('audio-loading-overlay');
-            const progressBar = document.getElementById('audio-progress-bar');
-            const loadingText = document.getElementById('audio-loading-text');
-
-            try {
-                if (fileOrUrl) {
-                    overlay.style.display = 'flex';
-                    DOM.btnAudioToggle.disabled = true;
-
-                    let arrayBuffer;
-                    if (typeof fileOrUrl === 'string') {
-                        arrayBuffer = await fetchWithProgress(fileOrUrl, (percent) => {
-                            progressBar.style.width = percent + '%';
-                            loadingText.innerText = `下载中... ${percent}%`;
-                        });
-                        loadingText.innerText = "解码音频中...";
-                    } else {
-                        loadingText.innerText = "读取本地文件...";
-                        arrayBuffer = await fileOrUrl.arrayBuffer();
-                    }
-                    audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-                }
-
-                if (!audioBuffer) return;
-
-                if (bufferSource) {
-                    try { bufferSource.stop(); } catch (e) { }
-                    bufferSource.disconnect();
-                }
-
-                bufferSource = audioCtx.createBufferSource();
-                bufferSource.buffer = audioBuffer;
-                bufferSource.loop = true;
-                bufferSource.playbackRate.value = getLogSpeed(parseFloat(DOM.knobAudioSpeed.value));
-
-                startOffset = offset;
-                startTime = audioCtx.currentTime;
-                isMusicPlaying = true;
-
-                bufferSource.connect(musicGainNode);
-                bufferSource.start(0, offset % audioBuffer.duration);
-                if (audioCtx.state === 'suspended') await audioCtx.resume();
-
-            } catch (err) {
-                showSysModal('加载失败', err.message);
-            } finally {
-                overlay.style.display = 'none';
-                progressBar.style.width = '0%';
-                DOM.btnAudioToggle.innerText = ' ⏸ ';
-                DOM.btnAudioToggle.disabled = false;
-            }
-        }
-
-        DOM.audioSeekBar.addEventListener('input', () => { isSeeking = true; });
-        DOM.audioSeekBar.addEventListener('change', (e) => {
-            if (!audioBuffer) return;
-            playBuffer(null, (parseFloat(e.target.value) / 100) * audioBuffer.duration);
-            isSeeking = false;
-        });
-
-        DOM.knobAudioSpeed.addEventListener('input', function (e) {
-            let speed = getLogSpeed(parseFloat(e.target.value));
-            DOM.lblAudioSpeed.innerText = (speed < 0.01 ? speed.toFixed(3) : speed.toFixed(2)) + 'x';
-            if (bufferSource && isMusicPlaying) {
-                startOffset = getCurrentTime();
-                startTime = audioCtx.currentTime;
-                bufferSource.playbackRate.value = speed;
-            }
-        });
-
-        DOM.fileSelect.addEventListener('change', function (e) {
-            const val = e.target.value;
-            if (!val) return;
-            if (val === 'LOCAL') {
-                DOM.fileInput.click();
-            } else {
-                playBuffer(val);
-            }
-            e.target.selectedIndex = 0;
-        });
-
-        DOM.fileInput.addEventListener('change', function () {
-            if (this.files[0]) playBuffer(this.files[0]);
-        });
-
-        DOM.btnAudioToggle.addEventListener('click', function () {
-            if (!audioBuffer) return;
-            if (isMusicPlaying) {
-                let cur = getCurrentTime();
-                if (bufferSource) {
-                    try { bufferSource.stop(); } catch (e) { }
-                    bufferSource.disconnect();
-                    bufferSource = null;
-                }
-                startOffset = cur;
-                isMusicPlaying = false;
-                this.innerText = ' ▶ ';
-            } else {
-                playBuffer(null, startOffset);
-            }
-        });
-
-        DOM.knobAudioSpeed.dispatchEvent(new Event('input'));
-        DOM.cplCh1.dispatchEvent(new Event('change'));
-        DOM.cplCh2.dispatchEvent(new Event('change'));
-        updateTriggerUI();
-
-        window.SerialEngine = {
-            isActive: false,
-            bufferSize: 32768,
-            head: 0,
-            simTimer: null,
-            port: null,
-            reader: null,
-            keepReading: false,
-            ring1_DC: new Float32Array(32768),
-            ring2_DC: new Float32Array(32768),
-            ring1_AC: new Float32Array(32768),
-            ring2_AC: new Float32Array(32768),
-            acY1: 0, acX1: 0, acY2: 0, acX2: 0,
-
-            pushSample: function (v1, v2) {
-                this.ring1_DC[this.head] = v1;
-                this.ring2_DC[this.head] = v2;
-                let alpha = 0.9999;
-
-                this.acY1 = alpha * (this.acY1 + v1 - this.acX1);
-                this.acX1 = v1;
-                this.ring1_AC[this.head] = this.acY1;
-
-                this.acY2 = alpha * (this.acY2 + v2 - this.acX2);
-                this.acX2 = v2;
-                this.ring2_AC[this.head] = this.acY2;
-
-                this.head = (this.head + 1) % this.bufferSize;
-            },
-
-            fillData: function (out1, out2, cpl1, cpl2) {
-                let s = out1.length;
-                let r1 = cpl1 === 'AC' ? this.ring1_AC : this.ring1_DC;
-                let r2 = cpl2 === 'AC' ? this.ring2_AC : this.ring2_DC;
-                for (let i = 0; i < s; i++) {
-                    let r = (this.head - s + i + this.bufferSize) % this.bufferSize;
-                    out1[i] = r1[r];
-                    out2[i] = r2[r];
-                }
-            },
-
-            stopAll: async function () {
-                this.isActive = false;
-                if (this.simTimer) clearInterval(this.simTimer);
-                this.keepReading = false;
-
-                if (this.reader) {
-                    try { await this.reader.cancel(); } catch (e) { }
-                    this.reader = null;
-                }
-                if (this.port) {
-                    try { await this.port.close(); } catch (e) { }
-                    this.port = null;
-                }
-
-                DOM.btnSerialSim.innerText = '测试源';
-                DOM.btnSerialReal.innerText = '串口输入';
-                DOM.osdSamplerate.innerText = (CONFIG.sampleRate / 1000).toFixed(1) + 'kSa/s (Audio)';
-            },
-
-            startSimulator: function () {
-                this.stopAll();
-                this.isActive = true;
-                DOM.btnSerialSim.innerText = '⏹ 停止测试';
-                DOM.osdSamplerate.innerText = '10.0kSa/s (SIM)';
-                let p = 0;
-                this.simTimer = setInterval(() => {
-                    for (let i = 0; i < 100; i++) {
-                        p += 0.05;
-                        this.pushSample(Math.sin(p) * 0.8, Math.cos(p) * 0.8);
-                    }
-                }, 10);
-            },
-
-            startSerial: async function () {
-                if (!('serial' in navigator)) return showSysModal('环境不支持', '当前浏览器不支持 Web Serial API。');
-                try {
-                    const p = await navigator.serial.requestPort();
-                    await p.open({ baudRate: 115200 });
-                    this.stopAll();
-                    this.port = p;
-                    this.isActive = true;
-                    this.keepReading = true;
-                    DOM.btnSerialReal.innerText = '⏹ 断开串口';
-                    DOM.osdSamplerate.innerText = '115.2k 波特率';
-                    this.readLoop();
-                } catch (e) {
-                    showSysModal('设备连接失败', e.message);
-                }
-            },
-
-            readLoop: async function () {
-                const dec = new TextDecoderStream();
-                this.port.readable.pipeTo(dec.writable);
-                this.reader = dec.readable.getReader();
-                let buf = '';
-
-                try {
-                    while (this.keepReading) {
-                        const { value, done } = await this.reader.read();
-                        if (done) break;
-                        if (!value) continue;
-
-                        buf += value;
-                        let lines = buf.split('\n');
-                        buf = lines.pop();
-                        for (let l of lines) {
-                            let pts = l.split(',');
-                            if (pts.length > 0) {
-                                let v1 = parseFloat(pts[0]);
-                                let v2 = pts.length > 1 ? parseFloat(pts[1]) : v1;
-                                if (!isNaN(v1)) {
-                                    this.pushSample(
-                                        Math.max(-1, Math.min(1, (v1 - 1.65) / 1.65)),
-                                        !isNaN(v2) ? Math.max(-1, Math.min(1, (v2 - 1.65) / 1.65)) : Math.max(-1, Math.min(1, (v1 - 1.65) / 1.65))
-                                    );
-                                }
-                            }
-                        }
-                    }
-                } finally {
-                    this.reader.releaseLock();
-                }
-            }
-        };
-
-        DOM.btnSerialSim.addEventListener('click', () => {
-            window.SerialEngine.isActive && DOM.btnSerialSim.innerText.includes('停止') ? window.SerialEngine.stopAll() : window.SerialEngine.startSimulator();
-        });
-
-        DOM.btnSerialReal.addEventListener('click', () => {
-            if (window.SerialEngine.isActive && DOM.btnSerialReal.innerText.includes('断开')) {
-                window.SerialEngine.stopAll();
-            } else {
-                const warningText =
-                    "【硬件接口规范与免责声明】\n\n" +
-                    "一、 物理安全与电气隔离要求\n" +
-                    "本系统为纯软件层观测工具，无任何硬件级电气隔离。严禁直接接入高于下位机 ADC 承受范围 (如 3.3V/5V) 的电压，或进行非共地测量 (如市电)。违规操作导致的瞬态浪涌或共地短路，极易击穿 PC 端 USB 控制器及主板。强烈建议使用带光耦/磁耦隔离的 USB-TTL 模块。\n\n" +
-                    "二、 数据链路层协议\n" +
-                    "1. 波特率：强制锁定为 115200 bps。\n" +
-                    "2. 数据帧格式：ASCII 明文流，格式为「CH1,CH2\\n」(例: 1.65,0.85\\n)。\n" +
-                    "3. 归一化映射：底层算法以 3.3V 系统为基准 (1.65V 中心偏置)。输入的电压浮点数将通过 (V-1.65)/1.65 映射至 WebGL 的 [-1.0, 1.0] 归一化坐标系，溢出部分将被截断。\n\n" +
-                    "三、 性能瓶颈限制\n" +
-                    "受限于 115200 波特率的物理带宽、ASCII 字符串解析开销，以及 JS 单线程 GC (垃圾回收) 机制，本模式有效采样率通常 <3kSa/s，且必定伴随微观丢帧与触发相位抖动。仅适用于超低频慢变信号 (如生理电、气压环境等) 的趋势观测。\n\n" +
-                    "点击确认即代表您已知晓上述技术局限与硬件风险。";
-                showSysModal('⚠️ 串口连接规范说明', warningText, () => {
-                    window.SerialEngine.startSerial();
-                });
-            }
-        });
-
-
-        /**
-         * 8. 完全展开、逻辑清晰的核心渲染引擎
-         */
-        function draw() {
-            frameCount++;
-            let now = performance.now();
-            if (now - lastTime >= 1000) {
-                fpsNode.innerText = `JS FPS: ${frameCount}`;
-                frameCount = 0;
-                lastTime = now;
-            }
-
-            if (STATE.power) requestAnimationFrame(draw);
-
-            if (DOM.glCanvas.width !== currentFboWidth || DOM.glCanvas.height !== currentFboHeight) {
-                currentFboWidth = DOM.glCanvas.width;
-                currentFboHeight = DOM.glCanvas.height;
-                resizeFBO(currentFboWidth, currentFboHeight);
-            }
-
-            // 清理并准备 WebGL 缓冲区
-            gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-            gl.viewport(0, 0, currentFboWidth, currentFboHeight);
-            gl.clearColor(0.0, 0.0, 0.0, 1.0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.useProgram(shaderProgram);
-
-            // 绘制 2D 背景网格
-            const w = DOM.oscilloscope.width / (window.devicePixelRatio || 1);
-            const h = DOM.oscilloscope.height / (window.devicePixelRatio || 1);
-            ctx2d.clearRect(0, 0, w, h);
-
-            const stepX = w / CONFIG.gridX;
-            const stepY = h / CONFIG.gridY;
-
-            ctx2d.save();
-            ctx2d.translate(0.5, 0.5);
-            ctx2d.strokeStyle = '#1e2920';
-            ctx2d.lineWidth = 1;
-            ctx2d.beginPath();
-
-            for (let i = 1; i < CONFIG.gridX; i++) {
-                ctx2d.moveTo(i * stepX, 0);
-                ctx2d.lineTo(i * stepX, h);
-            }
-            for (let i = 1; i < CONFIG.gridY; i++) {
-                ctx2d.moveTo(0, i * stepY);
-                ctx2d.lineTo(w, i * stepY);
-            }
-            ctx2d.stroke();
-
-            ctx2d.strokeStyle = '#2d4a30';
-            ctx2d.beginPath();
-            ctx2d.moveTo(w / 2, 0); ctx2d.lineTo(w / 2, h);
-            ctx2d.moveTo(0, h / 2); ctx2d.lineTo(w, h / 2);
-
-            for (let i = 0; i < w; i += stepX / 5) {
-                ctx2d.moveTo(i, h / 2 - 3);
-                ctx2d.lineTo(i, h / 2 + 3);
-            }
-            for (let i = 0; i < h; i += stepY / 5) {
-                ctx2d.moveTo(w / 2 - 3, i);
-                ctx2d.lineTo(w / 2 + 3, i);
-            }
-            ctx2d.stroke();
-            ctx2d.restore();
-
-            // 抓取底层真实数据
-            if (STATE.run) {
-                if (window.SerialEngine && window.SerialEngine.isActive) {
-                    window.SerialEngine.fillData(dataL, dataR, STATE.ch1.cpl, STATE.ch2.cpl);
-                } else if (audioCtx && analyserL_DC) {
-                    if (STATE.ch1.cpl === 'AC') analyserL_AC.getFloatTimeDomainData(dataL);
-                    else analyserL_DC.getFloatTimeDomainData(dataL);
-
-                    if (STATE.ch2.cpl === 'AC') analyserR_AC.getFloatTimeDomainData(dataR);
-                    else analyserR_DC.getFloatTimeDomainData(dataR);
-                }
-            }
-
-            processData(dataL, STATE.ch1, pData1);
-            processData(dataR, STATE.ch2, pData2);
-            updateMeasurements(dataL, dataR);
-
-            // 触发器与视口计算逻辑
-            let ptsPerDiv = (STATE.secPerDiv) * (CONFIG.sampleRate / 1000);
-            let ptsToShow = Math.floor(ptsPerDiv * CONFIG.gridX);
-            let trigData = STATE.trigger.src === 'CH1' ? pData1 : pData2;
-            let tScale = STATE.trigger.src === 'CH1' ? STATE.ch1.scale : STATE.ch2.scale;
-            let tPos = STATE.trigger.src === 'CH1' ? STATE.ch1.pos : STATE.ch2.pos;
-            const ndcPerDiv = 2.0 / CONFIG.gridY;
-            let mappedLevel = STATE.trigger.level * tScale * ndcPerDiv + tPos;
-
-            // 调用之前修复过的独立搜索锚点，不再随偏移漂移
-            if (STATE.trigger.enabled) {
-                if (!window._frozenTriggerIdx || STATE.run) {
-                    window._frozenTriggerIdx = findTriggerIndex(trigData, ptsToShow, 0, mappedLevel);
-                }
-            } else {
-                window._frozenTriggerIdx = -1;
-            }
-            let triggerIndexFloat = window._frozenTriggerIdx;
-
-            let anchorIdx = triggerIndexFloat !== -1 ? triggerIndexFloat : CONFIG.fftSize / 2;
-
-            // hpos (0~100) 决定了你当前屏幕的正中心，在锚点两侧多远的地方。50% 时，中心与锚点完美重合。
-            let viewCenterIdx = anchorIdx + (STATE.hpos / 100 - 0.5) * CONFIG.fftSize;
-
-            // 视口的起止点，围绕着 viewCenterIdx 展开
-            let startIdxFloat = viewCenterIdx - ptsToShow / 2;
-            let startIdxInt = Math.floor(startIdxFloat);
-            let endIdxInt = Math.ceil(startIdxFloat + ptsToShow) + 1;
-
-            // 更新顶部 OSD 触发状态
-            let curTStateTxt, curTStateColor;
-            if (!STATE.run) {
-                curTStateTxt = "Stop"; curTStateColor = "#ef4444";
-            } else if (!STATE.trigger.enabled) {
-                curTStateTxt = "Free"; curTStateColor = "#9ca3af";
-            } else if (triggerIndexFloat !== -1) {
-                curTStateTxt = "Trig'd"; curTStateColor = "#4ade80";
-            } else {
-                curTStateTxt = "Auto"; curTStateColor = "#eab308";
-            }
-
-            if (CACHE.tStateTxt !== curTStateTxt) {
-                DOM.osdTriggerState.innerText = curTStateTxt;
-                CACHE.tStateTxt = curTStateTxt;
-            }
-            if (CACHE.tStateColor !== curTStateColor) {
-                DOM.osdTriggerState.style.color = curTStateColor;
-                CACHE.tStateColor = curTStateColor;
-            }
-
-            // 绘制画布内的触发水平线和垂直标识 T
-            if (STATE.mode === 'YT' && STATE.trigger.enabled) {
-                ctx2d.strokeStyle = 'rgba(255, 165, 0, 0.4)';
-                ctx2d.setLineDash([4, 4]);
-                ctx2d.beginPath();
-
-                let ty = h / 2 - mappedLevel * (h / 2);
-                ctx2d.moveTo(0, ty);
-                ctx2d.lineTo(w, ty);
-                ctx2d.stroke();
-
-                if (triggerIndexFloat !== -1) {
-                    let tx = ((triggerIndexFloat - startIdxFloat) / ptsToShow) * w;
-                    // 只有 T 标记在屏幕内时才画，真实反映被平移走的状态
-                    if (tx >= 0 && tx <= w) {
-                        ctx2d.beginPath();
-                        ctx2d.moveTo(tx, 0);
-                        ctx2d.lineTo(tx, h);
-                        ctx2d.stroke();
-                    }
-                }
-                ctx2d.setLineDash([]);
-            }
-            // 绘制 Minimap 缩略图与高亮观察窗
-            const minimapCanvas = document.getElementById('minimap-canvas');
-            if (minimapCanvas) {
-                if (minimapCanvas.width === 0 || minimapCanvas.width !== minimapCanvas.clientWidth) {
-                    minimapCanvas.width = minimapCanvas.clientWidth;
-                    minimapCanvas.height = minimapCanvas.clientHeight;
-                }
-                const mCtx = minimapCanvas.getContext('2d');
-                const mW = minimapCanvas.width;
-                const mH = minimapCanvas.height;
-                mCtx.clearRect(0, 0, mW, mH);
-                mCtx.lineWidth = 1;
-
-                mCtx.globalCompositeOperation = 'lighter';
-
-                // 使用绝对内存坐标 (0 到 fftSize) 映射缩略图，杜绝下标越界
-                // 修复：Canvas Y轴反转Bug，使用标准上下极值连线，完美还原高频包络
-                const drawMiniTrace = (data, color) => {
-                    mCtx.strokeStyle = color;
-                    mCtx.beginPath();
-                    let minimapStep = CONFIG.fftSize / mW;
-                    let started = false;
-                    for (let x = 0; x < mW; x++) {
-                        let mIdxStart = Math.floor(x * minimapStep);
-                        let mIdxEnd = Math.floor((x + 1) * minimapStep);
-                        let min = 999, max = -999;
-                        for (let j = mIdxStart; j < mIdxEnd; j++) {
-                            let v = data[j];
-                            if (v < min) min = v;
-                            if (v > max) max = v;
-                        }
-                        if (min !== 999) {
-                            // min 对应屏幕底部(Y值大)，max 对应屏幕顶部(Y值小)
-                            let yBottom = mH / 2 - min * (mH / 2);
-                            let yTop = mH / 2 - max * (mH / 2);
-                            if (!started) { mCtx.moveTo(x, yBottom); started = true; }
-                            mCtx.lineTo(x, yBottom);
-                            mCtx.lineTo(x, yTop); // 上下极值相连，画出完整波峰波谷
-                        }
-                    }
-                    mCtx.stroke();
-                };
-
-                if (STATE.ch1.on) drawMiniTrace(pData1, 'rgba(234,179,8,0.8)');
-                if (STATE.ch2.on) drawMiniTrace(pData2, 'rgba(6,182,212,0.8)');
-
-                mCtx.globalCompositeOperation = 'source-over';
-
-                // 计算高亮区：完全抛弃边界束缚，允许负数和超大数，交由 CSS 的 overflow:hidden 自然裁切
-                let leftPercent = (startIdxFloat / CONFIG.fftSize) * 100;
-                let widthPercent = (ptsToShow / CONFIG.fftSize) * 100;
-
-                let highlightDiv = document.getElementById('minimap-highlight');
-                if (highlightDiv) {
-                    highlightDiv.style.left = leftPercent + '%';
-                    highlightDiv.style.width = widthPercent + '%';
-                }
-            }
-
-            // WebGL 波形轨迹绘制函数
-            const renderGLTrace = (dataBuffer, colorArr, isXY, pData2_XY) => {
-                let aspect = DOM.glCanvas.height / DOM.glCanvas.width;
-                let vIdx = 0, pointCount = 0;
-                let uSize = 0.002;
-                let uIntensity = 0.4;
-
-                const pushV = (vx, vy, lx, ly, len) => {
-                    glDataArray[vIdx++] = vx;
-                    glDataArray[vIdx++] = vy;
-                    glDataArray[vIdx++] = lx;
-                    glDataArray[vIdx++] = ly;
-                    glDataArray[vIdx++] = len;
-                    pointCount++;
-                };
-
-                const addPt = (p0x, p0y, p1x, p1y) => {
-                    let dx = p1x - p0x, dy = p1y - p0y, z = Math.sqrt(dx * dx + dy * dy);
-                    let dirX = (z > 1E-6 ? dx / z : 1.0) * uSize;
-                    let dirY = (z > 1E-6 ? dy / z : 0.0) * uSize;
-                    let normX = -dirY, normY = dirX;
-
-                    pushV(p0x - dirX - normX, p0y - dirY - normY, -uSize, -uSize, z);
-                    pushV(p0x - dirX + normX, p0y - dirY + normY, -uSize, uSize, z);
-                    pushV(p1x + dirX - normX, p1y + dirY - normY, z + uSize, -uSize, z);
-
-                    pushV(p0x - dirX + normX, p0y - dirY + normY, -uSize, uSize, z);
-                    pushV(p1x + dirX - normX, p1y + dirY - normY, z + uSize, -uSize, z);
-                    pushV(p1x + dirX + normX, p1y + dirY + normY, z + uSize, uSize, z);
-                };
-
-                if (!isXY) {
-                    // YT 模式：保留暴力直接连线，完美重现物理荧光余辉
-                    for (let i = startIdxInt; i < endIdxInt - 1; i++) {
-                        // Math.max/min 保护平移越界时产生的数组错误
-                        let v1 = dataBuffer[Math.max(0, Math.min(CONFIG.fftSize - 1, i))];
-                        let v2 = dataBuffer[Math.max(0, Math.min(CONFIG.fftSize - 1, i + 1))];
-                        addPt(
-                            ((i - startIdxFloat) / ptsToShow) * 2.0 - 1.0, v1,
-                            ((i + 1 - startIdxFloat) / ptsToShow) * 2.0 - 1.0, v2
-                        );
-                    }
-                } else {
-                    // XY 模式：剔除所有圆滑插值，直接直线相连，消灭星形线伪影
-                    let sIdx = Math.max(0, CONFIG.fftSize - XY_PTS - 1);
-                    for (let i = 1; i < XY_PTS - 1; i++) {
-                        let rawAlpha = ALPHA_LUT[i];
-                        if (rawAlpha < 0.02) continue;
-
-                        let i1 = sIdx + i;
-                        let i2 = sIdx + i + 1;
-
-                        let x1 = dataBuffer[i1] * aspect;
-                        let y1 = pData2_XY[i1];
-                        let x2 = dataBuffer[i2] * aspect;
-                        let y2 = pData2_XY[i2];
-
-                        addPt(x1, y1, x2, y2);
-                    }
-                }
-
-                if (pointCount > 0) {
-                    gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
-                    gl.bufferData(gl.ARRAY_BUFFER, glDataArray.subarray(0, vIdx), gl.STREAM_DRAW);
-                    gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, GL_CONST.BYTES_PER_VERTEX, GL_CONST.POS_OFFSET);
-                    gl.enableVertexAttribArray(posAttr);
-                    gl.vertexAttribPointer(dataAttr, 3, gl.FLOAT, false, GL_CONST.BYTES_PER_VERTEX, GL_CONST.DATA_OFFSET);
-                    gl.enableVertexAttribArray(dataAttr);
-                    gl.uniform1f(sizeUni, uSize);
-                    gl.uniform1f(intensityUni, uIntensity);
-                    gl.uniform3fv(colorUni, colorArr);
-                    gl.drawArrays(gl.TRIANGLES, 0, pointCount);
-                }
-            };
-
-            // 渲染通道
-            if (STATE.mode === 'YT') {
-                if (STATE.ch1.on) renderGLTrace(pData1, CONFIG.c1, false);
-                if (STATE.ch2.on) renderGLTrace(pData2, CONFIG.c2, false);
-                if (STATE.math.on) {
-                    for (let i = 0; i < dataMath.length; i++) dataMath[i] = pData1[i] + pData2[i];
-                    renderGLTrace(dataMath, CONFIG.cM, false);
-                }
-            } else if (STATE.mode === 'XY') {
-                renderGLTrace(pData1, [0.1, 1.0, 0.2], true, pData2);
-            }
-
-            // 辉光后期处理 (Bloom)
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(0, 0, currentFboWidth, currentFboHeight);
-            gl.clearColor(0.0, 0.0, 0.0, 1.0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-            gl.useProgram(bloomProgram);
-
-            gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
-            gl.enableVertexAttribArray(posAttrBloom);
-            gl.vertexAttribPointer(posAttrBloom, 2, gl.FLOAT, false, 0, 0);
-            gl.uniform2f(texSizeUniBloom, currentFboWidth, currentFboHeight);
-
-            gl.activeTexture(gl.TEXTURE0);
-            gl.bindTexture(gl.TEXTURE_2D, fboTexture);
-            gl.uniform1i(texUniBloom, 0);
-            gl.drawArrays(gl.TRIANGLES, 0, 6);
-
-            // 绘制测量光标 (Cursors)
-            if (STATE.cursor.mode > 0) {
-                ctx2d.save();
-                ctx2d.translate(0.5, 0.5);
-                ctx2d.fillStyle = 'rgba(0, 0, 0, 0.75)';
-                ctx2d.lineWidth = 1;
-
-                if (STATE.cursor.mode === 1) {
-                    let y1 = h / 2 - STATE.cursor.v1 * (h / 2);
-                    let y2 = h / 2 - STATE.cursor.v2 * (h / 2);
-
-                    ctx2d.strokeStyle = '#a855f7';
-                    ctx2d.setLineDash([4, 4]);
-                    ctx2d.beginPath();
-                    ctx2d.moveTo(0, y1); ctx2d.lineTo(w, y1); ctx2d.stroke();
-                    ctx2d.beginPath();
-                    ctx2d.moveTo(0, y2); ctx2d.lineTo(w, y2); ctx2d.stroke();
-
-                    let dv1 = Math.abs(STATE.cursor.v1 - STATE.cursor.v2) / (2.0 / CONFIG.gridY) * (1 / STATE.ch1.scale);
-                    let dv2 = Math.abs(STATE.cursor.v1 - STATE.cursor.v2) / (2.0 / CONFIG.gridY) * (1 / STATE.ch2.scale);
-
-                    ctx2d.fillRect(10, 40, 140, 50);
-                    ctx2d.strokeStyle = '#444';
-                    ctx2d.strokeRect(10, 40, 140, 50);
-                    ctx2d.fillStyle = '#a855f7';
-                    ctx2d.font = 'bold 12px Courier New';
-                    ctx2d.fillText(`ΔCH1: ${dv1.toFixed(2)} V`, 20, 60);
-                    ctx2d.fillText(`ΔCH2: ${dv2.toFixed(2)} V`, 20, 80);
-
-                } else if (STATE.cursor.mode === 2) {
-                    let x1 = w / 2 + STATE.cursor.t1 * (w / 2);
-                    let x2 = w / 2 + STATE.cursor.t2 * (w / 2);
-
-                    ctx2d.strokeStyle = '#38bdf8';
-                    ctx2d.setLineDash([4, 4]);
-                    ctx2d.beginPath();
-                    ctx2d.moveTo(x1, 0); ctx2d.lineTo(x1, h); ctx2d.stroke();
-                    ctx2d.beginPath();
-                    ctx2d.moveTo(x2, 0); ctx2d.lineTo(x2, h); ctx2d.stroke();
-
-                    let dt = Math.abs(STATE.cursor.t1 - STATE.cursor.t2) / (2.0 / CONFIG.gridX) * STATE.secPerDiv;
-                    let f = dt > 0 ? 1000 / dt : 0;
-
-                    ctx2d.fillRect(10, 40, 160, 50);
-                    ctx2d.strokeStyle = '#444';
-                    ctx2d.strokeRect(10, 40, 160, 50);
-                    ctx2d.fillStyle = '#38bdf8';
-                    ctx2d.font = 'bold 12px Courier New';
-                    ctx2d.fillText(`ΔT : ${dt.toFixed(2)} ms`, 20, 60);
-                    ctx2d.fillText(`1/ΔT: ${f.toFixed(1)} Hz`, 20, 80);
-                }
-                ctx2d.restore();
-            }
-
-            // 更新底部音频播放进度条
-            if (audioBuffer && !isSeeking) {
-                let cur = getCurrentTime();
-                let dur = audioBuffer.duration;
-                let newVal = (cur / dur) * 100;
-                let newTimeStr = `${new Date(cur * 1000).toISOString().substring(14, 19)} / ${new Date(dur * 1000).toISOString().substring(14, 19)}`;
-
-                if (Math.abs(CACHE.audioSeekVal - newVal) > 0.1) {
-                    DOM.audioSeekBar.value = newVal;
-                    CACHE.audioSeekVal = newVal;
-                }
-                if (CACHE.audioTimeStr !== newTimeStr) {
-                    DOM.lblAudioTime.innerText = newTimeStr;
-                    CACHE.audioTimeStr = newTimeStr;
-                }
-            }
-        }
-
-        // 初始化启动显示
-        DOM.osdSamplerate.innerText = (CONFIG.sampleRate / 1000).toFixed(1) + 'kSa/s (Audio)';
-        draw();
-    </script>
+    <script type="module" src="./js/main.js"></script>
 </body>
 </html>

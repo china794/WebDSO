@@ -1,0 +1,51 @@
+/* ==========================================
+   现代扁平化基础与变量 (深色模式风格)
+   ========================================== */
+:root {
+    --bg-body: #09090b; /* 极暗的背景色 */
+    --bg-panel: #18181b; /* 右侧面板背景 */
+    --bg-card: #27272a; /* 卡片/按钮背景 */
+    --bg-hover: #3f3f46; /* 悬停颜色 */
+    --border-color: #3f3f46; /* 统一柔和边框 */
+    --text-main: #f4f4f5;
+    --text-dim: #a1a1aa;
+    --ch1-color: #eab308;
+    --ch2-color: #06b6d4;
+    --math-color: #c084fc;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--bg-body);
+    color: var(--text-main);
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 12px;
+    user-select: none;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* 现代滚动条 */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #52525b;
+    border-radius: 3px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #71717a;
+    }
