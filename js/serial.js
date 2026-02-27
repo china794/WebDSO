@@ -1,22 +1,62 @@
 import { CONFIG, DOM, STATE, Buffers, showSysModal } from './core.js';
+import { AudioState } from './audio.js';
+import { FFT } from './lib/fft.js';
 
 /**
- * 串口引擎：负责 Web Serial 通信、协议解析及系统模式切换
+ * ==========================================
+ * 串口通信引擎 (Serial Engine)
+ * 负责 Web Serial 通信、协议解析、系统模式切换及数据可听化
+ * ==========================================
  */
 export const SerialEngine = {
+    // 基础串口状态
     port: null,
     reader: null,
     keepReading: false,
+    
+    // 协议解析缓冲
     rawBuffer: [],
     textBuffer: '',
     textDecoder: new TextDecoder(),
+    
+    // 示波器环形缓冲区 (用于渲染)
     ringL: new Float32Array(CONFIG.fftSize),
     ringR: new Float32Array(CONFIG.fftSize),
     head: 0,
 
+    // ------------------------------------------
+    // 音频控制与缓冲变量 (数据可听化)
+    // ------------------------------------------
+    audioAccumL: [],
+    audioAccumR: [],
+    audioNextTime: 0,
+    masterGain: null, // 总音量阀门
+
     /**
-     * 🚀 动态量程切换中枢
-     * 根据波特率自动调整 SEC/DIV 的 min/max 范围，防止波形显示为“折线”
+     * 专门管理扬声器开关，实现瞬间丝滑静音
+     * @param {boolean} isOn - 扬声器目标状态
+     */
+    toggleSpeaker: function(isOn) {
+        STATE.serial.speaker = isOn;
+        
+        if (!isOn) {
+            this.audioAccumL = [];
+            this.audioAccumR = [];
+        } else {
+            this.audioNextTime = 0; // 重新打开时，重置时间轴
+        }
+
+        // 如果阀门已经建立，利用渐变实现 0.02秒丝滑静音，防止爆音
+        if (this.masterGain && AudioState.audioCtx) {
+            const now = AudioState.audioCtx.currentTime;
+            this.masterGain.gain.setTargetAtTime(isOn ? 0.5 : 0, now, 0.02);
+        }
+    },
+
+    /**
+     * 动态量程切换中枢
+     * 根据当前波特率自动调整时基 (SEC/DIV) 的范围与初始值
+     * @param {boolean} isSerial - 是否处于串口模式
      */
     switchMode: function(isSerial) {
         const timebase = DOM.knobTimebase;
@@ -25,35 +65,25 @@ export const SerialEngine = {
             const baud = parseInt(DOM.serialBaud.value);
             
             // 1. 计算理论采样率 (JustFloat: 10 bits/byte * 12 bytes/frame)
-            // 公式: fs = baud / 120
             const estimatedRate = Math.floor(baud / 120);
             
             STATE.current.isSerial = true;
             STATE.current.sampleRate = estimatedRate;
-            STATE.current.lineSize = 0.002; // 串口加粗渲染
+            STATE.current.lineSize = 0.002; 
 
-            // 2. 🚀 动态计算时基范围 (ms/div)
-            // 为了防止正弦波变成折线，我们强制每个格子(div)至少包含 10 个采样点
-            // 最小 ms/div = (10 点 / 采样率) * 1000
+            // 2. 动态计算时基范围 (ms/div)
             let minMs = (10 / estimatedRate) * 1000;
-            
-            // 限制硬件/渲染极限：最小不低于 0.1ms (对应 12M 波特率)
             if (minMs < 0.1) minMs = 0.1;
 
-            // 最大 ms/div: 每个格子显示约 500 个点，用于观察长周期信号
             let maxMs = (500 / estimatedRate) * 1000;
-            
-            // 确保缩放空间至少有 10 倍
             if (maxMs < minMs * 10) maxMs = minMs * 10;
 
             // 3. 更新 HTML 滑块属性
             timebase.min = minMs.toFixed(2);
             timebase.max = maxMs.toFixed(1);
-            
-            // 根据量程决定步进精度
             timebase.step = (minMs < 1) ? "0.1" : "1";
             
-            // 4. 设置默认初始值 (显示约 50 个点/格，这是视觉最舒适的密度)
+            // 4. 设置默认初始值 (保证画面美观)
             let defaultVal = (50 / estimatedRate) * 1000;
             if (defaultVal < minMs) defaultVal = minMs;
             if (defaultVal > maxMs) defaultVal = maxMs;
@@ -67,7 +97,7 @@ export const SerialEngine = {
             if (DOM.osdTimebase) DOM.osdTimebase.innerText = txt;
 
         } else {
-            // 🔙 回归音频模式 (固定的 96kSa/s 范围)
+            // 🔙 回归音频模式 (降级为默认参数)
             STATE.current.isSerial = false;
             STATE.current.sampleRate = CONFIG.sampleRate;
             STATE.current.lineSize = 0.002;
@@ -83,106 +113,238 @@ export const SerialEngine = {
             if (DOM.osdTimebase) DOM.osdTimebase.innerText = txt;
         }
         
-        // 🚀 核心：手动触发 input 事件，让 main.js 里的监听器感知到范围变化并刷新 WebGL
+        // 触发 UI 更新事件
         timebase.dispatchEvent(new Event('input'));
-        
-        // 更新连接状态点和按钮显示
         this.updateUI(isSerial);
     },
 
-    // 连接设备
+    /**
+     * 连接 Web Serial 设备
+     */
     connect: async function() {
-        if (!('serial' in navigator)) return showSysModal('不支持', '请使用 Chrome/Edge 浏览器');
+        if (!('serial' in navigator)) {
+            return showSysModal('环境不支持', '请使用基于 Chromium 内核的现代浏览器 (如 Chrome/Edge)');
+        }
         try {
             this.port = await navigator.serial.requestPort();
-            await this.port.open({ baudRate: parseInt(DOM.serialBaud.value), bufferSize: 4096 });
+            await this.port.open({ 
+                baudRate: parseInt(DOM.serialBaud.value), 
+                bufferSize: 8192 
+            });
+            
             this.keepReading = true;
             STATE.serial.connected = true;
             
-            // 🚀 执行模式切换
             this.switchMode(true); 
-            
             this.readLoop();
-        } catch (e) { showSysModal('连接失败', e.message); }
+        } catch (e) { 
+            showSysModal('连接失败', e.message); 
+        }
     },
 
-    // 断开设备
+    /**
+     * 断开 Web Serial 设备
+     */
     disconnect: async function() {
         this.keepReading = false;
         if (this.reader) await this.reader.cancel();
         if (this.port) await this.port.close();
-        STATE.serial.connected = false;
         
-        // 🚀 执行模式恢复
+        STATE.serial.connected = false;
         this.switchMode(false); 
     },
 
-    // 协议解析逻辑 (保持之前的高性能版本)
-    parseData: function(data) { DOM.serialProtocol.value === 'justfloat' ? this.parseJustFloat(data) : this.parseFireWater(data); },
+    // ------------------------------------------
+    // 数据解析器 (Parsers)
+    // ------------------------------------------
+
+    /**
+     * 数据解析入口路由
+     * @param {Uint8Array} data - 从串口读取的原始二进制数据
+     */
+    parseData: function(data) { 
+        DOM.serialProtocol.value === 'justfloat' ? this.parseJustFloat(data) : this.parseFireWater(data); 
+    },
     
+    /**
+     * JustFloat 二进制协议解析 (高性能)
+     */
     parseJustFloat: function(data) {
-        for (let i = 0; i < data.length; i++) this.rawBuffer.push(data[i]);
+        for (let i = 0; i < data.length; i++) {
+            this.rawBuffer.push(data[i]);
+        }
+        
         while (this.rawBuffer.length >= 12) {
             let s1 = this.findSync(0); 
-            if (s1 === -1) { this.rawBuffer = []; break; }
+            if (s1 === -1) { 
+                this.rawBuffer = []; 
+                break; 
+            }
+            
             let s2 = this.findSync(s1 + 4); 
             if (s2 === -1) break;
+            
             const payload = this.rawBuffer.slice(s1 + 4, s2);
-            if (payload.length > 0 && payload.length % 4 === 0) this.pushToRings(this.bytesToFloats(payload));
+            if (payload.length > 0 && payload.length % 4 === 0) {
+                this.pushToRings(this.bytesToFloats(payload));
+            }
             this.rawBuffer = this.rawBuffer.slice(s2);
         }
     },
 
+    /**
+     * FireWater 纯文本协议解析 (兼容模式)
+     */
     parseFireWater: function(data) {
         this.textBuffer += this.textDecoder.decode(data, { stream: true });
         let lines = this.textBuffer.split(/\r?\n/); 
-        this.textBuffer = lines.pop();
+        this.textBuffer = lines.pop(); // 保留最后一行未闭合的残段
+        
         for (let l of lines) {
             let s = l.trim(); 
             if (!s) continue; 
+            
             if (s.includes(':')) s = s.split(':')[1];
             const v = s.split(',').map(p => parseFloat(p)).filter(n => !isNaN(n));
+            
             if (v.length > 0) this.pushToRings(v);
         }
     },
 
+    /**
+     * 寻找 JustFloat 同步字
+     * 目标序列: 00 00 80 7F
+     */
     findSync: function(st) { 
-        // JustFloat 同步字: 00 00 80 7F
         for (let i = st; i <= this.rawBuffer.length - 4; i++) { 
-            if (this.rawBuffer[i]===0x00 && this.rawBuffer[i+1]===0x00 && 
-                this.rawBuffer[i+2]===0x80 && this.rawBuffer[i+3]===0x7F) return i; 
+            if (this.rawBuffer[i] === 0x00 && 
+                this.rawBuffer[i+1] === 0x00 && 
+                this.rawBuffer[i+2] === 0x80 && 
+                this.rawBuffer[i+3] === 0x7F) {
+                return i;
+            }
         } 
         return -1; 
     },
 
+    /**
+     * 字节数组转为 IEEE-754 单精度浮点数
+     */
     bytesToFloats: function(b) { 
         const v = new DataView(new Uint8Array(b).buffer); 
         const f = []; 
-        for (let i = 0; i < b.length; i += 4) f.push(v.getFloat32(i, true)); 
+        for (let i = 0; i < b.length; i += 4) {
+            f.push(v.getFloat32(i, true)); // true 为小端序
+        }
         return f; 
     },
 
+    // ------------------------------------------
+    // 渲染缓冲与音频调度核心
+    // ------------------------------------------
+
+    /**
+     * 核心数据推入函数 (同时处理渲染环与音频分流)
+     * @param {Array<number>} v - 提取出的浮点数据数组
+     */
     pushToRings: function(v) { 
-        const v1 = v[0]||0, v2 = v.length>1?v[1]:v1; 
-        this.ringL[this.head]=v1; 
-        this.ringR[this.head]=v2; 
-        this.head=(this.head+1)%CONFIG.fftSize; 
+        const v1 = v[0] || 0;
+        const v2 = v.length > 1 ? v[1] : v1; 
+        
+        // 1. 推入图形渲染环
+        this.ringL[this.head] = v1; 
+        this.ringR[this.head] = v2; 
+        this.head = (this.head + 1) % CONFIG.fftSize; 
+        
+        // 2. 声音监听钩子 (将数据分流到音频池)
+        if (STATE.serial && STATE.serial.speaker) {
+            const currentRate = STATE.current.sampleRate || 16000;
+            // WebAudio API 强制要求采样率下限为 8000Hz。通过 Zero-order hold 做硬上采样
+            const repeat = currentRate < 8000 ? Math.ceil(8000 / currentRate) : 1;
+            
+            for(let i = 0; i < repeat; i++) {
+                this.audioAccumL.push(v1);
+                this.audioAccumR.push(v2);
+            }
+            
+            // 积攒到足够切片 (2048) 后，交付声卡物理调度
+            if (this.audioAccumL.length >= 2048) {
+                this.playAudioChunk(currentRate * repeat);
+            }
+        }
     },
 
+    /**
+     * 音频流物理调度器 (附带高级防积压算法)
+     * @param {number} playRate - 最终发送给声卡的采样率
+     */
+    playAudioChunk: function(playRate) {
+        if (!AudioState.audioCtx || AudioState.audioCtx.state !== 'running') return;
+        
+        const ctx = AudioState.audioCtx;
+
+        // 初始化主音量限制阀门
+        if (!this.masterGain) {
+            this.masterGain = ctx.createGain();
+            this.masterGain.gain.value = 0.5; // 限制全局最大物理音量
+            this.masterGain.connect(ctx.destination);
+        }
+
+        // 限制 WebAudio 允许的采样率区间
+        const sr = Math.max(8000, Math.min(96000, playRate)); 
+        const len = this.audioAccumL.length;
+        
+        const buffer = ctx.createBuffer(2, len, sr);
+        buffer.copyToChannel(new Float32Array(this.audioAccumL), 0);
+        buffer.copyToChannel(new Float32Array(this.audioAccumR), 1);
+        
+        // 释放原数组，重置缓冲池
+        this.audioAccumL = [];
+        this.audioAccumR = [];
+        
+        const now = ctx.currentTime;
+        
+        // 核心防积压 (Anti-Drift) 机制
+        if (this.audioNextTime < now) {
+            // 时间轴落后 (发生卡顿)，强制后延 0.05 秒重新对齐
+            this.audioNextTime = now + 0.05; 
+        } else if (this.audioNextTime > now + 0.4) {
+            // 调度时间严重超前 (JS 处理速度 > 播放速度)，直接丢弃此切片以强制泄洪
+            return; 
+        }
+
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        source.connect(this.masterGain); 
+        
+        source.start(this.audioNextTime);
+        this.audioNextTime += buffer.duration;
+    },
+
+    /**
+     * 将环形缓冲区的数据解包到线性渲染数组
+     */
     fillData: function(outL, outR) { 
         for (let i = 0; i < CONFIG.fftSize; i++) { 
             let idx = (this.head - CONFIG.fftSize + i + CONFIG.fftSize) % CONFIG.fftSize; 
-            outL[i] = this.ringL[idx]; outR[i] = this.ringR[idx]; 
+            outL[i] = this.ringL[idx]; 
+            outR[i] = this.ringR[idx]; 
         } 
     },
 
+    /**
+     * 更新串口状态 UI
+     */
     updateUI: function(c) {
         DOM.serialStatusDot.innerText = c ? '● CONNECTED' : '● DISCONNECTED';
-        DOM.serialStatusDot.className = c ? 'status-active' : '';
+        DOM.serialStatusDot.style.color = c ? '#4ade80' : '#ef4444'; 
         DOM.btnSerialOpen.style.display = c ? 'none' : 'block';
         DOM.btnSerialClose.style.display = c ? 'block' : 'none';
     },
 
+    /**
+     * 后台无尽读取循环
+     */
     async readLoop() {
         while (this.keepReading && this.port.readable) {
             this.reader = this.port.readable.getReader();
@@ -192,7 +354,11 @@ export const SerialEngine = {
                     if (done) break;
                     this.parseData(value);
                 }
-            } catch (e) { console.warn(e); } finally { this.reader.releaseLock(); }
+            } catch (e) { 
+                console.warn("Serial read error:", e); 
+            } finally { 
+                this.reader.releaseLock(); 
+            }
         }
     }
 };

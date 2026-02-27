@@ -1,11 +1,12 @@
 .hw-group {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 16px;
+    transition: background 0.3s, border-color 0.3s;
 }
 
 .group-title {
@@ -16,17 +17,21 @@
     text-transform: uppercase;
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    border-left: 3px solid var(--text-dim);
+    padding-left: 8px;
+    margin-left: -16px;
 }
 
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 16px;
 }
 
 .flex-row {
     display: flex;
-    gap: 10px;
+    gap: 12px;
 }
 
 .items-center {
@@ -46,29 +51,31 @@
 }
 
 .ch-box {
-    background: rgba(0,0,0,0.2);
-    padding: 12px;
-    border-radius: 6px;
+    background: var(--bg-panel);
+    padding: 16px;
+    border-radius: var(--radius-md);
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    border: 1px solid transparent;
+    gap: 14px;
+    border: 1px solid var(--border-color);
+    transition: background 0.3s, border-color 0.3s;
 }
 
     .ch-box.ch1 {
-        border-color: rgba(234,179,8,0.2);
+        border-top: 3px solid var(--ch1-color);
     }
 
     .ch-box.ch2 {
-        border-color: rgba(6,182,212,0.2);
+        border-top: 3px solid var(--ch2-color);
     }
 
+/* --- 统一切换类按钮基础样式 --- */
 .hw-btn {
-    background: #3f3f46;
-    border: none;
-    color: var(--text-main);
-    font-weight: 500;
-    border-radius: 6px;
+    background: transparent; 
+    border: 1px solid var(--border-color); 
+    color: var(--text-dim); 
+    font-weight: 600;
+    border-radius: var(--radius-sm);
     cursor: pointer;
     transition: all 0.15s;
     padding: 10px 8px;
@@ -79,50 +86,107 @@
 }
 
     .hw-btn:hover {
-        background: #52525b;
+        background: var(--bg-hover);
+        color: var(--text-main);
     }
 
     .hw-btn:active {
-        transform: scale(0.97);
+        transform: scale(0.98);
     }
 
     .hw-btn.active {
-        background: rgba(59, 130, 246, 0.2);
-        color: #60a5fa;
-        border: 1px solid #3b82f6;
+        background: var(--color-blue) !important;
+        color: #ffffff !important;
+        border-color: var(--color-blue) !important;
     }
 
 .btn-run {
-    background: rgba(34, 197, 94, 0.2);
-    color: #4ade80;
-    border: 1px solid #22c55e;
+    background: var(--color-run) !important;
+    color: #fff !important;
+    border: none !important;
 }
 
     .btn-run:hover {
-        background: rgba(34, 197, 94, 0.3);
+        opacity: 0.85;
     }
 
     .btn-run.stopped {
-        background: rgba(239, 68, 68, 0.2);
-        color: #f87171;
-        border: 1px solid #ef4444;
+        background: var(--color-stop) !important;
+        color: #fff !important;
+        border: none !important;
     }
 
         .btn-run.stopped:hover {
-            background: rgba(239, 68, 68, 0.3);
+            opacity: 0.85;
         }
 
 .hw-select {
-    background: #27272a;
+    background: var(--bg-input);
     border: 1px solid var(--border-color);
     color: var(--text-main);
-    padding: 8px;
-    border-radius: 6px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
     font-family: inherit;
+    font-weight: 500;
     outline: none;
     width: 100%;
     font-size: 11px;
     cursor: pointer;
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
+}
+
+    .hw-select:focus {
+        border-color: var(--color-blue);
+    }
+
+.flat-input-box {
+    display: flex;
+    align-items: center;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 4px 8px;
+    height: 28px;
+    box-sizing: border-box;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+    .flat-input-box input[type="number"] {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: inherit;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: right;
+        flex: 1;
+        width: 0;
+    }
+
+.spin-btns {
+    display: flex;
+    flex-direction: column;
+    margin-right: 6px;
+    gap: 2px;
+}
+
+    .spin-btns div {
+        color: var(--text-dim);
+        font-size: 8px;
+        cursor: pointer;
+        line-height: 1;
+        user-select: none;
+    }
+
+        .spin-btns div:hover {
+            color: var(--text-main);
+        }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 input[type=range] {
@@ -132,46 +196,44 @@ input[type=range] {
 }
 
     input[type=range]::-webkit-slider-runnable-track {
-        height: 4px;
-        background: #3f3f46;
-        border-radius: 2px;
+        height: 6px;
+        background: var(--bg-input);
+        border: 1px solid var(--border-color);
+        border-radius: 3px;
     }
 
     input[type=range]::-webkit-slider-thumb {
         -webkit-appearance: none;
-        height: 14px;
-        width: 14px;
-        border-radius: 50%;
-        background: #a1a1aa;
+        height: 16px;
+        width: 16px;
+        border-radius: 8px;
+        background: var(--text-dim);
         cursor: pointer;
-        margin-top: -5px;
+        margin-top: -6px;
         transition: 0.1s;
     }
 
         input[type=range]::-webkit-slider-thumb:hover {
-            background: #fff;
-            transform: scale(1.2);
+            background: var(--color-blue);
+            transform: scale(1.1);
         }
 
     input[type=range]:focus {
         outline: none;
     }
 
-input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
 .audio-control-cluster {
-    background: rgba(0,0,0,0.2);
-    padding: 12px;
-    border-radius: 6px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    padding: 16px;
+    border-radius: var(--radius-md);
+    transition: background 0.3s, border-color 0.3s;
 }
 
 .audio-panel-row {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
     margin-bottom: 12px;
 }
 
@@ -189,29 +251,29 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 }
 
 .osd-value {
-    color: #38bdf8;
+    color: var(--color-blue);
     font-size: 13px;
     font-weight: bold;
     font-family: monospace;
 }
 
     .osd-value.speed {
-        color: #facc15;
+        color: var(--ch1-color);
     }
 
 .osd-btn-primary {
-    background: #3f3f46;
-    border: none;
-    color: #fff;
-    padding: 6px 16px;
-    border-radius: 4px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
     cursor: pointer;
 }
 
 .speed-control-box {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     flex-grow: 1;
     margin-left: 20px;
 }
@@ -241,7 +303,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
     padding: 24px;
     width: 90%;
     max-width: 420px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 40px var(--shadow-color);
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -250,7 +312,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 .sys-modal-title {
     font-size: 16px;
     font-weight: bold;
-    color: #fff;
+    color: var(--text-main);
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 12px;
 }
@@ -263,7 +325,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 }
 
 .sys-modal-btn {
-    background: #2563eb;
+    background: var(--color-blue);
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -279,6 +341,14 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 }
 
 .status-active {
-    color: #4ade80 !important;
-    text-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    color: var(--color-green) !important;
+    text-shadow: 0 0 8px var(--color-green);
+}
+
+.txt-y {
+    color: var(--ch1-color);
+}
+
+.txt-c {
+    color: var(--ch2-color);
 }
