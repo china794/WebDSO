@@ -4,7 +4,7 @@
 
 WebDSO 是一款基于现代浏览器的原生数字存储示波器（DSO）。项目无任何前端构建工具和第三方依赖，底层通过 `Web Audio API` 进行信号捕获与 DSP 处理，使用 `WebGL` 实现高帧率波形渲染与荧光余辉模拟。
 
-**在线体验（Live Demo）**：[https://wanghaohan.com/sbq.html](https://wanghaohan.com/sbq.html)
+**在线体验（Live Demo）**：[https://wanghaohan.com/WebDSO](https://wanghaohan.com/WebDSO)
 
 ## 核心特性
 
