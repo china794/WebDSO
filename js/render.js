@@ -1,11 +1,17 @@
-﻿import { STATE, CONFIG, XY_PTS, ALPHA_LUT, GL_CONST, DOM, CACHE, Buffers } from './core.js';
+import { STATE, CONFIG, XY_PTS, ALPHA_LUT, GL_CONST, DOM, CACHE, Buffers, CHANNEL_COUNT } from './core.js';
 import { vsSource, fsSource, vsBloom, fsBloom } from './shaders.js';
 import { AudioState, getCurrentTime } from './audio.js';
 import { findTriggerIndex, processData, updateMeasurements } from './signal.js';
 import { SerialEngine } from './serial.js';
 
 /**
- * 渲染模块：负责 WebGL 波形绘制、Canvas 2D 背景网格及 UI 叠加层渲染
+ * ==========================================
+ * 渲染模块 (Render Module)
+ * ==========================================
+ * 负责：
+ * - WebGL 波形绘制（抗锯齿、辉光后期）
+ * - Canvas 2D 背景网格、十字标尺、触发线
+ * - 小地图、FFT 频谱、光标、悬停信息
  */
 
 const ctx2d = DOM.oscilloscope.getContext('2d', { alpha: true });
@@ -15,6 +21,7 @@ const gl = DOM.glCanvas.getContext('webgl', {
     premultipliedAlpha: false 
 });
 
+/** 编译单个着色器并返回句柄，失败时输出错误日志 */
 function createShader(gl, type, source) {
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
@@ -57,6 +64,7 @@ let fboTexture = gl.createTexture();
 let currentFboWidth = 0;
 let currentFboHeight = 0;
 
+/** 调整离屏渲染目标 (FBO) 尺寸，用于 Bloom 后期处理 */
 function resizeFBO(w, h) {
     gl.bindTexture(gl.TEXTURE_2D, fboTexture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
@@ -71,6 +79,9 @@ function resizeFBO(w, h) {
 
 gl.enable(gl.BLEND);
 
+/**
+ * 响应窗口尺寸变化，更新 Canvas 分辨率与 DPR
+ */
 export function resize() {
     const dpr = window.devicePixelRatio || 1;
     const wrapper = document.querySelector('.screen-wrapper');
@@ -94,6 +105,9 @@ let fpsNode = document.createElement('div');
 fpsNode.style = "position:absolute; top:10px; left:10px; color:#00ff00; font-weight:bold; font-family:monospace; z-index:9999;";
 document.body.appendChild(fpsNode);
 
+/**
+ * 主渲染循环：数据采集 → 处理 → 绘制波形 → 叠加 UI
+ */
 export function draw() {
     frameCount++;
     let now = performance.now();
@@ -162,19 +176,20 @@ export function draw() {
 
     if (STATE.run) {
         if (STATE.serial && STATE.serial.connected) {
-            SerialEngine.fillData(Buffers.dataL, Buffers.dataR);
-        } else if (AudioState.audioCtx && AudioState.analyserL_DC) {
-            if (STATE.ch1.cpl === 'AC') AudioState.analyserL_AC.getFloatTimeDomainData(Buffers.dataL);
-            else AudioState.analyserL_DC.getFloatTimeDomainData(Buffers.dataL);
-            
-            if (STATE.ch2.cpl === 'AC') AudioState.analyserR_AC.getFloatTimeDomainData(Buffers.dataR);
-            else AudioState.analyserR_DC.getFloatTimeDomainData(Buffers.dataR);
+            SerialEngine.fillData(Buffers.data1, Buffers.data2, Buffers.data3, Buffers.data4, Buffers.data5, Buffers.data6, Buffers.data7, Buffers.data8);
+        } else if (AudioState.audioCtx && AudioState.analyser1_DC) {
+            for (let i = 1; i <= CHANNEL_COUNT; i++) {
+                const cpl = STATE['ch' + i].cpl;
+                const analyser = cpl === 'AC' ? AudioState['analyser' + i + '_AC'] : AudioState['analyser' + i + '_DC'];
+                if (analyser) analyser.getFloatTimeDomainData(Buffers['data' + i]);
+            }
         }
     }
 
-    processData(Buffers.dataL, STATE.ch1, Buffers.pData1);
-    processData(Buffers.dataR, STATE.ch2, Buffers.pData2);
-    updateMeasurements(Buffers.dataL, Buffers.dataR);
+    for (let i = 1; i <= CHANNEL_COUNT; i++) {
+        processData(Buffers['data' + i], STATE['ch' + i], Buffers['pData' + i]);
+    }
+    updateMeasurements(Buffers.data1, Buffers.data2, Buffers.data3, Buffers.data4, Buffers.data5, Buffers.data6, Buffers.data7, Buffers.data8);
 
     let currentRate = STATE.current.sampleRate;
     
@@ -184,9 +199,10 @@ export function draw() {
     let ptsPerDiv = (STATE.secPerDiv) * (currentRate / 1000); 
     let ptsToShow = Math.floor(ptsPerDiv * CONFIG.gridX);
 
-    let trigData = STATE.trigger.src === 'CH1' ? Buffers.pData1 : Buffers.pData2;
-    let tScale = STATE.trigger.src === 'CH1' ? STATE.ch1.scale : STATE.ch2.scale;
-    let tPos = STATE.trigger.src === 'CH1' ? STATE.ch1.pos : STATE.ch2.pos;
+    const trigCh = parseInt(STATE.trigger.src.replace('CH', '')) || 1;
+    let trigData = Buffers['pData' + trigCh];
+    let tScale = STATE['ch' + trigCh].scale;
+    let tPos = STATE['ch' + trigCh].pos;
     const ndcPerDiv = 2.0 / CONFIG.gridY;
     let mappedLevel = STATE.trigger.level * tScale * ndcPerDiv + tPos;
 
@@ -256,6 +272,7 @@ export function draw() {
         // 恢复小地图发光叠加模式
         mCtx.globalCompositeOperation = 'lighter'; 
 
+        /** 在小地图上绘制单通道波形 (min-max 压缩) */
         const drawMiniTrace = (data, color) => {
             mCtx.strokeStyle = color;
             mCtx.beginPath();
@@ -276,8 +293,9 @@ export function draw() {
             mCtx.stroke();
         };
         
-        if (STATE.ch1.on) drawMiniTrace(Buffers.pData1, theme.miniTrace1);
-        if (STATE.ch2.on) drawMiniTrace(Buffers.pData2, theme.miniTrace2);
+        for (let i = 1; i <= CHANNEL_COUNT; i++) {
+            if (STATE['ch' + i].on) drawMiniTrace(Buffers['pData' + i], theme['miniTrace' + i]);
+        }
         
         mCtx.globalCompositeOperation = 'source-over'; 
 
@@ -287,6 +305,7 @@ export function draw() {
         if (highlight) { highlight.style.left = leftP + '%'; highlight.style.width = widthP + '%'; }
     }
 
+    /** 使用 WebGL 绘制单条波形轨迹 (Y-T 或 X-Y 模式) */
     const renderGLTrace = (dataBuffer, colorArr, isXY, pData2_XY) => {
         let aspect = DOM.glCanvas.height / DOM.glCanvas.width;
         let vIdx = 0, pointCount = 0;
@@ -343,14 +362,24 @@ export function draw() {
     };
 
     if (STATE.mode === 'YT') {
-        if (STATE.ch1.on) renderGLTrace(Buffers.pData1, theme.c1, false);
-        if (STATE.ch2.on) renderGLTrace(Buffers.pData2, theme.c2, false);
-        if (STATE.math.on) {
-            for (let i = 0; i < Buffers.dataMath.length; i++) Buffers.dataMath[i] = Buffers.pData1[i] + Buffers.pData2[i];
-            renderGLTrace(Buffers.dataMath, theme.cM, false);
+        for (let i = 1; i <= CHANNEL_COUNT; i++) {
+            if (STATE['ch' + i].on) renderGLTrace(Buffers['pData' + i], theme['c' + i], false);
         }
     } else if (STATE.mode === 'XY') {
         renderGLTrace(Buffers.pData1, theme.cXY, true, Buffers.pData2);
+    }
+
+    // OSD 右侧：仅显示开启的频道，并更新档位/耦合
+    for (let i = 1; i <= CHANNEL_COUNT; i++) {
+        const box = document.getElementById('osd-box-ch' + i);
+        const scaleEl = document.getElementById('osd-ch' + i + '-scale');
+        const cplEl = document.getElementById('osd-cpl' + i);
+        if (box) box.style.display = STATE['ch' + i].on ? 'flex' : 'none';
+        if (STATE['ch' + i].on) {
+            const vPerDiv = (1 / STATE['ch' + i].scale).toFixed(2);
+            if (scaleEl) scaleEl.innerText = vPerDiv + 'V';
+            if (cplEl) cplEl.innerText = STATE['ch' + i].cpl;
+        }
     }
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
@@ -375,7 +404,8 @@ export function draw() {
     }
 
     if (STATE.fft && STATE.fft.on) {
-        if (!STATE.fft.buffer1 || !STATE.fft.buffer2) return; 
+        const hasFftBuffer = Array.from({ length: CHANNEL_COUNT }, (_, i) => STATE.fft['buffer' + (i + 1)]).some(Boolean);
+        if (!hasFftBuffer) return; 
 
         const currentRate = STATE.current.sampleRate; 
         let maxFreq = STATE.fft.maxFreq || 8000;
@@ -390,6 +420,7 @@ export function draw() {
         ctx2d.fillStyle = theme.fftBg; 
         ctx2d.fillRect(0, h - 150, w, 150);
         
+        /** 绘制单通道 FFT 频谱柱状图 */
         const drawSpectrum = (buffer, color, offsetX) => {
             ctx2d.beginPath();
             ctx2d.strokeStyle = color; 
@@ -424,8 +455,11 @@ export function draw() {
         
         ctx2d.globalCompositeOperation = isLight ? 'source-over' : 'screen'; 
         
-        if (STATE.ch1.on) drawSpectrum(STATE.fft.buffer1, theme.fftC1, 0);
-        if (STATE.ch2.on) drawSpectrum(STATE.fft.buffer2, theme.fftC2, 1);
+        for (let i = 1; i <= CHANNEL_COUNT; i++) {
+            if (STATE['ch' + i].on && STATE.fft['buffer' + i]) {
+                drawSpectrum(STATE.fft['buffer' + i], theme['fftC' + i], i - 1);
+            }
+        }
         
         ctx2d.globalCompositeOperation = 'source-over';; 
 
@@ -476,19 +510,25 @@ export function draw() {
             ctx2d.setLineDash([4, 4]); 
             ctx2d.beginPath(); ctx2d.moveTo(0, y1); ctx2d.lineTo(w, y1); ctx2d.stroke();
             ctx2d.beginPath(); ctx2d.moveTo(0, y2); ctx2d.lineTo(w, y2); ctx2d.stroke();
-            let dv1 = Math.abs(STATE.cursor.v1 - STATE.cursor.v2) / (2.0 / CONFIG.gridY) * (1 / STATE.ch1.scale);
-            let dv2 = Math.abs(STATE.cursor.v1 - STATE.cursor.v2) / (2.0 / CONFIG.gridY) * (1 / STATE.ch2.scale);
+            const ndcVPD = 2.0 / CONFIG.gridY;
+            const dvVals = Array.from({ length: CHANNEL_COUNT }, (_, i) => 
+                STATE['ch' + (i + 1)].on ? Math.abs(STATE.cursor.v1 - STATE.cursor.v2) / ndcVPD * (1 / STATE['ch' + (i + 1)].scale) : null);
             
             ctx2d.fillStyle = theme.hoverBg; 
-            ctx2d.fillRect(10, 40, 140, 50); 
+            ctx2d.fillRect(10, 40, 180, Math.max(50, 20 + dvVals.filter(Boolean).length * 18)); 
             ctx2d.strokeStyle = theme.hoverBorder; 
             ctx2d.setLineDash([]);
-            ctx2d.strokeRect(10, 40, 140, 50); 
+            ctx2d.strokeRect(10, 40, 180, Math.max(50, 20 + dvVals.filter(Boolean).length * 18)); 
             
-            ctx2d.fillStyle = theme.cursorY; 
-            ctx2d.font = 'bold 12px Courier New'; 
-            ctx2d.fillText(`ΔCH1: ${dv1.toFixed(2)} V`, 20, 60); 
-            ctx2d.fillText(`ΔCH2: ${dv2.toFixed(2)} V`, 20, 80);
+            ctx2d.font = 'bold 11px Courier New'; 
+            let dy = 58;
+            for (let i = 0; i < CHANNEL_COUNT; i++) {
+                if (dvVals[i] != null) {
+                    ctx2d.fillStyle = theme['c' + (i + 1) + 'Hex'];
+                    ctx2d.fillText(`ΔCH${i + 1}: ${dvVals[i].toFixed(2)} V`, 20, dy);
+                    dy += 18;
+                }
+            }
         } else if (STATE.cursor.mode === 2) {
             let x1 = w / 2 + STATE.cursor.t1 * (w / 2);
             let x2 = w / 2 + STATE.cursor.t2 * (w / 2);
@@ -527,10 +567,10 @@ export function draw() {
         let tD = gX * STATE.secPerDiv;
         let vNDC = (h / 2 - STATE.hover.y) / (h / 2); 
         let ndcVPD = 2.0 / CONFIG.gridY;
-        let v1 = (vNDC - STATE.ch1.pos) / (STATE.ch1.scale * ndcVPD); 
-        let v2 = (vNDC - STATE.ch2.pos) / (STATE.ch2.scale * ndcVPD);
-        
-        let bW = 140, bH = 65;
+        const vVals = Array.from({ length: CHANNEL_COUNT }, (_, i) => 
+            STATE['ch' + (i + 1)].on ? (vNDC - STATE['ch' + (i + 1)].pos) / (STATE['ch' + (i + 1)].scale * ndcVPD) : null);
+        const activeCount = vVals.filter(Boolean).length;
+        let bW = 140, bH = Math.max(65, 20 + activeCount * 18);
         let tX = STATE.hover.x + 15, tY = STATE.hover.y + 15;
         
         if (tX + bW > w) tX = STATE.hover.x - bW - 10; 
@@ -545,8 +585,14 @@ export function draw() {
         ctx2d.font = 'bold 12px Courier New'; 
         ctx2d.fillStyle = theme.hoverText; 
         ctx2d.fillText(` T: ${tD > 0 ? '+' : ''}${tD.toFixed(3)} ms`, tX + 10, tY + 20);
-        if (STATE.ch1.on) { ctx2d.fillStyle = theme.c1Hex; ctx2d.fillText(`C1: ${v1.toFixed(3)} V`, tX + 10, tY + 38); }
-        if (STATE.ch2.on) { ctx2d.fillStyle = theme.c2Hex; ctx2d.fillText(`C2: ${v2.toFixed(3)} V`, tX + 10, tY + 56); }
+        let vy = tY + 38;
+        for (let i = 0; i < CHANNEL_COUNT; i++) {
+            if (vVals[i] != null) {
+                ctx2d.fillStyle = theme['c' + (i + 1) + 'Hex'];
+                ctx2d.fillText(`C${i + 1}: ${vVals[i].toFixed(3)} V`, tX + 10, vy);
+                vy += 18;
+            }
+        }
         ctx2d.restore();
     }
 }

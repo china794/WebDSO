@@ -1,5 +1,5 @@
-﻿import { STATE, CONFIG, DOM, updateTriggerUI, showSysModal, Buffers } from './core.js';
-import { AudioState, initAudio, rebuildChannel, updateAWG, playBuffer, getLogSpeed, getCurrentTime } from './audio.js';
+import { STATE, CONFIG, DOM, updateTriggerUI, showSysModal, Buffers, CHANNEL_COUNT } from './core.js';
+import { AudioState, initAudio, rebuildChannel, updateAWG, rebuildStereoRouting, playBuffer, getLogSpeed, getCurrentTime } from './audio.js';
 import { resize, draw } from './render.js';
 import { SerialEngine } from './serial.js';
 
@@ -19,20 +19,69 @@ if (btnThemeToggle && themeIconPath) {
     const currentTheme = localStorage.getItem('theme') || 'dark';
     if (currentTheme === 'light') {
         document.body.setAttribute('data-theme', 'light');
-        themeIconPath.setAttribute('d', moonPath); 
+        themeIconPath.setAttribute('d', moonPath);
     }
-    
-    btnThemeToggle.addEventListener('click', () => {
-        const isLight = document.body.getAttribute('data-theme') === 'light';
-        if (isLight) {
-            document.body.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'dark');
-            themeIconPath.setAttribute('d', sunPath);
-        } else {
-            document.body.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
-            themeIconPath.setAttribute('d', moonPath); 
+
+    btnThemeToggle.addEventListener('click', (event) => {
+        // 兼容性处理：如果浏览器不支持 View Transitions API，则直接切换
+        if (!document.startViewTransition) {
+            const isLight = document.body.getAttribute('data-theme') === 'light';
+            if (isLight) {
+                document.body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+                themeIconPath.setAttribute('d', sunPath);
+            } else {
+                document.body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                themeIconPath.setAttribute('d', moonPath);
+            }
+            return;
         }
+
+        // 获取点击的坐标，作为圆心的起点
+        const x = event.clientX;
+        const y = event.clientY;
+
+        // 计算扩散的最大半径：从点击处到屏幕最远角的距离 (勾股定理)
+        const endRadius = Math.hypot(
+            Math.max(x, innerWidth - x),
+            Math.max(y, innerHeight - y)
+        );
+
+        // 开启视图过渡
+        const transition = document.startViewTransition(() => {
+            // 在这里进行状态的实际改变
+            const isLight = document.body.getAttribute('data-theme') === 'light';
+            if (isLight) {
+                document.body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+                themeIconPath.setAttribute('d', sunPath);
+            } else {
+                document.body.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                themeIconPath.setAttribute('d', moonPath);
+            }
+        });
+
+        // 等待新视图准备好后，注入自定义动画
+        transition.ready.then(() => {
+            const clipPath = [
+                `circle(0px at ${x}px ${y}px)`,
+                `circle(${endRadius}px at ${x}px ${y}px)`
+            ];
+
+            // 使用 Web Animations API 控制 ::view-transition-new(root) 的形变
+            document.documentElement.animate(
+                {
+                    clipPath: clipPath,
+                },
+                {
+                    duration: 500,       // 动画持续时间（毫秒）
+                    easing: 'ease-out',  // 缓动函数
+                    pseudoElement: '::view-transition-new(root)' // 指定只让新视图进行圆形扩散
+                }
+            );
+        });
     });
 }
 
@@ -41,6 +90,8 @@ if (btnThemeToggle && themeIconPath) {
  * 全局工具监听与绑定函数
  * ==========================================
  */
+
+/** 绑定开关类按钮：点击切换 prop.on，并执行可选回调 */
 const bindToggle = (domEl, prop, cb) => {
     domEl.addEventListener('click', () => {
         prop.on = !prop.on;
@@ -49,6 +100,7 @@ const bindToggle = (domEl, prop, cb) => {
     });
 };
 
+/** 绑定旋钮/滑块：input 时更新标签并执行 act 回调 */
 const bindKnob = (domInput, domLbl, domOsd, fmt, act) => {
     domInput.addEventListener('input', (e) => {
         let v = parseFloat(e.target.value);
@@ -57,6 +109,55 @@ const bindKnob = (domInput, domLbl, domOsd, fmt, act) => {
         act(v);
     });
 };
+
+// ==========================================
+// 垂直 / 输入：下拉选择 + 单卡片
+// ==========================================
+const txtClass = (n) => `txt-ch${n}`;
+
+let currentSelectedCh = 1;
+
+function refreshVerticalCard(ch) {
+    const c = STATE['ch' + ch];
+    if (!c || !DOM.verticalChSelect) return;
+    currentSelectedCh = ch;
+    DOM.verticalChSelect.value = String(ch);
+    
+    for (let i = 1; i <= 8; i++) {
+        const btn = DOM['ch' + i + 'Toggle'];
+        if (btn) {
+            const chState = STATE['ch' + i];
+            btn.classList.toggle('active', chState.on);
+        }
+    }
+    
+    DOM.knobPosSel.value = c.pos;
+    DOM.lblPosSel.innerText = c.pos.toFixed(2);
+    const vPerDiv = 1 / c.scale;
+    DOM.numScaleSel.value = vPerDiv.toFixed(2);
+    DOM.cplChSel.value = c.cpl;
+}
+
+function refreshInputCard(ch) {
+    const c = STATE['ch' + ch];
+    if (!c || !DOM.inputChSelect) return;
+    DOM.inputChSelect.value = String(ch);
+    DOM.inputGenLabel.innerText = 'CH' + ch;
+    DOM.inputGenLabel.className = 'txt-ch' + ch + ' font-mono';
+    DOM.inputGenLabel.classList.remove('txt-ch1','txt-ch2','txt-ch3','txt-ch4','txt-ch5','txt-ch6','txt-ch7','txt-ch8');
+    DOM.inputGenLabel.classList.add('txt-ch' + ch);
+    DOM.genTypeSel.value = c.genType || 'off';
+    DOM.numGenFreqSel.value = c.genFreq ?? 1000;
+    DOM.knobGenFreqSel.value = Math.log10(c.genFreq || 1000) * 100;
+    DOM.numGenAmpSel.value = (c.genAmp ?? 0.5).toFixed(2);
+    DOM.knobGenAmpSel.value = c.genAmp ?? 0.5;
+}
+
+// 重新收集 DOM 引用（新控件）
+document.querySelectorAll('[id]').forEach(el => {
+    const camelCaseId = el.id.replace(/-([a-z0-9])/g, (g) => g[1].toUpperCase());
+    if (!DOM[camelCaseId]) DOM[camelCaseId] = el;
+});
 
 // ==========================================
 // 视口与基础系统控制
@@ -81,11 +182,19 @@ DOM.btnRunstop.addEventListener('click', function () {
 // 顶部工具栏控制
 // ==========================================
 
-bindToggle(DOM.btnCh1, STATE.ch1);
-bindToggle(DOM.btnCh2, STATE.ch2);
-bindToggle(DOM.btnMath, STATE.math, () => {
-    DOM.osdMathBox.style.display = STATE.math.on ? 'flex' : 'none';
-});
+// 垂直区：下拉切换 + 开关按钮 + 单卡片通道控制
+if (DOM.verticalChSelect) {
+    DOM.verticalChSelect.addEventListener('change', () => refreshVerticalCard(parseInt(DOM.verticalChSelect.value)));
+}
+for (let i = 1; i <= 8; i++) {
+    const btn = DOM['ch' + i + 'Toggle'];
+    if (btn) {
+        btn.addEventListener('click', () => {
+            STATE['ch' + i].on = !STATE['ch' + i].on;
+            refreshVerticalCard(currentSelectedCh);
+        });
+    }
+}
 
 // YT / XY 模式切换
 DOM.btnXy.addEventListener('click', function () {
@@ -136,35 +245,40 @@ DOM.btnTrigEn.addEventListener('click', function () {
     }
 });
 
-// CH1 垂直档位与偏移
-bindKnob(DOM.knobPos1, DOM.lblPos1, null, v => v.toFixed(2), v => STATE.ch1.pos = v);
-DOM.numScale1.addEventListener('change', (e) => {
-    let v = parseFloat(e.target.value);
-    if (isNaN(v) || v <= 0) v = 0.25;
-    e.target.value = v.toFixed(2);
-    STATE.ch1.scale = 1 / v;
-    DOM.osdCh1Scale.innerText = v.toFixed(2) + 'V';
-    updateTriggerUI();
-});
-DOM.cplCh1.addEventListener('change', e => {
-    STATE.ch1.cpl = e.target.value;
-    DOM.osdCpl1.innerText = e.target.value;
-});
-
-// CH2 垂直档位与偏移
-bindKnob(DOM.knobPos2, DOM.lblPos2, null, v => v.toFixed(2), v => STATE.ch2.pos = v);
-DOM.numScale2.addEventListener('change', (e) => {
-    let v = parseFloat(e.target.value);
-    if (isNaN(v) || v <= 0) v = 0.25;
-    e.target.value = v.toFixed(2);
-    STATE.ch2.scale = 1 / v;
-    DOM.osdCh2Scale.innerText = v.toFixed(2) + 'V';
-    updateTriggerUI();
-});
-DOM.cplCh2.addEventListener('change', e => {
-    STATE.ch2.cpl = e.target.value;
-    DOM.osdCpl2.innerText = e.target.value;
-});
+// 垂直区：POS / SCALE / CPL 绑定到当前选中通道
+if (DOM.knobPosSel && DOM.lblPosSel) {
+    bindKnob(DOM.knobPosSel, DOM.lblPosSel, null, v => v.toFixed(2), v => {
+        const ch = parseInt(DOM.verticalChSelect?.value || currentSelectedCh);
+        STATE['ch' + ch].pos = v;
+    });
+}
+if (DOM.numScaleSel) {
+    DOM.numScaleSel.addEventListener('change', (e) => {
+        const ch = parseInt(DOM.verticalChSelect?.value || currentSelectedCh);
+        let v = parseFloat(e.target.value);
+        if (isNaN(v) || v <= 0) v = 0.25;
+        e.target.value = v.toFixed(2);
+        STATE['ch' + ch].scale = 1 / v;
+        updateTriggerUI();
+    });
+}
+if (DOM.cplChSel) {
+    DOM.cplChSel.addEventListener('change', e => {
+        const ch = parseInt(DOM.verticalChSelect?.value || currentSelectedCh);
+        STATE['ch' + ch].cpl = e.target.value;
+    });
+}
+if (DOM.btnSelUp && DOM.btnSelDn && DOM.numScaleSel) {
+    DOM.btnSelUp.addEventListener('click', () => {
+        let v = parseFloat(DOM.numScaleSel.value) || 0;
+        DOM.numScaleSel.value = (v + 0.05).toFixed(2);
+        DOM.numScaleSel.dispatchEvent(new Event('change'));
+    });
+    DOM.btnSelDn.addEventListener('click', () => {
+        let v = parseFloat(DOM.numScaleSel.value) || 0;
+        if (v > 0.05) { DOM.numScaleSel.value = (v - 0.05).toFixed(2); DOM.numScaleSel.dispatchEvent(new Event('change')); }
+    });
+}
 
 // 水平中心偏移 (H-POS)
 bindKnob(DOM.knobHpos, DOM.lblHpos, null, v => v.toFixed(1) + '%', v => STATE.hpos = v);
@@ -212,7 +326,7 @@ DOM.btnAutoset.addEventListener('click', () => {
         return;
     }
     
-    const scanLen = Math.min(8000, Buffers.dataL.length);
+    const scanLen = Math.min(8000, Buffers.data1.length);
     const currentRate = (STATE.current && STATE.current.sampleRate) ? STATE.current.sampleRate : CONFIG.sampleRate;
 
     const analyzeChannel = (rawData) => {
@@ -239,62 +353,38 @@ DOM.btnAutoset.addEventListener('click', () => {
         return { dcOffset, vpp, freq, valid: vpp > 0.02 }; 
     };
 
-    const stat1 = analyzeChannel(Buffers.dataL);
-    const stat2 = analyzeChannel(Buffers.dataR);
-
-    if (!stat1.valid && !stat2.valid) {
-        showSysModal('Auto-Set 失败', '双通道信号均太微弱或无信号，无法自动捕捉');
+    const stats = Array.from({ length: CHANNEL_COUNT }, (_, i) => analyzeChannel(Buffers['data' + (i + 1)]));
+    const anyValid = stats.some(s => s.valid);
+    if (!anyValid) {
+        showSysModal('Auto-Set 失败', '所有通道信号均太微弱或无信号，无法自动捕捉');
         return;
     }
 
-    let vPerDiv1 = (stat1.valid && STATE.ch1.on) ? stat1.vpp / 4.0 : 0.01;
-    let vPerDiv2 = (stat2.valid && STATE.ch2.on) ? stat2.vpp / 4.0 : 0.01;
-    
-    let targetVPerDiv = Math.max(vPerDiv1, vPerDiv2);
+    let targetVPerDiv = 0.01;
+    for (let i = 0; i < CHANNEL_COUNT; i++) {
+        const ch = STATE['ch' + (i + 1)];
+        if (stats[i].valid && ch.on) targetVPerDiv = Math.max(targetVPerDiv, stats[i].vpp / 4.0);
+    }
     let unifiedScale = Math.max(0.01, Math.min(1000, 1.0 / targetVPerDiv));
 
-    if (stat1.valid && STATE.ch1.on) {
-        STATE.ch1.scale = unifiedScale;
-        STATE.ch1.pos = -stat1.dcOffset * unifiedScale * (2.0 / CONFIG.gridY); 
-        
-        DOM.knobPos1.value = STATE.ch1.pos; 
-        DOM.lblPos1.innerText = STATE.ch1.pos.toFixed(2);
-        DOM.numScale1.value = targetVPerDiv.toFixed(2); 
-        DOM.osdCh1Scale.innerText = targetVPerDiv.toFixed(2) + 'V';
-    }
-
-    if (stat2.valid && STATE.ch2.on) {
-        STATE.ch2.scale = unifiedScale;
-        STATE.ch2.pos = -stat2.dcOffset * unifiedScale * (2.0 / CONFIG.gridY); 
-        
-        DOM.knobPos2.value = STATE.ch2.pos; 
-        DOM.lblPos2.innerText = STATE.ch2.pos.toFixed(2);
-        DOM.numScale2.value = targetVPerDiv.toFixed(2); 
-        DOM.osdCh2Scale.innerText = targetVPerDiv.toFixed(2) + 'V';
-    }
-
-    let masterFreq = 0;
-    let trigSrc = 'CH1';
-    let trigOffset = 0;
-
-    if (stat1.valid && stat2.valid && STATE.ch1.on && STATE.ch2.on) {
-        if (stat1.vpp >= stat2.vpp) { 
-            masterFreq = stat1.freq; 
-            trigSrc = 'CH1'; 
-            trigOffset = stat1.dcOffset; 
-        } else { 
-            masterFreq = stat2.freq; 
-            trigSrc = 'CH2'; 
-            trigOffset = stat2.dcOffset; 
+    for (let i = 0; i < CHANNEL_COUNT; i++) {
+        const n = i + 1, ch = STATE['ch' + n];
+        if (stats[i].valid && ch.on) {
+            ch.scale = unifiedScale;
+            ch.pos = -stats[i].dcOffset * unifiedScale * (2.0 / CONFIG.gridY);
         }
-    } else if (stat1.valid && STATE.ch1.on) { 
-        masterFreq = stat1.freq; 
-        trigSrc = 'CH1'; 
-        trigOffset = stat1.dcOffset; 
-    } else if (stat2.valid && STATE.ch2.on) { 
-        masterFreq = stat2.freq; 
-        trigSrc = 'CH2'; 
-        trigOffset = stat2.dcOffset; 
+    }
+    refreshVerticalCard(currentSelectedCh);
+
+    let masterFreq = 0, trigSrc = 'CH1', trigOffset = 0, bestVpp = 0;
+    for (let i = 0; i < CHANNEL_COUNT; i++) {
+        const ch = STATE['ch' + (i + 1)];
+        if (stats[i].valid && ch.on && stats[i].vpp > bestVpp) {
+            bestVpp = stats[i].vpp;
+            masterFreq = stats[i].freq;
+            trigSrc = 'CH' + (i + 1);
+            trigOffset = stats[i].dcOffset;
+        }
     }
 
     if (masterFreq > 0) {
@@ -376,6 +466,7 @@ DOM.btnMic.addEventListener('click', async function () {
 // 交互与拖拽事件控制 (Canvas 层)
 // ==========================================
 
+/** 将鼠标/触摸事件坐标转换为 NDC (-1 ~ 1) */
 const getNDC = (e) => {
     const rect = DOM.glCanvas.getBoundingClientRect(); 
     let cX = e.clientX;
@@ -392,6 +483,7 @@ const getNDC = (e) => {
     };
 };
 
+/** 检测光标拖拽起始：判断是否点中某条光标线 */
 const startCursorDrag = (e) => {
     if (STATE.cursor.mode === 0) return;
     
@@ -407,6 +499,7 @@ const startCursorDrag = (e) => {
     }
 };
 
+/** 执行光标拖拽：根据 dragging 类型更新对应坐标 */
 const doCursorDrag = (e) => {
     if (!STATE.cursor.dragging) return; 
     e.preventDefault(); 
@@ -419,6 +512,7 @@ const doCursorDrag = (e) => {
     }
 };
 
+/** 结束光标拖拽 */
 const endCursorDrag = () => { 
     STATE.cursor.dragging = null; 
 };
@@ -449,70 +543,76 @@ window.addEventListener('touchend', endCursorDrag);
 // 内置信号发生器 (AWG) 控制
 // ==========================================
 
-const bindFreqControl = (ch) => {
-    const slider = DOM[`knobGenFreq${ch}`];
-    const numBox = DOM[`numGenFreq${ch}`];
-    
-    slider.addEventListener('input', (e) => { 
-        let freq = Math.round(Math.pow(10, e.target.value / 100)); 
-        numBox.value = freq; 
-        updateAWG(ch, freq); 
-    });
-    
-    numBox.addEventListener('change', (e) => { 
-        let freq = parseFloat(e.target.value); 
-        if (isNaN(freq) || freq < 1) freq = 1; 
-        
-        let maxFreq = CONFIG.sampleRate / 2; 
-        if (freq > maxFreq) freq = maxFreq; 
-        
-        numBox.value = freq; 
-        slider.value = Math.log10(freq) * 100; 
-        updateAWG(ch, freq); 
-    });
-    
-    DOM[`genType${ch}`].addEventListener('change', () => { 
-        updateAWG(ch, parseFloat(numBox.value)); 
-    });
-};
+// 输入区：下拉切换 + 单组控件
+if (DOM.inputChSelect) {
+    DOM.inputChSelect.addEventListener('change', () => refreshInputCard(parseInt(DOM.inputChSelect.value)));
+}
 
-const bindAmpControl = (ch) => {
-    const slider = DOM[`knobGenAmp${ch}`];
-    const numBox = DOM[`numGenAmp${ch}`];
-    
-    slider.addEventListener('input', (e) => { 
-        let amp = parseFloat(e.target.value); 
-        numBox.value = amp.toFixed(2); 
-        
-        if (ch === 1 && AudioState.awgGain1) {
-            AudioState.awgGain1.gain.setValueAtTime(amp, AudioState.audioCtx.currentTime); 
-        }
-        if (ch === 2 && AudioState.awgGain2) {
-            AudioState.awgGain2.gain.setValueAtTime(amp, AudioState.audioCtx.currentTime); 
-        }
-    });
-    
-    numBox.addEventListener('change', (e) => { 
-        let amp = parseFloat(e.target.value); 
-        if (isNaN(amp) || amp < 0) amp = 0; 
-        if (amp > 20) amp = 20; 
-        
-        numBox.value = amp.toFixed(2); 
-        slider.value = amp; 
-        
-        if (ch === 1 && AudioState.awgGain1) {
-            AudioState.awgGain1.gain.setValueAtTime(amp, AudioState.audioCtx.currentTime); 
-        }
-        if (ch === 2 && AudioState.awgGain2) {
-            AudioState.awgGain2.gain.setValueAtTime(amp, AudioState.audioCtx.currentTime); 
-        }
-    });
-};
+const getInputCh = () => parseInt(DOM.inputChSelect?.value || 1);
 
-bindFreqControl(1); 
-bindFreqControl(2);
-bindAmpControl(1); 
-bindAmpControl(2);
+if (DOM.knobGenFreqSel && DOM.numGenFreqSel) {
+    DOM.knobGenFreqSel.addEventListener('input', (e) => {
+        const ch = getInputCh();
+        let freq = Math.round(Math.pow(10, e.target.value / 100));
+        STATE['ch' + ch].genFreq = freq;
+        DOM.numGenFreqSel.value = freq;
+        updateAWG(ch, freq);
+    });
+    DOM.numGenFreqSel.addEventListener('change', (e) => {
+        const ch = getInputCh();
+        let freq = parseFloat(e.target.value);
+        if (isNaN(freq) || freq < 1) freq = 1;
+        if (freq > CONFIG.sampleRate / 2) freq = CONFIG.sampleRate / 2;
+        STATE['ch' + ch].genFreq = freq;
+        DOM.numGenFreqSel.value = freq;
+        DOM.knobGenFreqSel.value = Math.log10(freq) * 100;
+        updateAWG(ch, freq);
+    });
+}
+if (DOM.genTypeSel) {
+    DOM.genTypeSel.addEventListener('change', (e) => {
+        const ch = getInputCh();
+        STATE['ch' + ch].genType = e.target.value;
+        rebuildChannel(ch);
+    });
+}
+if (DOM.knobGenAmpSel && DOM.numGenAmpSel) {
+    DOM.knobGenAmpSel.addEventListener('input', (e) => {
+        const ch = getInputCh();
+        let amp = parseFloat(e.target.value);
+        STATE['ch' + ch].genAmp = amp;
+        DOM.numGenAmpSel.value = amp.toFixed(2);
+        const g = AudioState['awgGain' + ch];
+        if (g && AudioState.audioCtx) g.gain.setValueAtTime(amp, AudioState.audioCtx.currentTime);
+    });
+    DOM.numGenAmpSel.addEventListener('change', (e) => {
+        const ch = getInputCh();
+        let amp = parseFloat(e.target.value);
+        if (isNaN(amp) || amp < 0) amp = 0;
+        if (amp > 20) amp = 20;
+        STATE['ch' + ch].genAmp = amp;
+        DOM.numGenAmpSel.value = amp.toFixed(2);
+        DOM.knobGenAmpSel.value = amp;
+        const g = AudioState['awgGain' + ch];
+        if (g && AudioState.audioCtx) g.gain.setValueAtTime(amp, AudioState.audioCtx.currentTime);
+    });
+}
+
+// 双声道输出：左/右通道选择
+if (DOM.awgOutLeft) {
+    DOM.awgOutLeft.addEventListener('change', (e) => {
+        STATE.awgOutL = parseInt(e.target.value);
+        initAudio();
+        rebuildStereoRouting();
+    });
+}
+if (DOM.awgOutRight) {
+    DOM.awgOutRight.addEventListener('change', (e) => {
+        STATE.awgOutR = parseInt(e.target.value);
+        initAudio();
+        rebuildStereoRouting();
+    });
+}
 
 // AWG 监听扬声器 (已全部改为 classList 切换)
 DOM.btnAwgSpk.addEventListener('click', function () {
@@ -533,10 +633,10 @@ DOM.btnAwgSpk.addEventListener('click', function () {
 // 音频文件解析与播放控制
 // ==========================================
 
+/** 首次用户交互时解锁 Web Audio 上下文 (浏览器策略要求) */
 const unlockAudio = () => { 
     initAudio(); 
-    rebuildChannel(1); 
-    rebuildChannel(2); 
+    for (let i = 1; i <= CHANNEL_COUNT; i++) rebuildChannel(i); 
     if (AudioState.audioCtx && AudioState.audioCtx.state === 'suspended') {
         AudioState.audioCtx.resume(); 
     }
@@ -610,31 +710,11 @@ DOM.btnAudioToggle.addEventListener('click', function () {
 });
 
 DOM.knobAudioSpeed.dispatchEvent(new Event('input')); 
-DOM.cplCh1.dispatchEvent(new Event('change')); 
-DOM.cplCh2.dispatchEvent(new Event('change')); 
+if (DOM.cplChSel) DOM.cplChSel.dispatchEvent(new Event('change'));
 updateTriggerUI();
 
-[1, 2].forEach(ch => {
-    const input = DOM['numScale' + ch]; 
-    const btnUp = document.getElementById('btn-s' + ch + '-up'); 
-    const btnDn = document.getElementById('btn-s' + ch + '-dn');
-    
-    if (btnUp && btnDn && input) {
-        btnUp.addEventListener('click', () => { 
-            let v = parseFloat(input.value) || 0; 
-            input.value = (v + 0.05).toFixed(2); 
-            input.dispatchEvent(new Event('change')); 
-        });
-        
-        btnDn.addEventListener('click', () => { 
-            let v = parseFloat(input.value) || 0; 
-            if (v > 0.05) { 
-                input.value = (v - 0.05).toFixed(2); 
-                input.dispatchEvent(new Event('change')); 
-            } 
-        });
-    }
-});
+refreshVerticalCard(1);
+refreshInputCard(1);
 
 DOM.osdSamplerate.innerText = (CONFIG.sampleRate / 1000).toFixed(1) + 'kSa/s (Audio)';
 
@@ -737,6 +817,20 @@ if (btnSerialSpk) {
             SerialEngine.audioAccumL = [];
             SerialEngine.audioAccumR = [];
         }
+    });
+}
+
+// 串口双声道输出：左/右通道选择
+if (DOM.serialOutLeft) {
+    DOM.serialOutLeft.addEventListener('change', (e) => {
+        STATE.serialOutL = parseInt(e.target.value);
+        initAudio();
+    });
+}
+if (DOM.serialOutRight) {
+    DOM.serialOutRight.addEventListener('change', (e) => {
+        STATE.serialOutR = parseInt(e.target.value);
+        initAudio();
     });
 }
 

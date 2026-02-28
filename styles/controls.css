@@ -1,3 +1,8 @@
+/* ==========================================
+   Controls - 控制面板组件
+   ========================================== */
+
+/* 控件分组容器 */
 .hw-group {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -9,6 +14,7 @@
     transition: background 0.3s, border-color 0.3s;
 }
 
+/* 分组标题 */
 .group-title {
     font-size: 11px;
     font-weight: 600;
@@ -50,6 +56,7 @@
     align-items: center;
 }
 
+/* 通道控制块 (CH1/CH2) */
 .ch-box {
     background: var(--bg-panel);
     padding: 16px;
@@ -61,13 +68,14 @@
     transition: background 0.3s, border-color 0.3s;
 }
 
-    .ch-box.ch1 {
-        border-top: 3px solid var(--ch1-color);
-    }
-
-    .ch-box.ch2 {
-        border-top: 3px solid var(--ch2-color);
-    }
+    .ch-box.ch1 { border-top: 3px solid var(--ch1-color); }
+    .ch-box.ch2 { border-top: 3px solid var(--ch2-color); }
+    .ch-box.ch3 { border-top: 3px solid var(--ch3-color); }
+    .ch-box.ch4 { border-top: 3px solid var(--ch4-color); }
+    .ch-box.ch5 { border-top: 3px solid var(--ch5-color); }
+    .ch-box.ch6 { border-top: 3px solid var(--ch6-color); }
+    .ch-box.ch7 { border-top: 3px solid var(--ch7-color); }
+    .ch-box.ch8 { border-top: 3px solid var(--ch8-color); }
 
 /* --- 统一切换类按钮基础样式 --- */
 .hw-btn {
@@ -159,7 +167,7 @@
         font-family: 'Courier New', monospace;
         font-size: 12px;
         font-weight: bold;
-        text-align: right;
+        text-align: left;
         flex: 1;
         width: 0;
     }
@@ -222,6 +230,7 @@ input[type=range] {
         outline: none;
     }
 
+/* 音频控制区域 */
 .audio-control-cluster {
     background: var(--bg-panel);
     border: 1px solid var(--border-color);
@@ -261,6 +270,11 @@ input[type=range] {
         color: var(--ch1-color);
     }
 
+.txt-ch1 { color: var(--ch1-color); } .txt-ch2 { color: var(--ch2-color); }
+.txt-ch3 { color: var(--ch3-color); } .txt-ch4 { color: var(--ch4-color); }
+.txt-ch5 { color: var(--ch5-color); } .txt-ch6 { color: var(--ch6-color); }
+.txt-ch7 { color: var(--ch7-color); } .txt-ch8 { color: var(--ch8-color); }
+
 .osd-btn-primary {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -278,6 +292,7 @@ input[type=range] {
     margin-left: 20px;
 }
 
+/* 系统模态框 */
 .sys-modal-overlay {
     position: fixed;
     top: 0;

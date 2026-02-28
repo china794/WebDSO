@@ -1,3 +1,7 @@
+/* ==========================================
+   Layout - 主布局与主题变量
+   ========================================== */
+
 :root {
     /* --- 深色模式 (默认) --- */
     --bg-body: #09090b;
@@ -11,9 +15,9 @@
     --osd-text: #ffffff;
     --osd-bg: rgba(15, 15, 15, 0.7);
     --osd-border: rgba(255, 255, 255, 0.1);
-    /* 核心主题色 */
-    --ch1-color: #eab308;
-    --ch2-color: #06b6d4;
+    /* 核心主题色 (8 通道) */
+    --ch1-color: #eab308; --ch2-color: #06b6d4; --ch3-color: #22c55e; --ch4-color: #ec4899;
+    --ch5-color: #f97316; --ch6-color: #a855f7; --ch7-color: #84cc16; --ch8-color: #e11d48;
     --math-color: #c084fc;
     --color-run: #22c55e;
     --color-stop: #ef4444;
@@ -41,8 +45,8 @@
     --osd-bg: rgba(244, 244, 245, 0.85);
     --osd-border: rgba(0, 0, 0, 0.1);
     --osd-text: #18181b;
-    --ch1-color: #d97706;
-    --ch2-color: #0891b2;
+    --ch1-color: #b91c1c; --ch2-color: #1d4ed8; --ch3-color: #15803d; --ch4-color: #be185d;
+    --ch5-color: #c2410c; --ch6-color: #7e22ce; --ch7-color: #65a30d; --ch8-color: #9f1239;
     --math-color: #9333ea;
     --color-run: #16a34a;
     --color-stop: #dc2626;
@@ -52,12 +56,14 @@
     --shadow-color: rgba(0,0,0,0.1); /* 浅色模式阴影变淡 */
 }
 
+/* 全局重置 */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
+/* 根容器 */
 body {
     background: var(--bg-body);
     color: var(--text-main);
@@ -67,9 +73,25 @@ body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    transition: background 0.3s, color 0.3s; /* 加入平滑过渡动画 */
+    /* 关闭默认过渡，交给 View Transition 处理 */
 }
 
+/* View Transitions API 核心样式 */
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+    z-index: 1;
+}
+
+::view-transition-new(root) {
+    z-index: 2;
+}
+
+/* 滚动条样式 */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -88,6 +110,7 @@ body {
         background: var(--text-dim);
     }
 
+/* 主容器：左右分栏 */
 .main-container {
     display: flex;
     width: 100vw;
@@ -101,6 +124,7 @@ body {
     transition: background 0.3s;
 }
 
+/* 左侧：波形显示区 */
 .left-panel {
     flex: 1;
     display: flex;
@@ -111,6 +135,7 @@ body {
     background: transparent;
 }
 
+/* 右侧：控制面板 */
 .right-panel {
     width: 480px;
     flex-shrink: 0;
@@ -126,6 +151,7 @@ body {
     transition: background 0.3s, border-color 0.3s;
 }
 
+/* 波形屏幕外框 */
 .screen-wrapper {
     flex: 1;
     width: 100%;
@@ -152,6 +178,7 @@ canvas {
 }
 
 
+/* 响应式：小屏垂直布局 */
 @media (max-width: 1024px) {
     body {
         overflow-y: auto;

@@ -1,9 +1,15 @@
-import { STATE, Buffers, CONFIG, CACHE, DOM } from './core.js';
+import { STATE, Buffers, CONFIG, CACHE, DOM, CHANNEL_COUNT } from './core.js';
 import { FFT } from './lib/fft.js';
 
-// ==========================================
-// 信号处理与分析模块 (Signal Processing)
-// ==========================================
+/**
+ * ==========================================
+ * 信号处理与分析模块 (Signal Processing)
+ * ==========================================
+ * 功能：
+ * - 触发点搜索 (findTriggerIndex)
+ * - 原始数据归一化 (processData)
+ * - 测量与 FFT 频谱 (updateMeasurements)
+ */
 
 const FFT_SIZE = 32768; 
 const fftProcessor = new FFT(FFT_SIZE);
@@ -11,7 +17,7 @@ const fftProcessor = new FFT(FFT_SIZE);
 /**
  * 寻找触发器 (Trigger) 的水平断点索引
  * 用于稳定波形显示，防止波形在屏幕上乱跑
- * * @param {Float32Array} data - 输入的波形数据数组
+ * @param {Float32Array} data - 输入的波形数据数组
  * @param {number} ptsNeeded - 视口需要显示的采样点数
  * @param {number} offset - 搜索偏移量 (当前未使用，预留参数)
  * @param {number} targetLevel - 设定的触发电平 (映射后的 NDC 坐标)
@@ -88,10 +94,10 @@ export function processData(rawArray, stateObj, out) {
 
 /**
  * 实时更新测量数据 (Vpp, Freq) 并执行 FFT 频谱分析
- * @param {Float32Array} ch1Raw - CH1 通道原始数据
- * @param {Float32Array} ch2Raw - CH2 通道原始数据
+ * @param {...Float32Array} rawArrays - 各通道原始数据 (CH1-CH8)
  */
-export function updateMeasurements(ch1Raw, ch2Raw) {
+export function updateMeasurements(ch1Raw, ch2Raw, ch3Raw, ch4Raw, ch5Raw, ch6Raw, ch7Raw, ch8Raw) {
+    const rawArrays = [ch1Raw, ch2Raw, ch3Raw, ch4Raw, ch5Raw, ch6Raw, ch7Raw, ch8Raw];
     // 如果测量面板和频谱分析都没开，直接退出
     if (!STATE.measure && !(STATE.fft && STATE.fft.on)) return;
 
@@ -99,11 +105,9 @@ export function updateMeasurements(ch1Raw, ch2Raw) {
 
     // ==========================================
     // 模块 A：基础参数测量 (Vpp & Frequency)
-    // 仅当开启【测量】时执行
     // ==========================================
     if (STATE.measure) {
         const scanLen = 8000;
-        
         const calc = (arr, cpl) => {
             let max = -999;
             let min = 999;
@@ -139,56 +143,30 @@ export function updateMeasurements(ch1Raw, ch2Raw) {
             };
         };
 
-        const r1 = calc(ch1Raw, STATE.ch1.cpl);
-        const r2 = calc(ch2Raw, STATE.ch2.cpl);
-
-        // 缓存优化：仅当数值发生变化时才操作 DOM
-        if (CACHE.mCh1Vpp !== r1.vpp) { 
-            DOM.measCh1Vpp.innerText = r1.vpp; 
-            CACHE.mCh1Vpp = r1.vpp; 
-        }
-        if (CACHE.mCh1Freq !== r1.freq) { 
-            DOM.measCh1Freq.innerText = r1.freq; 
-            CACHE.mCh1Freq = r1.freq; 
-        }
-        if (CACHE.mCh2Vpp !== r2.vpp) { 
-            DOM.measCh2Vpp.innerText = r2.vpp; 
-            CACHE.mCh2Vpp = r2.vpp; 
-        }
-        if (CACHE.mCh2Freq !== r2.freq) { 
-            DOM.measCh2Freq.innerText = r2.freq; 
-            CACHE.mCh2Freq = r2.freq; 
+        for (let i = 0; i < CHANNEL_COUNT && rawArrays[i]; i++) {
+            const n = i + 1, r = calc(rawArrays[i], STATE['ch' + n].cpl);
+            const vppKey = 'mCh' + n + 'Vpp', freqKey = 'mCh' + n + 'Freq';
+            const vppEl = DOM['measCh' + n + 'Vpp'], freqEl = DOM['measCh' + n + 'Freq'];
+            if (CACHE[vppKey] !== r.vpp && vppEl) { vppEl.innerText = r.vpp; CACHE[vppKey] = r.vpp; }
+            if (CACHE[freqKey] !== r.freq && freqEl) { freqEl.innerText = r.freq; CACHE[freqKey] = r.freq; }
         }
     }
 
     // ==========================================
     // 模块 B：高级频谱分析 (FFT)
-    // 双通道并行处理，独立于测量面板运行
     // ==========================================
     if (STATE.fft && STATE.fft.on) {
-        
-        // CH1 通道 FFT 计算
-        if (STATE.ch1.on) {
-            const sampleSegment1 = ch1Raw.slice(-FFT_SIZE);
-            const result1 = fftProcessor.forward(sampleSegment1);
-            
-            // 动态扩容缓冲池以适配新的精度
-            if (STATE.fft.buffer1.length !== result1.length) {
-                STATE.fft.buffer1 = new Float32Array(result1.length);
+        for (let i = 0; i < CHANNEL_COUNT && rawArrays[i]; i++) {
+            const n = i + 1;
+            if (STATE['ch' + n].on) {
+                const seg = rawArrays[i].slice(-FFT_SIZE);
+                const result = fftProcessor.forward(seg);
+                const bufKey = 'buffer' + n;
+                if (STATE.fft[bufKey].length !== result.length) {
+                    STATE.fft[bufKey] = new Float32Array(result.length);
+                }
+                STATE.fft[bufKey].set(result);
             }
-            STATE.fft.buffer1.set(result1);
-        }
-        
-        // CH2 通道 FFT 计算
-        if (STATE.ch2.on) {
-            const sampleSegment2 = ch2Raw.slice(-FFT_SIZE);
-            const result2 = fftProcessor.forward(sampleSegment2);
-            
-            // 动态扩容缓冲池以适配新的精度
-            if (STATE.fft.buffer2.length !== result2.length) {
-                STATE.fft.buffer2 = new Float32Array(result2.length);
-            }
-            STATE.fft.buffer2.set(result2);
         }
     }
 }

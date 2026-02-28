@@ -1,4 +1,4 @@
-import { CONFIG, DOM, STATE, Buffers, showSysModal } from './core.js';
+import { CONFIG, DOM, STATE, Buffers, showSysModal, CHANNEL_COUNT } from './core.js';
 import { AudioState } from './audio.js';
 import { FFT } from './lib/fft.js';
 
@@ -20,13 +20,13 @@ export const SerialEngine = {
     textDecoder: new TextDecoder(),
     
     // 示波器环形缓冲区 (用于渲染)
-    ringL: new Float32Array(CONFIG.fftSize),
-    ringR: new Float32Array(CONFIG.fftSize),
+    ring1: new Float32Array(CONFIG.fftSize), ring2: new Float32Array(CONFIG.fftSize),
+    ring3: new Float32Array(CONFIG.fftSize), ring4: new Float32Array(CONFIG.fftSize),
+    ring5: new Float32Array(CONFIG.fftSize), ring6: new Float32Array(CONFIG.fftSize),
+    ring7: new Float32Array(CONFIG.fftSize), ring8: new Float32Array(CONFIG.fftSize),
     head: 0,
 
-    // ------------------------------------------
-    // 音频控制与缓冲变量 (数据可听化)
-    // ------------------------------------------
+    // 音频控制与缓冲变量 (数据可听化，取 CH1/CH2 用于立体声)
     audioAccumL: [],
     audioAccumR: [],
     audioNextTime: 0,
@@ -248,20 +248,19 @@ export const SerialEngine = {
      * @param {Array<number>} v - 提取出的浮点数据数组
      */
     pushToRings: function(v) { 
-        const v1 = v[0] || 0;
-        const v2 = v.length > 1 ? v[1] : v1; 
-        
-        // 1. 推入图形渲染环
-        this.ringL[this.head] = v1; 
-        this.ringR[this.head] = v2; 
+        for (let i = 1; i <= CHANNEL_COUNT; i++) {
+            this['ring' + i][this.head] = v[i - 1] ?? v[0] ?? 0;
+        }
         this.head = (this.head + 1) % CONFIG.fftSize; 
         
-        // 2. 声音监听钩子 (将数据分流到音频池)
+        // 2. 声音监听钩子 (使用 serialOutL/serialOutR 选择通道用于立体声)
         if (STATE.serial && STATE.serial.speaker) {
             const currentRate = STATE.current.sampleRate || 16000;
-            // WebAudio API 强制要求采样率下限为 8000Hz。通过 Zero-order hold 做硬上采样
             const repeat = currentRate < 8000 ? Math.ceil(8000 / currentRate) : 1;
-            
+            const leftCh = (STATE.serialOutL || 1) - 1;
+            const rightCh = (STATE.serialOutR || 2) - 1;
+            const v1 = v[leftCh] ?? 0;
+            const v2 = v[rightCh] ?? v1;
             for(let i = 0; i < repeat; i++) {
                 this.audioAccumL.push(v1);
                 this.audioAccumR.push(v2);
@@ -322,13 +321,15 @@ export const SerialEngine = {
     },
 
     /**
-     * 将环形缓冲区的数据解包到线性渲染数组
+     * 将环形缓冲区的数据解包到线性渲染数组 (8 通道)
      */
-    fillData: function(outL, outR) { 
+    fillData: function(out1, out2, out3, out4, out5, out6, out7, out8) { 
+        const outs = [out1, out2, out3, out4, out5, out6, out7, out8];
         for (let i = 0; i < CONFIG.fftSize; i++) { 
             let idx = (this.head - CONFIG.fftSize + i + CONFIG.fftSize) % CONFIG.fftSize; 
-            outL[i] = this.ringL[idx]; 
-            outR[i] = this.ringR[idx]; 
+            for (let ch = 0; ch < CHANNEL_COUNT && outs[ch]; ch++) {
+                outs[ch][i] = this['ring' + (ch + 1)][idx];
+            }
         } 
     },
 
