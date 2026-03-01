@@ -1,4 +1,5 @@
 import { CONFIG, DOM, showSysModal, CHANNEL_COUNT, STATE } from './core.js';
+import { SYSTEM, AUDIO, GENERATOR } from './constants.js';
 
 /**
  * ==========================================
@@ -33,13 +34,13 @@ export function initAudio() {
             AudioState['analyser' + i + '_AC'].fftSize = CONFIG.fftSize;
             
             const hp = AudioState.audioCtx.createBiquadFilter();
-            hp.type = 'highpass'; hp.frequency.value = 10;
+            hp.type = 'highpass'; hp.frequency.value = AUDIO.HIGHPASS_FREQ;
             AudioState['ch' + i + 'Mixer'].connect(AudioState['analyser' + i + '_DC']);
             AudioState['ch' + i + 'Mixer'].connect(hp);
             hp.connect(AudioState['analyser' + i + '_AC']);
             
             const bias = AudioState.audioCtx.createConstantSource();
-            bias.offset.value = 0.000001;
+            bias.offset.value = AUDIO.DC_BIAS;
             bias.connect(AudioState['ch' + i + 'Mixer']);
             bias.start();
         }
@@ -92,8 +93,8 @@ export function rebuildChannel(ch) {
     
     if (type === 'off') return;
     
-    let freq = chState.genFreq ?? 1000;
-    let amp = chState.genAmp ?? 0.5;
+    let freq = chState.genFreq ?? GENERATOR.DEFAULT_FREQ;
+    let amp = chState.genAmp ?? GENERATOR.DEFAULT_AMP;
     
     let osc = AudioState.audioCtx.createOscillator();
     let gain = AudioState.audioCtx.createGain();
@@ -124,16 +125,16 @@ export function updateAWG(ch, freq) {
  * 将滑块数值映射为对数倍速 (0.001x - 2.0x)
  */
 export function getLogSpeed(sliderVal) {
-    const spd = 0.001 * Math.pow((2.0 / 0.001), sliderVal / 100); 
+    const spd = AUDIO.MIN_SPEED * Math.pow((AUDIO.MAX_SPEED / AUDIO.MIN_SPEED), sliderVal / AUDIO.SPEED_SLIDER_NORM); 
     // 加入死区：在 1.0 附近自动吸附，防止细微的手抖
-    return (spd > 0.97 && spd < 1.03) ? 1.0 : spd;
+    return (spd > AUDIO.SPEED_DEADZONE_LOW && spd < AUDIO.SPEED_DEADZONE_HIGH) ? AUDIO.NORMAL_SPEED : spd;
 }
 
 /**
  * 计算当前音频文件准确的播放进度时间
  */
 export function getCurrentTime() {
-    if (!AudioState.isMusicPlaying || !AudioState.audioBuffer || !AudioState.bufferSource || AudioState.audioCtx.state !== 'running') {
+    if (!AudioState.isMusicPlaying || !AudioState.audioBuffer || !AudioState.bufferSource || !AudioState.audioCtx || AudioState.audioCtx.state !== 'running') {
         return AudioState.startOffset;
     }
     return (AudioState.startOffset + (AudioState.audioCtx.currentTime - AudioState.startTime) * AudioState.bufferSource.playbackRate.value) % AudioState.audioBuffer.duration;
@@ -239,7 +240,7 @@ export async function playBuffer(fileOrUrl, offset = 0) {
         AudioState.bufferSource.connect(AudioState.musicGainNode);
         AudioState.bufferSource.start(0, offset % AudioState.audioBuffer.duration);
         
-        if (AudioState.audioCtx.state === 'suspended') {
+        if (AudioState.audioCtx?.state === 'suspended') {
             await AudioState.audioCtx.resume();
         }
     } catch (err) {

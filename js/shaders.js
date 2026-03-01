@@ -23,6 +23,7 @@ export const vsSource = `
 /**
  * 2. 主波形 - 片段着色器 (Fragment Shader)
  * 包含基于高斯误差函数 (erf) 的高级抗锯齿与线宽渲染算法
+ * 支持亮度密度补偿机制，解决大 sec/div 慢扫描模式下波形堆叠过深变白的问题
  */
 export const fsSource = `
     precision highp float;
@@ -31,6 +32,7 @@ export const fsSource = `
     uniform vec3 u_color;
     uniform float u_size;
     uniform float u_intensity;
+    uniform float u_densityAlpha;
     
     #define EPS 1E-6
     #define SQRT2 1.4142135623730951
@@ -65,6 +67,9 @@ export const fsSource = `
         // 计算光晕强度与最终透明度
         float intens = max(0.0, u_intensity - 0.4) * 0.7 - 1000.0 * u_size / 500.0;
         alpha = pow(alpha, 1.0 - intens) * (0.01 + min(0.99, u_intensity * 3.0));
+        
+        // 应用亮度密度补偿：解决大 sec/div 慢扫描模式下波形堆叠过深变白的问题
+        alpha *= u_densityAlpha;
         
         gl_FragColor = vec4(u_color * alpha, alpha);
     }

@@ -15,9 +15,9 @@
     --osd-text: #ffffff;
     --osd-bg: rgba(15, 15, 15, 0.7);
     --osd-border: rgba(255, 255, 255, 0.1);
-    /* 核心主题色 (8 通道) */
-    --ch1-color: #eab308; --ch2-color: #06b6d4; --ch3-color: #22c55e; --ch4-color: #ec4899;
-    --ch5-color: #f97316; --ch6-color: #a855f7; --ch7-color: #84cc16; --ch8-color: #e11d48;
+    /* 核心主题色 (8 通道) - 深色模式 */
+    --ch1-color: #FF3B30; --ch2-color: #007AFF; --ch3-color: #4CD964; --ch4-color: #00D4AA;
+    --ch5-color: #AF52DE; --ch6-color: #5AC8FA; --ch7-color: #FF9500; --ch8-color: #FF2D55;
     --math-color: #c084fc;
     --color-run: #22c55e;
     --color-stop: #ef4444;
@@ -41,12 +41,12 @@
     --border-color: #d4d4d8; /* 浅色边框 */
     --text-main: #18181b; /* 深黑文字 */
     --text-dim: #71717a; /* 中灰文字 */
-    /* 浅色模式下的核心主题色 (微微加深以保证白色背景下的对比度和清晰度) */
+    /* 浅色模式下的核心主题色 */
     --osd-bg: rgba(244, 244, 245, 0.85);
     --osd-border: rgba(0, 0, 0, 0.1);
     --osd-text: #18181b;
-    --ch1-color: #b91c1c; --ch2-color: #1d4ed8; --ch3-color: #15803d; --ch4-color: #be185d;
-    --ch5-color: #c2410c; --ch6-color: #7e22ce; --ch7-color: #65a30d; --ch8-color: #9f1239;
+    --ch1-color: #C41E3A; --ch2-color: #0056B3; --ch3-color: #228B22; --ch4-color: #008B6B;
+    --ch5-color: #7030A0; --ch6-color: #008B8B; --ch7-color: #D2691E; --ch8-color: #B03060;
     --math-color: #9333ea;
     --color-run: #16a34a;
     --color-stop: #dc2626;

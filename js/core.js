@@ -5,140 +5,222 @@
  * ==========================================
  */
 
+import {
+    SYSTEM, BUFFER, GRID, TRIGGER, TIMEBASE, GENERATOR, CURSOR, SERIAL, RENDER, COLOR
+} from './constants.js';
+
 /** 通道数量 */
-export const CHANNEL_COUNT = 8;
+export const CHANNEL_COUNT = SYSTEM.CHANNEL_COUNT;
 
 /** 通道默认配置 (含内置信号发生器参数) */
 const createChannelState = () => ({
     on: true, pos: 0, scale: 4.0, cpl: 'DC',
-    genType: 'off', genFreq: 1000, genAmp: 0.5
+    genType: 'off', genFreq: GENERATOR.DEFAULT_FREQ, genAmp: GENERATOR.DEFAULT_AMP
 });
 
 /**
  * 全局状态树 (STATE)
  * 集中管理示波器运行时的所有可调参数与 UI 状态
  */
-export const STATE = {
+/** * ==========================================
+ * 状态管理模块 (State Management)
+ * ==========================================
+ * 将原本庞大的上帝对象按功能域拆分，最后组合导出
+ */
+
+// 1. 系统核心与时基状态 (Core & Timebase)
+const coreState = {
     power: true, 
     run: true, 
     mode: 'YT',
-    ch1: { ...createChannelState(), on: true },
-    ch2: { ...createChannelState(), on: true },
-    ch3: { ...createChannelState(), on: false },
-    ch4: { ...createChannelState(), on: false },
-    ch5: { ...createChannelState(), on: false },
-    ch6: { ...createChannelState(), on: false },
-    ch7: { ...createChannelState(), on: false },
-    ch8: { ...createChannelState(), on: false },
+    hpos: 50,
+    secPerDiv: TIMEBASE.DEFAULT_MS,
+    current: {
+        sampleRate: SYSTEM.DEFAULT_SAMPLE_RATE,
+        isSerial: false,
+        lineSize: RENDER.DEFAULT_LINE_SIZE
+    },
+    // 真实采样率测量器 - 只数实际收到的有效帧
+    realSampleMeasurer: {
+        lastTime: performance.now(),
+        frameCount: 0,       // 真正收到的有效数据帧数
+        actualRate: 0        // 计算出来的真实频率 (Hz)
+    }
+};
+
+// 2. 通道状态 (Channels 1-8)
+const createChannelsState = () => {
+    const channels = {};
+    for (let i = 1; i <= 8; i++) {
+        // 默认只开启 ch1 和 ch2
+        channels[`ch${i}`] = { ...createChannelState(), on: i <= 2 };
+    }
+    return channels;
+};
+
+// 3. I/O 路由与串口状态 (I/O & Serial)
+const ioState = {
     awgOutL: 1,
     awgOutR: 2,
     serialOutL: 1,
     serialOutR: 2,
-    hpos: 50, 
-    secPerDiv: 5,
-    trigger: { src: 'CH1', edge: 1, level: 0.0, enabled: false },
-    measure: false, 
-    awgMonitor: false,
-    cursor: { mode: 0, v1: 0.25, v2: -0.25, t1: -0.25, t2: 0.25, dragging: null },
-    hover: { active: false, x: 0, y: 0 },
     serial: {
         connected: false,
-        baud: 115200,
+        baud: SERIAL.DEFAULT_BAUD,
         protocol: 'justfloat'
+    }
+};
+
+// 4. UI 组件与交互状态 (UI, Cursors & Hover)
+const uiState = {
+    measure: false,
+    awgMonitor: false,
+    trigger: { 
+        src: 'CH1', 
+        edge: 1, 
+        level: 0.0, 
+        enabled: false 
     },
-    current: {
-        sampleRate: 96000,
-        isSerial: false,
-        lineSize: 0.002
+    cursor: { 
+        mode: CURSOR.DEFAULT_MODE, 
+        v1: CURSOR.DEFAULT_V1, 
+        v2: CURSOR.DEFAULT_V2, 
+        t1: CURSOR.DEFAULT_T1, 
+        t2: CURSOR.DEFAULT_T2, 
+        dragging: null 
     },
-    fft: { 
-        on: false, 
-        maxFreq: 8000,
-        gain: 100,
-        buffer1: new Float32Array(4096),
-        buffer2: new Float32Array(4096),
-        buffer3: new Float32Array(4096),
-        buffer4: new Float32Array(4096),
-        buffer5: new Float32Array(4096),
-        buffer6: new Float32Array(4096),
-        buffer7: new Float32Array(4096),
-        buffer8: new Float32Array(4096)
-    },
+    hover: { 
+        active: false, 
+        x: 0, 
+        y: 0 
+    }
+};
+
+// 5. 分析工具状态 (FFT)
+const createFFTState = () => {
+    const fft = {
+        on: false,
+        maxFreq: RENDER.DEFAULT_FFT_MAX_FREQ,
+        gain: RENDER.DEFAULT_FFT_GAIN,
+    };
+    for (let i = 1; i <= 8; i++) {
+        fft[`buffer${i}`] = new Float32Array(BUFFER.FFT_SMALL);
+    }
+    return fft;
+};
+
+
+// ==========================================
+// 最终组装并导出，保持对外的 API 结构完全不变
+// ==========================================
+export const STATE = {
+    ...coreState,
+    ...createChannelsState(),
+    ...ioState,
+    ...uiState,
+    fft: createFFTState()
 };
 
 /**
  * 系统常量与动态色彩配置
  */
-export const CONFIG = { 
-    fftSize: 32768, 
-    sampleRate: 96000, 
-    gridX: 10, 
-    gridY: 8, 
-    
+// 颜色配置数据 - 浅色模式
+const LIGHT_COLORS = {
+    bg: [1.0, 1.0, 1.0, 1.0],
+    channels: [
+        [0.77, 0.12, 0.23], [0.00, 0.34, 0.70], [0.13, 0.55, 0.13], [0.00, 0.55, 0.42],
+        [0.44, 0.19, 0.63], [0.00, 0.55, 0.55], [0.82, 0.41, 0.12], [0.69, 0.19, 0.38]
+    ],
+    hex: ['#C41E3A', '#0056B3', '#228B22', '#008B6B', '#7030A0', '#008B8B', '#D2691E', '#B03060'],
+    grid: '#e4e4e7', crosshair: '#a1a1aa', trigger: 'rgba(234, 88, 12, 0.5)',
+    cursorY: '#9333ea', cursorX: '#0284c7', hoverBg: 'rgba(255, 255, 255, 0.9)',
+    hoverBorder: '#d4d4d8', hoverText: '#18181b',
+    cM: [0.57, 0.20, 0.91], cXY: [0.05, 0.6, 0.1],
+    fftBg: 'rgba(244, 244, 245, 0.85)', fftTextDim: 'rgba(0, 0, 0, 0.4)', fftTextBright: '#16a34a'
+};
+
+// 颜色配置数据 - 深色模式
+const DARK_COLORS = {
+    bg: [0.0, 0.0, 0.0, 1.0],
+    channels: [
+        [1.00, 0.23, 0.19], [0.00, 0.48, 1.00], [0.30, 0.85, 0.39], [0.00, 0.83, 0.67],
+        [0.69, 0.32, 0.87], [0.35, 0.78, 0.98], [1.00, 0.58, 0.00], [1.00, 0.18, 0.33]
+    ],
+    hex: ['#FF3B30', '#007AFF', '#4CD964', '#00D4AA', '#AF52DE', '#5AC8FA', '#FF9500', '#FF2D55'],
+    grid: '#1e2920', crosshair: '#2d4a30', trigger: 'rgba(255, 165, 0, 0.4)',
+    cursorY: '#a855f7', cursorX: '#38bdf8', hoverBg: 'rgba(10, 10, 12, 0.85)',
+    hoverBorder: '#444', hoverText: '#ffffff',
+    cM: [0.75, 0.51, 0.98], cXY: [0.1, 1.0, 0.2],
+    fftBg: 'rgba(0, 30, 10, 0.6)', fftTextDim: 'rgba(255, 255, 255, 0.6)', fftTextBright: '#4ade80'
+};
+
+/** 生成通道颜色对象 */
+function generateChannelColors(cfg) {
+    const result = {};
+    for (let i = 0; i < 8; i++) {
+        const n = i + 1;
+        result['c' + n] = cfg.channels[i];
+        result['c' + n + 'Hex'] = cfg.hex[i];
+        result['fftC' + n] = cfg.hex[i].replace(')', ', 0.95)').replace('#', 'rgba(').replace(/([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})/i, (_, r, g, b) => `${parseInt(r,16)}, ${parseInt(g,16)}, ${parseInt(b,16)}`);
+        if (cfg === LIGHT_COLORS) {
+            result['fftC' + n] = cfg.hex[i].replace('#', 'rgba(').replace(/([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})/i, (_, r, g, b) => `${parseInt(r,16)}, ${parseInt(g,16)}, ${parseInt(b,16)}, 0.95)`);
+            result['miniTrace' + n] = cfg.hex[i].replace('#', 'rgba(').replace(/([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})/i, (_, r, g, b) => `${parseInt(r,16)}, ${parseInt(g,16)}, ${parseInt(b,16)}, 0.8)`);
+        } else {
+            result['fftC' + n] = cfg.hex[i].replace('#', 'rgba(').replace(/([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})/i, (_, r, g, b) => `${parseInt(r,16)}, ${parseInt(g,16)}, ${parseInt(b,16)}, 0.8)`);
+            result['miniTrace' + n] = cfg.hex[i].replace('#', 'rgba(').replace(/([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})/i, (_, r, g, b) => `${parseInt(r,16)}, ${parseInt(g,16)}, ${parseInt(b,16)}, 0.8)`).toLowerCase();
+        }
+    }
+    return result;
+}
+
+export const CONFIG = {
+    fftSize: BUFFER.FFT_SIZE,
+    sampleRate: SYSTEM.DEFAULT_SAMPLE_RATE,
+    gridX: GRID.DIVISIONS_X,
+    gridY: GRID.DIVISIONS_Y,
+
     get colors() {
         const isLight = document.body.getAttribute('data-theme') === 'light';
-        return isLight ? {
-            // --- 浅色模式 (Light Mode) --- 深色波形便于白底对比
-            bg: [1.0, 1.0, 1.0, 1.0], 
-            c1: [0.73, 0.11, 0.11],   c2: [0.11, 0.31, 0.85],   c3: [0.08, 0.50, 0.24],   c4: [0.75, 0.10, 0.36],
-            c5: [0.76, 0.25, 0.05],   c6: [0.49, 0.13, 0.62],   c7: [0.40, 0.64, 0.04],   c8: [0.62, 0.07, 0.22],
-            cM: [0.57, 0.20, 0.91],   cXY: [0.05, 0.6, 0.1],    
-            
-            grid: '#e4e4e7',          crosshair: '#a1a1aa',     trigger: 'rgba(234, 88, 12, 0.5)', 
-            cursorY: '#9333ea',       cursorX: '#0284c7',       hoverBg: 'rgba(255, 255, 255, 0.9)', 
-            hoverBorder: '#d4d4d8',   hoverText: '#18181b',     
-            c1Hex: '#b91c1c', c2Hex: '#1d4ed8', c3Hex: '#15803d', c4Hex: '#be185d',
-            c5Hex: '#c2410c', c6Hex: '#7e22ce', c7Hex: '#65a30d', c8Hex: '#9f1239',
-            
-            fftBg: 'rgba(244, 244, 245, 0.85)',
-            fftC1: 'rgba(185, 28, 28, 0.95)', fftC2: 'rgba(29, 78, 216, 0.95)', fftC3: 'rgba(21, 128, 61, 0.95)',
-            fftC4: 'rgba(190, 24, 93, 0.95)', fftC5: 'rgba(194, 65, 12, 0.95)', fftC6: 'rgba(126, 34, 206, 0.95)',
-            fftC7: 'rgba(101, 163, 13, 0.95)', fftC8: 'rgba(159, 18, 57, 0.95)',
-            fftTextDim: 'rgba(0, 0, 0, 0.4)', fftTextBright: '#16a34a', 
-            
-            miniTrace1: 'rgba(185, 28, 28, 0.8)', miniTrace2: 'rgba(29, 78, 216, 0.8)', miniTrace3: 'rgba(21, 128, 61, 0.8)',
-            miniTrace4: 'rgba(190, 24, 93, 0.8)', miniTrace5: 'rgba(194, 65, 12, 0.8)', miniTrace6: 'rgba(126, 34, 206, 0.8)',
-            miniTrace7: 'rgba(101, 163, 13, 0.8)', miniTrace8: 'rgba(159, 18, 57, 0.8)'
-        } : {
-            // --- 深色模式 --- 亮色波形便于黑底对比
-            bg: [0.0, 0.0, 0.0, 1.0], 
-            c1: [0.91, 0.7, 0.04],    c2: [0.02, 0.71, 0.83],   c3: [0.13, 0.77, 0.37],   c4: [0.93, 0.28, 0.60],
-            c5: [0.98, 0.45, 0.02],   c6: [0.66, 0.33, 0.98],   c7: [0.52, 0.80, 0.05],   c8: [0.88, 0.12, 0.35],
-            cM: [0.75, 0.51, 0.98],   cXY: [0.1, 1.0, 0.2],     
-            
-            grid: '#1e2920', crosshair: '#2d4a30', trigger: 'rgba(255, 165, 0, 0.4)',
-            cursorY: '#a855f7', cursorX: '#38bdf8', hoverBg: 'rgba(10, 10, 12, 0.85)',
-            hoverBorder: '#444', hoverText: '#ffffff',
-            c1Hex: '#eab308', c2Hex: '#06b6d4', c3Hex: '#22c55e', c4Hex: '#ec4899',
-            c5Hex: '#f97316', c6Hex: '#a855f7', c7Hex: '#84cc16', c8Hex: '#e11d48',
-            
-            fftBg: 'rgba(0, 30, 10, 0.6)',
-            fftC1: 'rgba(234, 179, 8, 0.8)', fftC2: 'rgba(6, 182, 212, 0.8)', fftC3: 'rgba(34, 197, 94, 0.8)',
-            fftC4: 'rgba(236, 72, 153, 0.8)', fftC5: 'rgba(249, 115, 22, 0.8)', fftC6: 'rgba(168, 85, 247, 0.8)',
-            fftC7: 'rgba(132, 204, 22, 0.8)', fftC8: 'rgba(225, 29, 72, 0.8)',
-            fftTextDim: 'rgba(255, 255, 255, 0.6)', fftTextBright: '#4ade80',
-            
-            miniTrace1: 'rgba(234,179,8,0.8)', miniTrace2: 'rgba(6,182,212,0.8)', miniTrace3: 'rgba(34,197,94,0.8)',
-            miniTrace4: 'rgba(236,72,153,0.8)', miniTrace5: 'rgba(249,115,22,0.8)', miniTrace6: 'rgba(168,85,247,0.8)',
-            miniTrace7: 'rgba(132,204,22,0.8)', miniTrace8: 'rgba(225,29,72,0.8)'
+        const cfg = isLight ? LIGHT_COLORS : DARK_COLORS;
+        const channelColors = generateChannelColors(cfg);
+
+        return {
+            bg: cfg.bg,
+            ...channelColors,
+            cM: cfg.cM, cXY: cfg.cXY,
+            grid: cfg.grid, crosshair: cfg.crosshair, trigger: cfg.trigger,
+            cursorY: cfg.cursorY, cursorX: cfg.cursorX,
+            hoverBg: cfg.hoverBg, hoverBorder: cfg.hoverBorder, hoverText: cfg.hoverText,
+            fftBg: cfg.fftBg, fftTextDim: cfg.fftTextDim, fftTextBright: cfg.fftTextBright
         };
     }
 };
 
+/**
+ * 根据当前采样率计算FFT最大频率（奈奎斯特频率的一半，留有余量）
+ * @returns {number} 最大频率(Hz)
+ */
+export function getMaxFreqForCurrentMode() {
+    const currentRate = STATE.current.sampleRate || CONFIG.sampleRate;
+    // 奈奎斯特频率是采样率的一半，但留一些余量
+    // 使用采样率的0.48倍（比0.4大20%），确保能显示到奈奎斯特频率附近
+    return Math.floor(currentRate * 0.6);
+}
+
 /** X-Y 模式下李萨如图形的采样点数 */
-export const XY_PTS = 16384;
+export const XY_PTS = BUFFER.XY_POINTS;
 /** X-Y 模式下用于渐变透明度的查找表 (越新越亮) */
 export const ALPHA_LUT = new Float32Array(XY_PTS);
 
 for (let i = 0; i < XY_PTS; i++) {
-    ALPHA_LUT[i] = Math.pow(i / XY_PTS, 30);
+    ALPHA_LUT[i] = Math.pow(i / XY_PTS, COLOR.ALPHA_LUT_EXP);
 }
 
 /** WebGL 顶点缓冲布局常量 (每顶点 20 字节: 2*float pos + 3*float data) */
-export const GL_CONST = { 
-    BYTES_PER_VERTEX: 20, 
-    POS_OFFSET: 0, 
-    DATA_OFFSET: 8 
+export const GL_CONST = {
+    BYTES_PER_VERTEX: 20,
+    POS_OFFSET: 0,
+    DATA_OFFSET: 8
 };
 
 /** 全局 DOM 引用表：将 id 转为驼峰命名并缓存 */
@@ -152,22 +234,31 @@ document.querySelectorAll('[id]').forEach(el => {
 /** 渲染缓存：避免重复写 DOM 造成闪烁 */
 export const CACHE = { 
     tStateTxt: '', tStateColor: '', 
-    mCh1Vpp: '', mCh1Freq: '', mCh2Vpp: '', mCh2Freq: '', mCh3Vpp: '', mCh3Freq: '', mCh4Vpp: '', mCh4Freq: '',
-    mCh5Vpp: '', mCh5Freq: '', mCh6Vpp: '', mCh6Freq: '', mCh7Vpp: '', mCh7Freq: '', mCh8Vpp: '', mCh8Freq: '',
+    // CH1-CH8 测量值缓存 (Vpp, Freq, Vmax, Vmin, Vavg)
+    mCh1Vpp: '', mCh1Freq: '', mCh1Vmax: '', mCh1Vmin: '', mCh1Vavg: '',
+    mCh2Vpp: '', mCh2Freq: '', mCh2Vmax: '', mCh2Vmin: '', mCh2Vavg: '',
+    mCh3Vpp: '', mCh3Freq: '', mCh3Vmax: '', mCh3Vmin: '', mCh3Vavg: '',
+    mCh4Vpp: '', mCh4Freq: '', mCh4Vmax: '', mCh4Vmin: '', mCh4Vavg: '',
+    mCh5Vpp: '', mCh5Freq: '', mCh5Vmax: '', mCh5Vmin: '', mCh5Vavg: '',
+    mCh6Vpp: '', mCh6Freq: '', mCh6Vmax: '', mCh6Vmin: '', mCh6Vavg: '',
+    mCh7Vpp: '', mCh7Freq: '', mCh7Vmax: '', mCh7Vmin: '', mCh7Vavg: '',
+    mCh8Vpp: '', mCh8Freq: '', mCh8Vmax: '', mCh8Vmin: '', mCh8Vavg: '',
     audioTimeStr: '', audioSeekVal: -1 
 };
 
 /** 共享数据缓冲池：原始数据、处理后数据、FFT 结果 */
+// 使用串口模式的大缓冲区大小，确保可以显示更多波形数据
+const DATA_BUFFER_SIZE = Math.max(BUFFER.FFT_SIZE, BUFFER.SERIAL_FFT_SIZE);
 export const Buffers = {
-    data1: new Float32Array(CONFIG.fftSize), data2: new Float32Array(CONFIG.fftSize),
-    data3: new Float32Array(CONFIG.fftSize), data4: new Float32Array(CONFIG.fftSize),
-    data5: new Float32Array(CONFIG.fftSize), data6: new Float32Array(CONFIG.fftSize),
-    data7: new Float32Array(CONFIG.fftSize), data8: new Float32Array(CONFIG.fftSize),
-    pData1: new Float32Array(CONFIG.fftSize), pData2: new Float32Array(CONFIG.fftSize),
-    pData3: new Float32Array(CONFIG.fftSize), pData4: new Float32Array(CONFIG.fftSize),
-    pData5: new Float32Array(CONFIG.fftSize), pData6: new Float32Array(CONFIG.fftSize),
-    pData7: new Float32Array(CONFIG.fftSize), pData8: new Float32Array(CONFIG.fftSize),
-    fftResult: new Float32Array(CONFIG.fftSize / 2)
+    data1: new Float32Array(DATA_BUFFER_SIZE), data2: new Float32Array(DATA_BUFFER_SIZE),
+    data3: new Float32Array(DATA_BUFFER_SIZE), data4: new Float32Array(DATA_BUFFER_SIZE),
+    data5: new Float32Array(DATA_BUFFER_SIZE), data6: new Float32Array(DATA_BUFFER_SIZE),
+    data7: new Float32Array(DATA_BUFFER_SIZE), data8: new Float32Array(DATA_BUFFER_SIZE),
+    pData1: new Float32Array(DATA_BUFFER_SIZE), pData2: new Float32Array(DATA_BUFFER_SIZE),
+    pData3: new Float32Array(DATA_BUFFER_SIZE), pData4: new Float32Array(DATA_BUFFER_SIZE),
+    pData5: new Float32Array(DATA_BUFFER_SIZE), pData6: new Float32Array(DATA_BUFFER_SIZE),
+    pData7: new Float32Array(DATA_BUFFER_SIZE), pData8: new Float32Array(DATA_BUFFER_SIZE),
+    fftResult: new Float32Array(BUFFER.FFT_SIZE / 2)  // FFT结果保持标准大小
 };
 
 /**
@@ -179,15 +270,15 @@ export const updateTriggerUI = () => {
     const ch = STATE[src];
     if (!ch) return;
     let vPerDiv = 1.0 / ch.scale;
-    let range = 4.0 * vPerDiv;
-    
-    DOM.knobTlevel.min = -range; 
-    DOM.knobTlevel.max = range; 
-    DOM.knobTlevel.step = range / 100;
-    
+    let range = TRIGGER.RANGE_MULTIPLIER * vPerDiv;
+
+    DOM.knobTlevel.min = -range;
+    DOM.knobTlevel.max = range;
+    DOM.knobTlevel.step = range / TRIGGER.STEP_DIVISOR;
+
     STATE.trigger.level = Math.max(-range, Math.min(range, STATE.trigger.level));
     DOM.knobTlevel.value = STATE.trigger.level;
-    
+
     if (DOM.lblTlevel) {
         DOM.lblTlevel.innerText = STATE.trigger.level.toFixed(2) + 'V';
     }
@@ -212,10 +303,10 @@ export function showSysModal(title, text, onConfirm) {
     oldBtn.replaceWith(newBtn); 
     DOM.sysModalBtn = newBtn;
     
-    DOM.sysModalBtn.onclick = () => { 
-        DOM.sysModal.classList.remove('show'); 
+    DOM.sysModalBtn.onclick = () => {
+        DOM.sysModal.classList.remove('show');
         if (onConfirm) {
-            setTimeout(onConfirm, 50); 
+            setTimeout(onConfirm, 50);
         }
     };
 }
