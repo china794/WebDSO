@@ -10,7 +10,7 @@
 
 支持声卡输入、串口采集、音频文件分析，内置 8 通道任意波形发生器，WebGL 硬件加速渲染，可覆盖大多数串口波形可视化场景。
 
-[🚀 在线体验](https://wanghaohan.com/sbq.html)
+[🚀 在线体验](https://wanghaohan.com/WebDSO)
 
 ---
 
@@ -93,7 +93,7 @@
 
 ### 方式一：在线使用（推荐）
 
-直接访问 **[https://wanghaohan.com/sbq.html](https://wanghaohan.com/sbq.html)**
+直接访问 **[https://wanghaohan.com/sbq.html](https://wanghaohan.com/WebDSO)**
 
 无需安装，即开即用！
 
