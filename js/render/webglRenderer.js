@@ -40,6 +40,7 @@ let glDataArray;
 /** 初始化 WebGL 变量（在首次渲染时调用） */
 function initWebGLVars() {
     if (posAttr !== undefined) return; // 已初始化
+    if (!gl || !shaderProgram) return; // 确保WebGL已初始化
     
     posAttr = gl.getAttribLocation(shaderProgram, 'a_position');
     dataAttr = gl.getAttribLocation(shaderProgram, 'a_data');
@@ -56,19 +57,19 @@ function initWebGLVars() {
  * 使用 WebGL 绘制单条波形轨迹 (Y-T 或 X-Y 模式)
  */
 export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLight, viewCtx) {
+    if (!gl) return; // 确保WebGL已初始化
+    
     let aspect = DOM.glCanvas.height / DOM.glCanvas.width;
     let vIdx = 0, pointCount = 0;
     
     // 串口模式：使用纯色线条，不渲染到FBO
     const isSerial = STATE.current && STATE.current.isSerial;
     
-    // 串口模式：使用更细的线条
-    let uSize = isSerial ? 0.001 : (isLight ? 0.002 : ((STATE.current && STATE.current.lineSize) ? STATE.current.lineSize : 0.002));
-    let uIntensity = (isLight || isSerial) ? 2 : 1;
-    
-    // 串口模式：不使用密度补偿，使用纯色
-    const secDiv = STATE.secPerDiv || 1;
-    const densityAlpha = isSerial ? 1.0 : Math.max(0.6, 1.0 / Math.log(secDiv * 2 + 1.5));
+    // 亮度和线条粗细：Y-T模式和X-Y模式分开处理
+    let uSize = isLight ? 0.002 : ((STATE.current && STATE.current.lineSize) ? STATE.current.lineSize : 0.002);
+    // Y-T模式使用较高亮度(2.0)，X-Y模式使用中等亮度(1.0)
+    let uIntensity = isXY ? 1.0 : 2.0;
+    const densityAlpha = 1.0;
 
     const pushV = (vx, vy, lx, ly, len) => {
         glDataArray[vIdx++] = vx; glDataArray[vIdx++] = vy;
@@ -167,16 +168,16 @@ export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLi
  * 遍历并渲染所有开启通道的波形
  */
 export function renderWaveforms(theme, isLight, viewCtx) {
+    if (!gl) return; // 确保WebGL已初始化
+    
     initWebGLVars(); // 延迟初始化 WebGL 变量
     
-    // 串口模式：直接渲染到屏幕，不使用FBO和辉光效果
-    if (STATE.current && STATE.current.isSerial) {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, currentFboWidth, currentFboHeight);
-        // 清除背景，使用主题背景色
-        gl.clearColor(theme.bg[0], theme.bg[1], theme.bg[2], theme.bg[3]);
-        gl.clear(gl.COLOR_BUFFER_BIT);
-    }
+    // 所有模式直接渲染到屏幕，不使用FBO和辉光效果
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, currentFboWidth, currentFboHeight);
+    // 清除背景，使用主题背景色
+    gl.clearColor(theme.bg[0], theme.bg[1], theme.bg[2], theme.bg[3]);
+    gl.clear(gl.COLOR_BUFFER_BIT);
     
     if (STATE.mode === 'YT') {
         for (let i = 1; i <= CHANNEL_COUNT; i++) {
@@ -193,6 +194,8 @@ export function renderWaveforms(theme, isLight, viewCtx) {
  * 执行 Bloom 发光后期处理
  */
 export function applyBloom() {
+    if (!gl) return; // 确保WebGL已初始化
+    
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     gl.viewport(0, 0, currentFboWidth, currentFboHeight);
     gl.clear(gl.COLOR_BUFFER_BIT);

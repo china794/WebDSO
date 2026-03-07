@@ -300,6 +300,102 @@ export function clamp(value, min, max) {
 }
 
 /**
+ * 性能优化工具函数
+ */
+
+
+
+/**
+ * 批量DOM更新 - 减少重排重绘
+ * @param {Function} updateFunction - 更新函数
+ */
+export function batchDOMUpdates(updateFunction) {
+    let updateQueue = [];
+    let isBatching = false;
+    
+    return function batchedUpdate(...args) {
+        updateQueue.push(() => updateFunction.apply(this, args));
+        
+        if (!isBatching) {
+            isBatching = true;
+            requestAnimationFrame(() => {
+                updateQueue.forEach(update => update());
+                updateQueue = [];
+                isBatching = false;
+            });
+        }
+    };
+}
+
+/**
+ * 内存优化 - 清理未使用的对象引用
+ * @param {Object} obj - 要清理的对象
+ */
+export function cleanupObject(obj) {
+    if (obj && typeof obj === 'object') {
+        Object.keys(obj).forEach(key => {
+            if (obj[key] === null || obj[key] === undefined) {
+                delete obj[key];
+            }
+        });
+    }
+}
+
+/**
+ * 事件监听器管理 - 避免内存泄漏
+ */
+export class EventManager {
+    constructor() {
+        this.listeners = new Map();
+    }
+    
+    add(element, event, handler, options) {
+        if (!this.listeners.has(element)) {
+            this.listeners.set(element, new Map());
+        }
+        
+        const elementListeners = this.listeners.get(element);
+        if (!elementListeners.has(event)) {
+            elementListeners.set(event, new Set());
+        }
+        
+        elementListeners.get(event).add(handler);
+        element.addEventListener(event, handler, options);
+    }
+    
+    remove(element, event, handler) {
+        if (this.listeners.has(element)) {
+            const elementListeners = this.listeners.get(element);
+            if (elementListeners.has(event)) {
+                const handlers = elementListeners.get(event);
+                if (handlers.has(handler)) {
+                    handlers.delete(handler);
+                    element.removeEventListener(event, handler);
+                }
+                if (handlers.size === 0) {
+                    elementListeners.delete(event);
+                }
+            }
+            if (elementListeners.size === 0) {
+                this.listeners.delete(element);
+            }
+        }
+    }
+    
+    removeAll(element) {
+        if (this.listeners.has(element)) {
+            const elementListeners = this.listeners.get(element);
+            elementListeners.forEach((handlers, event) => {
+                handlers.forEach(handler => {
+                    element.removeEventListener(event, handler);
+                });
+            });
+            this.listeners.delete(element);
+        }
+    }
+}
+
+/**
  * 线性插值
  * @param {number} start - 起始值
  * @param {number} end - 结束值

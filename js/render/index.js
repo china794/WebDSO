@@ -28,48 +28,136 @@ import { calculateTimebaseAndTrigger } from './canvasRenderer.js';
  * ==========================================
  */
 
-export const ctx2d = DOM.oscilloscope?.getContext('2d', { alpha: true });
-export const gl = DOM.glCanvas?.getContext('webgl', { alpha: false, antialias: true, premultipliedAlpha: false });
+// 渲染上下文 - 延迟初始化
+export let ctx2d = null;
+export let gl = null;
 
-if (!ctx2d || !gl) console.error('Failed to get canvas context');
-
-/** 编译单个着色器并返回句柄，失败时输出错误日志 */
-function createShader(gl, type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error('Shader compile error:', gl.getShaderInfoLog(shader));
-        return null;
-    }
-    return shader;
-}
-
-export const shaderProgram = gl.createProgram();
-gl.attachShader(shaderProgram, createShader(gl, gl.VERTEX_SHADER, vsSource));
-gl.attachShader(shaderProgram, createShader(gl, gl.FRAGMENT_SHADER, fsSource));
-gl.linkProgram(shaderProgram);
-
-export const bloomProgram = gl.createProgram();
-gl.attachShader(bloomProgram, createShader(gl, gl.VERTEX_SHADER, vsBloom));
-gl.attachShader(bloomProgram, createShader(gl, gl.FRAGMENT_SHADER, fsBloom));
-gl.linkProgram(bloomProgram);
-
-export const posAttrBloom = gl.getAttribLocation(bloomProgram, 'a_pos');
-export const texUniBloom = gl.getUniformLocation(bloomProgram, 'u_texture');
-export const texSizeUniBloom = gl.getUniformLocation(bloomProgram, 'u_texSize');
-
-export const quadVBO = gl.createBuffer();
-gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
-gl.bufferData(gl.ARRAY_BUFFER, WEBGL.FULLSCREEN_QUAD, gl.STATIC_DRAW);
-
-export let fbo = gl.createFramebuffer();
-export let fboTexture = gl.createTexture();
+// WebGL程序和资源 - 延迟初始化
+export let shaderProgram = null;
+export let bloomProgram = null;
+export let posAttrBloom = null;
+export let texUniBloom = null;
+export let texSizeUniBloom = null;
+export let quadVBO = null;
+export let fbo = null;
+export let fboTexture = null;
 export let currentFboWidth = 0;
 export let currentFboHeight = 0;
 
+let isRenderInitialized = false;
+
+/**
+ * 初始化渲染上下文 - 应在DOM准备好后调用
+ */
+export function initRenderContexts() {
+    if (isRenderInitialized) return true;
+    
+    if (!DOM.oscilloscope || !DOM.glCanvas) {
+        console.error('Canvas elements not found in DOM');
+        return false;
+    }
+    
+    ctx2d = DOM.oscilloscope.getContext('2d', { alpha: true });
+    gl = DOM.glCanvas.getContext('webgl', { alpha: false, antialias: true, premultipliedAlpha: false });
+    
+    if (!ctx2d || !gl) {
+        console.error('Failed to get canvas context');
+        return false;
+    }
+    
+    // 监听WebGL上下文丢失事件
+    DOM.glCanvas.addEventListener('webglcontextlost', handleContextLost, false);
+    DOM.glCanvas.addEventListener('webglcontextrestored', handleContextRestored, false);
+    
+    initWebGLResources();
+    
+    isRenderInitialized = true;
+    return true;
+}
+
+/**
+ * 处理WebGL上下文丢失
+ */
+function handleContextLost(event) {
+    event.preventDefault();
+    console.warn('WebGL context lost - 等待恢复...');
+    isRenderInitialized = false;
+}
+
+/**
+ * 处理WebGL上下文恢复
+ */
+function handleContextRestored() {
+    // WebGL context restored - 重新初始化资源
+    initRenderContexts();
+}
+
+/**
+ * 初始化WebGL资源
+ */
+function initWebGLResources() {
+    if (!gl) return;
+    
+    /** 编译单个着色器并返回句柄，失败时输出错误日志 */
+    function createShader(gl, type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+            return null;
+        }
+        return shader;
+    }
+    
+    shaderProgram = gl.createProgram();
+    const vsShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
+    const fsShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+    if (vsShader && fsShader) {
+        gl.attachShader(shaderProgram, vsShader);
+        gl.attachShader(shaderProgram, fsShader);
+        gl.linkProgram(shaderProgram);
+        if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+            console.error('Shader program link error:', gl.getProgramInfoLog(shaderProgram));
+        }
+    }
+    
+    bloomProgram = gl.createProgram();
+    const vsBloomShader = createShader(gl, gl.VERTEX_SHADER, vsBloom);
+    const fsBloomShader = createShader(gl, gl.FRAGMENT_SHADER, fsBloom);
+    if (vsBloomShader && fsBloomShader) {
+        gl.attachShader(bloomProgram, vsBloomShader);
+        gl.attachShader(bloomProgram, fsBloomShader);
+        gl.linkProgram(bloomProgram);
+        if (!gl.getProgramParameter(bloomProgram, gl.LINK_STATUS)) {
+            console.error('Bloom program link error:', gl.getProgramInfoLog(bloomProgram));
+        }
+    }
+    
+    posAttrBloom = gl.getAttribLocation(bloomProgram, 'a_pos');
+    texUniBloom = gl.getUniformLocation(bloomProgram, 'u_texture');
+    texSizeUniBloom = gl.getUniformLocation(bloomProgram, 'u_texSize');
+    
+    quadVBO = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
+    gl.bufferData(gl.ARRAY_BUFFER, WEBGL.FULLSCREEN_QUAD, gl.STATIC_DRAW);
+    
+    fbo = gl.createFramebuffer();
+    fboTexture = gl.createTexture();
+    
+    // 启用混合
+    gl.enable(gl.BLEND);
+}
+
+// 为了兼容性，在模块加载时尝试初始化（如果DOM已准备好）
+// 但main.js应该在DOM准备好后调用initRenderContexts()
+if (DOM.oscilloscope && DOM.glCanvas) {
+    initRenderContexts();
+}
+
 /** 调整离屏渲染目标 (FBO) 尺寸，用于 Bloom 后期处理 */
 export function resizeFBO(w, h) {
+    if (!gl || !fbo || !fboTexture) return;
     gl.bindTexture(gl.TEXTURE_2D, fboTexture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
@@ -81,8 +169,6 @@ export function resizeFBO(w, h) {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 }
 
-gl.enable(gl.BLEND);
-
 /**
  * 响应窗口尺寸变化，更新 Canvas 分辨率与 DPR
  */
@@ -90,6 +176,11 @@ export function resize() {
     const dpr = window.devicePixelRatio || 1;
     const wrapper = document.querySelector('.screen-wrapper');
     if (!wrapper) return;
+    
+    // 确保渲染上下文已初始化
+    if (!gl || !ctx2d) {
+        if (!initRenderContexts()) return;
+    }
 
     let w = wrapper.clientWidth;
     let h = wrapper.clientHeight;
@@ -223,7 +314,12 @@ export function draw() {
     updateFPS();
     
     if (STATE.power) requestAnimationFrame(draw);
-    if (DOM.glCanvas.width <= 0 || DOM.glCanvas.height <= 0) return;
+    if (!DOM.glCanvas || DOM.glCanvas.width <= 0 || DOM.glCanvas.height <= 0) return;
+    
+    // 确保渲染上下文已初始化
+    if (!gl || !ctx2d) {
+        if (!initRenderContexts()) return;
+    }
 
     const theme = CONFIG.colors;
     const isLight = document.body.getAttribute('data-theme') === 'light';
@@ -234,11 +330,9 @@ export function draw() {
         currentFboHeight = DOM.glCanvas.height;
         resizeFBO(currentFboWidth, currentFboHeight);
     }
-    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-    gl.viewport(0, 0, currentFboWidth, currentFboHeight);
-    gl.clearColor(theme.bg[0], theme.bg[1], theme.bg[2], theme.bg[3]);
+    // 不再绑定到 FBO，直接渲染到屏幕
+    // 暗色主题使用叠加混合，亮色主题使用标准混合
     gl.blendFunc(gl.ONE, isLight ? gl.ONE_MINUS_SRC_ALPHA : gl.ONE);
-    gl.clear(gl.COLOR_BUFFER_BIT);
     gl.useProgram(shaderProgram);
 
     const dpr = window.devicePixelRatio || WEBGL.DEFAULT_DPR;
@@ -268,10 +362,6 @@ export function draw() {
     renderMinimap(theme, viewCtx);
 
     renderWaveforms(theme, isLight, viewCtx);
-    // 串口模式不使用辉光效果，直接绘制到屏幕
-    if (!STATE.current.isSerial) {
-        applyBloom();
-    }
 
     updateChannelOSD();
     updateAudioSeekbar();

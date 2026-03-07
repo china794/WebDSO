@@ -115,9 +115,9 @@ export function processData(rawArray, stateObj, out) {
     // AC耦合：使用高通滤波器去除直流分量（类似音频模式）
     if (stateObj.cpl === 'AC') {
         // 使用简单的高通滤波，截止频率对应10Hz（与音频模式一致）
-        // 归一化截止频率 = 10Hz / 采样率
+        // 归一化截止频率 = 10Hz / 采样率，限制在有效范围(0, 1)内
         const sampleRate = STATE.current.sampleRate || CONFIG.sampleRate;
-        const cutoffNorm = 10 / sampleRate;
+        const cutoffNorm = Math.min(0.99, Math.max(0.01, 10 / sampleRate));
         highpassFilter(rawArray, out, cutoffNorm);
         
         // 应用scale和pos

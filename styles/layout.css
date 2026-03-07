@@ -6,16 +6,17 @@
     /* --- 深色模式 (默认) --- */
     --bg-body: #09090b;
     --bg-panel: #121214;
-    --bg-card: #1c1c1f;
-    --bg-hover: #27272a;
-    --bg-input: #0e0e11;
-    --border-color: #27272a;
+    --bg-card: rgba(28, 28, 31, 0.6);
+    --bg-hover: rgba(39, 39, 42, 0.8);
+    --bg-input: rgba(14, 14, 17, 0.6);
+    --border-color: rgba(255, 255, 255, 0.1);
     --text-main: #f4f4f5;
     --text-dim: #a1a1aa;
     --osd-text: #ffffff;
     --osd-bg: rgba(15, 15, 15, 0.7);
     --osd-border: rgba(255, 255, 255, 0.1);
-    /* 核心主题色 (8 通道) - 深色模式 */
+    
+    /* 核心主题色 (8 通道) */
     --ch1-color: #FF3B30; --ch2-color: #007AFF; --ch3-color: #4CD964; --ch4-color: #00D4AA;
     --ch5-color: #AF52DE; --ch6-color: #5AC8FA; --ch7-color: #FF9500; --ch8-color: #FF2D55;
     --math-color: #c084fc;
@@ -24,6 +25,7 @@
     --color-blue: #3b82f6;
     --color-green: #4ade80;
     --color-purple: #a855f7;
+    
     /* 其他全局属性 */
     --shadow-color: rgba(0,0,0,0.6);
     --radius-sm: 4px;
@@ -33,15 +35,14 @@
 
 /* --- 浅色模式 (Light Mode) --- */
 [data-theme="light"] {
-    --bg-body: #e4e4e7; /* 浅灰底色 */
-    --bg-panel: #ffffff; /* 纯白面板 */
-    --bg-card: #f4f4f5; /* 极浅灰卡片 */
-    --bg-hover: #e4e4e7; /* 悬停颜色 */
-    --bg-input: #ffffff; /* 输入框纯白 */
-    --border-color: #d4d4d8; /* 浅色边框 */
-    --text-main: #18181b; /* 深黑文字 */
-    --text-dim: #71717a; /* 中灰文字 */
-    /* 浅色模式下的核心主题色 */
+    --bg-body: #e4e4e7;
+    --bg-panel: #ffffff;
+    --bg-card: rgba(244, 244, 245, 0.6);
+    --bg-hover: rgba(228, 228, 231, 0.8);
+    --bg-input: rgba(255, 255, 255, 0.8);
+    --border-color: rgba(0, 0, 0, 0.1);
+    --text-main: #18181b;
+    --text-dim: #71717a;
     --osd-bg: rgba(244, 244, 245, 0.85);
     --osd-border: rgba(0, 0, 0, 0.1);
     --osd-text: #18181b;
@@ -53,7 +54,7 @@
     --color-blue: #2563eb;
     --color-green: #16a34a;
     --color-purple: #7e22ce;
-    --shadow-color: rgba(0,0,0,0.1); /* 浅色模式阴影变淡 */
+    --shadow-color: rgba(0,0,0,0.1);
 }
 
 /* 全局重置 */
@@ -63,7 +64,7 @@
     padding: 0;
 }
 
-/* 根容器 */
+/* 根容器：除了移动端外，禁止 body 滚动 */
 body {
     background: var(--bg-body);
     color: var(--text-main);
@@ -73,55 +74,32 @@ body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    /* 关闭默认过渡，交给 View Transition 处理 */
 }
 
-/* View Transitions API 核心样式 */
+/* View Transitions */
 ::view-transition-old(root),
-::view-transition-new(root) {
-    animation: none;
-    mix-blend-mode: normal;
-}
-
-::view-transition-old(root) {
-    z-index: 1;
-}
-
-::view-transition-new(root) {
-    z-index: 2;
-}
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 2; }
 
 /* 滚动条样式 */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--border-color);
-    border-radius: 3px;
-}
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: var(--text-dim);
-    }
-
-/* 主容器：左右分栏 */
+/* ==========================================
+   Main Layout Container (扁平拼接)
+   ========================================== */
 .main-container {
     display: flex;
     width: 100vw;
     height: 100vh;
-    padding: 20px;
-    gap: 20px;
-    box-sizing: border-box;
+    padding: 0; /* 无外边距 */
+    gap: 0;     /* 无间隙 */
     background: var(--bg-body);
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s;
+    align-items: stretch;
+    justify-content: flex-start;
 }
 
 /* 左侧：波形显示区 */
@@ -132,82 +110,127 @@ body {
     min-width: 0;
     height: 100%;
     padding: 0;
-    background: transparent;
+    background: #000;
 }
 
-/* 右侧：控制面板 */
+/* 波形屏幕：无边框、无圆角 */
+.screen-wrapper {
+    flex: 1;
+    width: 100%;
+    background: #000;
+    border: none;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: none;
+}
+
+.screen-container { width: 100%; height: 100%; position: relative; cursor: crosshair; }
+canvas { display: block; width: 100%; height: 100%; }
+
+/* ==========================================
+   Right Panel: 固定框架 (Fixed Frame)
+   负责背景显示，不负责内容滚动
+   ========================================== */
 .right-panel {
     width: 480px;
     flex-shrink: 0;
     height: 100%;
-    background: var(--bg-panel);
-    border: 1px solid var(--border-color); /* 给浅色模式加一点点边界感 */
-    border-radius: var(--radius-lg);
-    padding: 24px;
+    
+    /* 核心布局 */
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    overflow-y: auto;
-    transition: background 0.3s, border-color 0.3s;
+    overflow: hidden; /* 禁止这里滚动 */
+    padding: 0;       /* 内边距移交给 panel-content */
+    
+    /* 样式：左侧分割线 */
+    border: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0;
+    
+    /* 背景层级上下文 */
+    position: relative;
+    z-index: 0;
+    background: transparent;
 }
 
-/* 波形屏幕外框 */
-.screen-wrapper {
+/* 层级1：背景图片 (固定不动) */
+.right-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image: var(--panel-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* 层级2：毛玻璃 (固定不动) */
+.right-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    
+    /* 深色模式滤镜 */
+    background: rgba(9, 9, 11, 0.75);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+/* 浅色模式适配 */
+[data-theme="light"] .right-panel::after {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(20px) saturate(120%);
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* 确保内容在背景之上 */
+.right-panel > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================
+   Panel Content: 滚动内容层 (Scrollable Content)
+   ========================================== */
+.panel-content {
+    /* 1. 填满高度并允许滚动 */
     flex: 1;
     width: 100%;
-    background: #000; /* 屏幕核心始终保持黑色，不随主题切换 */
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-lg);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 24px var(--shadow-color);
-    transition: border-color 0.3s, box-shadow 0.3s;
+    overflow-y: auto;
+    overflow-x: hidden;
+    
+    /* 2. 内边距 (Padding) 在这里定义 */
+    padding: 24px;
+    
+    /* 3. 布局模式 (解决挤在一起的问题) */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 控件之间的间距 */
 }
 
-.screen-container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    cursor: crosshair;
-}
-
-canvas {
-    display: block;
-    width: 100%;
-    height: 100%;
-}
-
-
-/* 响应式：小屏垂直布局 */
+/* 响应式调整 */
 @media (max-width: 1024px) {
-    body {
-        overflow-y: auto;
-        height: auto;
-    }
-
-    .main-container {
-        flex-direction: column;
-        height: auto;
-        align-items: stretch;
-        padding: 10px;
-        gap: 10px;
-    }
-
-    .left-panel {
-        width: 100%;
-        max-width: 100%;
-        height: auto;
-        aspect-ratio: 5 / 4;
-        flex-shrink: 1;
-        border-radius: 8px;
-    }
-
+    body { overflow-y: auto; height: auto; }
+    .main-container { flex-direction: column; height: auto; }
+    
+    .left-panel { width: 100%; aspect-ratio: 5 / 4; flex-shrink: 0; }
+    
     .right-panel {
         width: 100%;
-        min-width: 0;
         height: auto;
-        overflow-y: visible;
-        border-radius: 8px;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    
+    /* 移动端滚动适配 */
+    .panel-content {
+        height: auto;
+        max-height: 60vh;
         padding: 16px;
+        gap: 16px; /* 移动端间距稍微小一点 */
     }
 }

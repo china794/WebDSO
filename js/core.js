@@ -154,21 +154,26 @@ const DARK_COLORS = {
     fftBg: 'rgba(0, 30, 10, 0.6)', fftTextDim: 'rgba(255, 255, 255, 0.6)', fftTextBright: '#4ade80'
 };
 
+import { hexToRgba } from './utils.js';
+
 /** 生成通道颜色对象 */
 function generateChannelColors(cfg) {
     const result = {};
+    const isLight = cfg === LIGHT_COLORS;
+    
     for (let i = 0; i < 8; i++) {
         const n = i + 1;
+        const hexColor = cfg.hex[i];
+        
         result['c' + n] = cfg.channels[i];
-        result['c' + n + 'Hex'] = cfg.hex[i];
-        result['fftC' + n] = cfg.hex[i].replace(')', ', 0.95)').replace('#', 'rgba(').replace(/([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})/i, (_, r, g, b) => `${parseInt(r,16)}, ${parseInt(g,16)}, ${parseInt(b,16)}`);
-        if (cfg === LIGHT_COLORS) {
-            result['fftC' + n] = cfg.hex[i].replace('#', 'rgba(').replace(/([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})/i, (_, r, g, b) => `${parseInt(r,16)}, ${parseInt(g,16)}, ${parseInt(b,16)}, 0.95)`);
-            result['miniTrace' + n] = cfg.hex[i].replace('#', 'rgba(').replace(/([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})/i, (_, r, g, b) => `${parseInt(r,16)}, ${parseInt(g,16)}, ${parseInt(b,16)}, 0.8)`);
-        } else {
-            result['fftC' + n] = cfg.hex[i].replace('#', 'rgba(').replace(/([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})/i, (_, r, g, b) => `${parseInt(r,16)}, ${parseInt(g,16)}, ${parseInt(b,16)}, 0.8)`);
-            result['miniTrace' + n] = cfg.hex[i].replace('#', 'rgba(').replace(/([0-9A-F]{2})([0-9A-F]{2})([0-9A-F]{2})/i, (_, r, g, b) => `${parseInt(r,16)}, ${parseInt(g,16)}, ${parseInt(b,16)}, 0.8)`).toLowerCase();
-        }
+        result['c' + n + 'Hex'] = hexColor;
+        
+        // FFT颜色：浅色模式使用0.95透明度，深色模式使用0.8
+        const fftAlpha = isLight ? 0.95 : 0.8;
+        result['fftC' + n] = hexToRgba(hexColor, fftAlpha);
+        
+        // 小地图轨迹颜色统一使用0.8透明度
+        result['miniTrace' + n] = hexToRgba(hexColor, 0.8);
     }
     return result;
 }
@@ -203,7 +208,7 @@ export const CONFIG = {
 export function getMaxFreqForCurrentMode() {
     const currentRate = STATE.current.sampleRate || CONFIG.sampleRate;
     // 奈奎斯特频率是采样率的一半，但留一些余量
-    // 使用采样率的0.48倍（比0.4大20%），确保能显示到奈奎斯特频率附近
+    // 使用采样率的0.6倍（比0.5大20%），确保能显示到奈奎斯特频率附近
     return Math.floor(currentRate * 0.6);
 }
 
@@ -226,10 +231,20 @@ export const GL_CONST = {
 /** 全局 DOM 引用表：将 id 转为驼峰命名并缓存 */
 export const DOM = {};
 
-document.querySelectorAll('[id]').forEach(el => {
-    const camelCaseId = el.id.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-    DOM[camelCaseId] = el;
-});
+/** 全局事件管理器 - 避免内存泄漏 */
+import { EventManager } from './utils.js';
+export const eventManager = new EventManager();
+
+/**
+ * 初始化DOM引用 - 应在DOM加载完成后调用
+ * 这个函数会被main.js调用，确保DOM已准备好
+ */
+export function initDOM() {
+    document.querySelectorAll('[id]').forEach(el => {
+        const camelCaseId = el.id.replace(/-([a-z0-9])/g, (g) => g[1].toUpperCase());
+        DOM[camelCaseId] = el;
+    });
+}
 
 /** 渲染缓存：避免重复写 DOM 造成闪烁 */
 export const CACHE = { 
@@ -272,12 +287,14 @@ export const updateTriggerUI = () => {
     let vPerDiv = 1.0 / ch.scale;
     let range = TRIGGER.RANGE_MULTIPLIER * vPerDiv;
 
-    DOM.knobTlevel.min = -range;
-    DOM.knobTlevel.max = range;
-    DOM.knobTlevel.step = range / TRIGGER.STEP_DIVISOR;
+    if (DOM.knobTlevel) {
+        DOM.knobTlevel.min = -range;
+        DOM.knobTlevel.max = range;
+        DOM.knobTlevel.step = range / TRIGGER.STEP_DIVISOR;
 
-    STATE.trigger.level = Math.max(-range, Math.min(range, STATE.trigger.level));
-    DOM.knobTlevel.value = STATE.trigger.level;
+        STATE.trigger.level = Math.max(-range, Math.min(range, STATE.trigger.level));
+        DOM.knobTlevel.value = STATE.trigger.level;
+    }
 
     if (DOM.lblTlevel) {
         DOM.lblTlevel.innerText = STATE.trigger.level.toFixed(2) + 'V';
@@ -294,19 +311,47 @@ export const updateTriggerUI = () => {
  * @param {Function} [onConfirm] - 点击确认后的回调
  */
 export function showSysModal(title, text, onConfirm) {
+    if (!DOM.sysModal || !DOM.sysModalTitleText || !DOM.sysModalText || !DOM.sysModalBtn) {
+        console.error('Modal DOM elements not found');
+        return;
+    }
+    
     DOM.sysModalTitleText.innerText = title; 
     DOM.sysModalText.innerText = text; 
     DOM.sysModal.classList.add('show');
     
+    // 清理旧的事件监听器（通过替换按钮实现）
     const oldBtn = DOM.sysModalBtn; 
     const newBtn = oldBtn.cloneNode(true); 
+    
+    // 移除旧按钮的所有事件监听器
+    const oldBtnClone = oldBtn.cloneNode(false);
+    oldBtnClone.innerHTML = oldBtn.innerHTML;
+    
     oldBtn.replaceWith(newBtn); 
     DOM.sysModalBtn = newBtn;
     
-    DOM.sysModalBtn.onclick = () => {
+    // 添加新的事件监听器
+    const clickHandler = () => {
         DOM.sysModal.classList.remove('show');
+        // 移除事件监听器防止内存泄漏
+        DOM.sysModalBtn.removeEventListener('click', clickHandler);
         if (onConfirm) {
             setTimeout(onConfirm, 50);
         }
     };
+    
+    DOM.sysModalBtn.addEventListener('click', clickHandler);
+    
+    // 点击遮罩层关闭模态框
+    const backdropClickHandler = (e) => {
+        if (e.target === DOM.sysModal) {
+            DOM.sysModal.classList.remove('show');
+            DOM.sysModal.removeEventListener('click', backdropClickHandler);
+        }
+    };
+    
+    // 移除旧的遮罩层监听器并添加新的
+    DOM.sysModal.removeEventListener('click', backdropClickHandler);
+    DOM.sysModal.addEventListener('click', backdropClickHandler);
 }

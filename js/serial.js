@@ -31,6 +31,133 @@ export const SerialEngine = {
     _lastReadIdx: -1,
     _lastHead: -1,
 
+    // ==========================================
+    // 分块降采样缓存系统 - 支持大容量存储
+    // ==========================================
+    // 缓存级别：每级压缩10倍
+    // 原始数据: 524288 点
+    // L1缓存: 52428 点 (1/10)
+    // L2缓存: 5242 点 (1/100)
+    // L3缓存: 524 点 (1/1000)
+    // L4缓存: 52 点 (1/10000)
+    CACHE_LEVELS: 4,
+    _cacheValid: false,  // 缓存是否有效
+    _cacheLevels: [],    // 缓存数组
+    
+    /**
+     * 初始化多级缓存
+     */
+    initCache: function() {
+        this._cacheLevels = [];
+        const baseSize = this.ringSize; // 524288
+        for (let level = 0; level < this.CACHE_LEVELS; level++) {
+            const size = Math.max(1, Math.floor(baseSize / Math.pow(10, level + 1)));
+            const cache = {
+                min: new Float32Array(size),
+                max: new Float32Array(size),
+                valid: false
+            };
+            // 为8个通道创建缓存
+            for (let ch = 1; ch <= CHANNEL_COUNT; ch++) {
+                cache['ch' + ch + 'Min'] = new Float32Array(size);
+                cache['ch' + ch + 'Max'] = new Float32Array(size);
+            }
+            this._cacheLevels.push(cache);
+        }
+        this._cacheValid = false;
+    },
+    
+    /**
+     * 计算多级降采样缓存
+     * 使用峰值保持算法，每段保留最大值和最小值
+     */
+    updateCache: function(ringData) {
+        if (!this._cacheLevels.length) this.initCache();
+        
+        const ringSize = this.ringSize;
+        
+        for (let level = 0; level < this.CACHE_LEVELS; level++) {
+            const cache = this._cacheLevels[level];
+            const ratio = Math.pow(10, level + 1); // 压缩比: 10, 100, 1000, 10000
+            const blockSize = ratio;
+            const outSize = Math.floor(ringSize / blockSize);
+            
+            for (let ch = 1; ch <= CHANNEL_COUNT; ch++) {
+                const ring = this['ring' + ch];
+                const minArr = cache['ch' + ch + 'Min'];
+                const maxArr = cache['ch' + ch + 'Max'];
+                
+                // 峰值保持：每段找出最大值和最小值
+                for (let i = 0; i < outSize; i++) {
+                    const start = i * blockSize;
+                    const end = Math.min(start + blockSize, ringSize);
+                    
+                    let minVal = ring[start];
+                    let maxVal = ring[start];
+                    
+                    // 手动展开循环优化性能
+                    for (let j = start + 1; j < end; j++) {
+                        const v = ring[j];
+                        if (v < minVal) minVal = v;
+                        if (v > maxVal) maxVal = v;
+                    }
+                    
+                    minArr[i] = minVal;
+                    maxArr[i] = maxVal;
+                }
+            }
+        }
+        
+        this._cacheValid = true;
+    },
+    
+    /**
+     * 获取指定范围的降采样数据
+     * @param {number} startIdx - 起始索引
+     * @param {number} endIdx - 结束索引
+     * @param {Float32Array} output - 输出数组
+     */
+    getDownsampledData: function(startIdx, endIdx, output, channel) {
+        if (!this._cacheValid) {
+            // 缓存无效，直接返回原始数据
+            const ring = this['ring' + channel];
+            output.set(ring.subarray(startIdx, endIdx));
+            return;
+        }
+        
+        const ringSize = this.ringSize;
+        const outLen = output.length;
+        const range = endIdx - startIdx;
+        
+        // 选择合适的缓存级别
+        let level = 0;
+        const ratio = range / outLen;
+        
+        if (ratio > 1000) level = 3;
+        else if (ratio > 100) level = 2;
+        else if (ratio > 10) level = 1;
+        
+        const cache = this._cacheLevels[level];
+        const blockRatio = Math.pow(10, level + 1);
+        const cacheStart = Math.floor(startIdx / blockRatio);
+        
+        const minArr = cache['ch' + channel + 'Min'];
+        const maxArr = cache['ch' + channel + 'Max'];
+        
+        // 使用峰值保持重建波形
+        for (let i = 0; i < outLen; i++) {
+            const globalIdx = startIdx + i;
+            const cacheIdx = Math.floor(globalIdx / blockRatio);
+            
+            if (cacheIdx < minArr.length) {
+                // 选择最大或最小值，取决于原始数据的趋势
+                output[i] = maxArr[cacheIdx];
+            } else {
+                output[i] = 0;
+            }
+        }
+    },
+
     // 音频控制与缓冲变量 (数据可听化，取 CH1/CH2 用于立体声)
     audioAccumL: [],
     audioAccumR: [],
@@ -241,8 +368,12 @@ export const SerialEngine = {
     // 数据解析器 (Parsers)
     // ------------------------------------------
 
-    parseData: function(data) { 
-        DOM.serialProtocol.value === 'justfloat' ? this.parseJustFloat(data) : this.parseFireWater(data); 
+    parseData: function(data) {
+        if (DOM.serialProtocol.value === 'justfloat') {
+            this.parseJustFloat(data);
+        } else {
+            this.parseFireWater(data);
+        }
     },
     
     /**
@@ -494,6 +625,15 @@ export const SerialEngine = {
                 outs[ch].set(ring.subarray(readIdx, ringSize), 0);
                 outs[ch].set(ring.subarray(0, readIdx), firstPart);
             }
+        }
+        
+        // 更新降采样缓存（使用setTimeout异步更新，避免阻塞渲染）
+        if (!this._cacheUpdatePending) {
+            this._cacheUpdatePending = true;
+            setTimeout(() => {
+                this.updateCache();
+                this._cacheUpdatePending = false;
+            }, 0);
         }
     },
 

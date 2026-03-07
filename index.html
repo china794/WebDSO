@@ -39,38 +39,37 @@
                     <!-- OSD 顶部：运行状态、时基、采样率、触发信息 -->
                     <div class="osd-top">
                         <div class="flex-row items-center">
-                            <span id="osd-run-state" style="background:var(--color-run);color:#fff;padding:0 4px;border-radius:2px;font-weight:bold;">run</span>
-                            <span class="txt-y">H <span id="osd-timebase">5.0ms</span></span>
-                            <span class="txt-c">A <span id="osd-samplerate">48.0kSa/s</span></span>
+                            <span id="osd-run-state" class="osd-run-state">run</span>
+                            <span class="txt-y">H <span id="osd-timebase">5.0ms @ 96.0kHz</span></span>
                         </div>
                         <div class="flex-row items-center">
                             <span>T <span id="osd-trigger-src" class="txt-y">CH1</span> <span id="osd-trigger-edge">↗</span> <span id="osd-trigger-level">0.00V</span></span>
-                            <span id="osd-trigger-state" style="background: var(--osd-text); color: var(--bg-panel); padding: 0 4px; border-radius: 2px; font-weight: bold; margin-left: 8px;">自动</span>
+                            <span id="osd-trigger-state" class="osd-trigger-state">自动</span>
                         </div>
                     </div>
 
                     <!-- OSD 右侧：仅显示当前开启的频道档位 (由 render 根据 chX.on 控制显示) -->
                     <div id="osd-side" class="osd-side osd-side-8ch">
-                        <div id="osd-box-ch1" class="osd-box bd-ch1" style="display:none;"><div class="osd-title bg-ch1">CH1</div><div class="txt-dim" style="font-size:8px;" id="osd-cpl1">DC</div><div class="txt-ch1" style="font-weight:bold;" id="osd-ch1-scale">0.25V</div></div>
-                        <div id="osd-box-ch2" class="osd-box bd-ch2" style="display:none;"><div class="osd-title bg-ch2">CH2</div><div class="txt-dim" style="font-size:8px;" id="osd-cpl2">DC</div><div class="txt-ch2" style="font-weight:bold;" id="osd-ch2-scale">0.25V</div></div>
-                        <div id="osd-box-ch3" class="osd-box bd-ch3" style="display:none;"><div class="osd-title bg-ch3">CH3</div><div class="txt-dim" style="font-size:8px;" id="osd-cpl3">DC</div><div class="txt-ch3" style="font-weight:bold;" id="osd-ch3-scale">0.25V</div></div>
-                        <div id="osd-box-ch4" class="osd-box bd-ch4" style="display:none;"><div class="osd-title bg-ch4">CH4</div><div class="txt-dim" style="font-size:8px;" id="osd-cpl4">DC</div><div class="txt-ch4" style="font-weight:bold;" id="osd-ch4-scale">0.25V</div></div>
-                        <div id="osd-box-ch5" class="osd-box bd-ch5" style="display:none;"><div class="osd-title bg-ch5">CH5</div><div class="txt-dim" style="font-size:8px;" id="osd-cpl5">DC</div><div class="txt-ch5" style="font-weight:bold;" id="osd-ch5-scale">0.25V</div></div>
-                        <div id="osd-box-ch6" class="osd-box bd-ch6" style="display:none;"><div class="osd-title bg-ch6">CH6</div><div class="txt-dim" style="font-size:8px;" id="osd-cpl6">DC</div><div class="txt-ch6" style="font-weight:bold;" id="osd-ch6-scale">0.25V</div></div>
-                        <div id="osd-box-ch7" class="osd-box bd-ch7" style="display:none;"><div class="osd-title bg-ch7">CH7</div><div class="txt-dim" style="font-size:8px;" id="osd-cpl7">DC</div><div class="txt-ch7" style="font-weight:bold;" id="osd-ch7-scale">0.25V</div></div>
-                        <div id="osd-box-ch8" class="osd-box bd-ch8" style="display:none;"><div class="osd-title bg-ch8">CH8</div><div class="txt-dim" style="font-size:8px;" id="osd-cpl8">DC</div><div class="txt-ch8" style="font-weight:bold;" id="osd-ch8-scale">0.25V</div></div>
+                        <div id="osd-box-ch1" class="osd-box bd-ch1"><div class="osd-title bg-ch1">CH1</div><div class="txt-dim osd-cpl" id="osd-cpl1">DC</div><div class="txt-ch1 osd-scale" id="osd-ch1-scale">0.25V</div></div>
+                        <div id="osd-box-ch2" class="osd-box bd-ch2"><div class="osd-title bg-ch2">CH2</div><div class="txt-dim osd-cpl" id="osd-cpl2">DC</div><div class="txt-ch2 osd-scale" id="osd-ch2-scale">0.25V</div></div>
+                        <div id="osd-box-ch3" class="osd-box bd-ch3"><div class="osd-title bg-ch3">CH3</div><div class="txt-dim osd-cpl" id="osd-cpl3">DC</div><div class="txt-ch3 osd-scale" id="osd-ch3-scale">0.25V</div></div>
+                        <div id="osd-box-ch4" class="osd-box bd-ch4"><div class="osd-title bg-ch4">CH4</div><div class="txt-dim osd-cpl" id="osd-cpl4">DC</div><div class="txt-ch4 osd-scale" id="osd-ch4-scale">0.25V</div></div>
+                        <div id="osd-box-ch5" class="osd-box bd-ch5"><div class="osd-title bg-ch5">CH5</div><div class="txt-dim osd-cpl" id="osd-cpl5">DC</div><div class="txt-ch5 osd-scale" id="osd-ch5-scale">0.25V</div></div>
+                        <div id="osd-box-ch6" class="osd-box bd-ch6"><div class="osd-title bg-ch6">CH6</div><div class="txt-dim osd-cpl" id="osd-cpl6">DC</div><div class="txt-ch6 osd-scale" id="osd-ch6-scale">0.25V</div></div>
+                        <div id="osd-box-ch7" class="osd-box bd-ch7"><div class="osd-title bg-ch7">CH7</div><div class="txt-dim osd-cpl" id="osd-cpl7">DC</div><div class="txt-ch7 osd-scale" id="osd-ch7-scale">0.25V</div></div>
+                        <div id="osd-box-ch8" class="osd-box bd-ch8"><div class="osd-title bg-ch8">CH8</div><div class="txt-dim osd-cpl" id="osd-cpl8">DC</div><div class="txt-ch8 osd-scale" id="osd-ch8-scale">0.25V</div></div>
                     </div>
 
-                    <!-- 测量面板：频率、峰峰值 -->
+                    <!-- 测量面板：频率、峰峰值、最大/最小/平均电压 -->
                     <div id="measure-panel" class="measure-panel measure-panel-8ch">
-                        <div class="txt-ch1">CH1 Freq: <span id="meas-ch1-freq" style="color:var(--osd-text);font-weight:bold;">-- Hz</span> | Vpp: <span id="meas-ch1-vpp" style="color:var(--osd-text);font-weight:bold;">-- V</span></div>
-                        <div class="txt-ch2">CH2 Freq: <span id="meas-ch2-freq" style="color:var(--osd-text);font-weight:bold;">-- Hz</span> | Vpp: <span id="meas-ch2-vpp" style="color:var(--osd-text);font-weight:bold;">-- V</span></div>
-                        <div class="txt-ch3">CH3 Freq: <span id="meas-ch3-freq" style="color:var(--osd-text);font-weight:bold;">-- Hz</span> | Vpp: <span id="meas-ch3-vpp" style="color:var(--osd-text);font-weight:bold;">-- V</span></div>
-                        <div class="txt-ch4">CH4 Freq: <span id="meas-ch4-freq" style="color:var(--osd-text);font-weight:bold;">-- Hz</span> | Vpp: <span id="meas-ch4-vpp" style="color:var(--osd-text);font-weight:bold;">-- V</span></div>
-                        <div class="txt-ch5">CH5 Freq: <span id="meas-ch5-freq" style="color:var(--osd-text);font-weight:bold;">-- Hz</span> | Vpp: <span id="meas-ch5-vpp" style="color:var(--osd-text);font-weight:bold;">-- V</span></div>
-                        <div class="txt-ch6">CH6 Freq: <span id="meas-ch6-freq" style="color:var(--osd-text);font-weight:bold;">-- Hz</span> | Vpp: <span id="meas-ch6-vpp" style="color:var(--osd-text);font-weight:bold;">-- V</span></div>
-                        <div class="txt-ch7">CH7 Freq: <span id="meas-ch7-freq" style="color:var(--osd-text);font-weight:bold;">-- Hz</span> | Vpp: <span id="meas-ch7-vpp" style="color:var(--osd-text);font-weight:bold;">-- V</span></div>
-                        <div class="txt-ch8">CH8 Freq: <span id="meas-ch8-freq" style="color:var(--osd-text);font-weight:bold;">-- Hz</span> | Vpp: <span id="meas-ch8-vpp" style="color:var(--osd-text);font-weight:bold;">-- V</span></div>
+                        <div id="meas-ch1-row" class="txt-ch1" style="font-family:monospace;white-space:pre;">CH1 Freq:<span id="meas-ch1-freq" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:70px;text-align:right;">-- Hz</span> Vpp:<span id="meas-ch1-vpp" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmax:<span id="meas-ch1-vmax" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmin:<span id="meas-ch1-vmin" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vavg:<span id="meas-ch1-vavg" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span></div>
+                        <div id="meas-ch2-row" class="txt-ch2" style="font-family:monospace;white-space:pre;">CH2 Freq:<span id="meas-ch2-freq" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:70px;text-align:right;">-- Hz</span> Vpp:<span id="meas-ch2-vpp" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmax:<span id="meas-ch2-vmax" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmin:<span id="meas-ch2-vmin" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vavg:<span id="meas-ch2-vavg" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span></div>
+                        <div id="meas-ch3-row" class="txt-ch3" style="font-family:monospace;white-space:pre;">CH3 Freq:<span id="meas-ch3-freq" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:70px;text-align:right;">-- Hz</span> Vpp:<span id="meas-ch3-vpp" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmax:<span id="meas-ch3-vmax" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmin:<span id="meas-ch3-vmin" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vavg:<span id="meas-ch3-vavg" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span></div>
+                        <div id="meas-ch4-row" class="txt-ch4" style="font-family:monospace;white-space:pre;">CH4 Freq:<span id="meas-ch4-freq" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:70px;text-align:right;">-- Hz</span> Vpp:<span id="meas-ch4-vpp" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmax:<span id="meas-ch4-vmax" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmin:<span id="meas-ch4-vmin" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vavg:<span id="meas-ch4-vavg" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span></div>
+                        <div id="meas-ch5-row" class="txt-ch5" style="font-family:monospace;white-space:pre;">CH5 Freq:<span id="meas-ch5-freq" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:70px;text-align:right;">-- Hz</span> Vpp:<span id="meas-ch5-vpp" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmax:<span id="meas-ch5-vmax" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmin:<span id="meas-ch5-vmin" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vavg:<span id="meas-ch5-vavg" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span></div>
+                        <div id="meas-ch6-row" class="txt-ch6" style="font-family:monospace;white-space:pre;">CH6 Freq:<span id="meas-ch6-freq" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:70px;text-align:right;">-- Hz</span> Vpp:<span id="meas-ch6-vpp" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmax:<span id="meas-ch6-vmax" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmin:<span id="meas-ch6-vmin" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vavg:<span id="meas-ch6-vavg" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span></div>
+                        <div id="meas-ch7-row" class="txt-ch7" style="font-family:monospace;white-space:pre;">CH7 Freq:<span id="meas-ch7-freq" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:70px;text-align:right;">-- Hz</span> Vpp:<span id="meas-ch7-vpp" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmax:<span id="meas-ch7-vmax" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmin:<span id="meas-ch7-vmin" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vavg:<span id="meas-ch7-vavg" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span></div>
+                        <div id="meas-ch8-row" class="txt-ch8" style="font-family:monospace;white-space:pre;">CH8 Freq:<span id="meas-ch8-freq" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:70px;text-align:right;">-- Hz</span> Vpp:<span id="meas-ch8-vpp" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmax:<span id="meas-ch8-vmax" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vmin:<span id="meas-ch8-vmin" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span> Vavg:<span id="meas-ch8-vavg" style="color:var(--osd-text);font-weight:bold;display:inline-block;width:55px;text-align:right;">-- V</span></div>
                     </div>
                 </div>
             </div>
@@ -78,302 +77,310 @@
 
         <!-- 右侧：控制面板 -->
         <div class="right-panel">
+            <div class="panel-content">
 
-            <!-- 顶部：标题 + 主题切换 -->
-            <div class="flex-between" style="margin-bottom: -4px;">
-                <div class="txt-dim font-mono" style="font-weight: bold; letter-spacing: 1px;">CONTROL PANEL(控制面板)</div>
-                <button id="btn-theme-toggle" class="hw-btn" style="width: 32px; height: 32px; padding: 0; display: flex; align-items: center; justify-content: center; background: var(--bg-card);">
-                    <svg id="theme-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path id="theme-icon-path" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- 工具栏：测量、光标、Y-T / X-Y 模式 -->
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; flex-shrink: 0;">
-                <button id="btn-measure" class="hw-btn">测量</button>
-                <button id="btn-cursors" class="hw-btn">光标: 关</button>
-                <button id="btn-display" class="hw-btn active">Y-T 模式</button>
-                <button id="btn-xy" class="hw-btn">X-Y 模式</button>
-            </div>
-
-            <!-- 运行/停止、自动设置 -->
-            <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px; flex-shrink: 0;">
-                <button id="btn-runstop" class="hw-btn btn-run" style="font-size: 13px;">运行/停止 (RUN/STOP)</button>
-                <button id="btn-autoset" class="hw-btn" style="background: #1e3a8a; color: #93c5fd;">自动设置 (AUTO)</button>
-            </div>
-
-            <!-- FFT 频谱分析仪开关 -->
-            <button id="btn-fft-toggle" class="hw-btn" style="background: #4f46e5; color: #fff;">📊 频谱模式 (OFF)</button>
-
-            <!-- FFT 参数：量程、增益、线性/对数 -->
-            <div id="fft-controls" class="hw-group" style="display:none; margin-top: -10px;">
-                <div class="flex-between txt-dim font-mono" style="font-size:10px;">
-                    <span>X轴刻度 (X-Axis)</span>
-                    <button id="btn-fft-scale" class="hw-btn" style="width: auto; padding: 4px 12px; font-size: 10px;">线性 (Linear)</button>
+                <!-- 顶部：标题 + 主题切换 -->
+                <div class="flex-between-mb-neg4">
+                    <div class="txt-dim font-mono txt-dim-mono-bold">CONTROL PANEL(控制面板)</div>
+                    <button id="btn-theme-toggle" class="hw-btn btn-theme-toggle">
+                        <svg id="theme-icon-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path id="theme-icon-path" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </button>
                 </div>
-                <div class="flex-col">
+
+                <!-- 工具栏：测量、光标、Y-T / X-Y 模式 -->
+                <div class="grid-4-col">
+                    <button id="btn-measure" class="hw-btn">测量</button>
+                    <button id="btn-cursors" class="hw-btn">光标: 关</button>
+                    <button id="btn-display" class="hw-btn active">Y-T 模式</button>
+                    <button id="btn-xy" class="hw-btn">X-Y 模式</button>
+                </div>
+
+                <!-- 配置导入导出 -->
+                <div class="grid-2-col">
+                    <button id="btn-export-config" class="hw-btn">📤 导出配置</button>
+                    <button id="btn-import-config" class="hw-btn">📥 导入配置</button>
+                    <input type="file" id="file-import-config" accept=".json" class="file-input-hidden">
+                </div>
+
+                <!-- 运行/停止、自动设置 -->
+                <div class="grid-1p5-1">
+                    <button id="btn-runstop" class="hw-btn btn-run btn-runstop">运行/停止 (RUN/STOP)</button>
+                    <button id="btn-autoset" class="hw-btn btn-autoset">自动设置 (AUTO)</button>
+                </div>
+
+                <!-- FFT 频谱分析仪开关 -->
+                <button id="btn-fft-toggle" class="hw-btn btn-fft-toggle">📊 频谱模式 (OFF)</button>
+
+                <!-- FFT 参数：量程、增益、线性/对数 -->
+                <div id="fft-controls" class="hw-group" style="display:none; margin-top: -10px;">
                     <div class="flex-between txt-dim font-mono" style="font-size:10px;">
-                        <span>量程上限(Hz)</span><span id="lbl-fft-max">8000Hz</span>
+                        <span>X轴刻度 (X-Axis)</span>
+                        <button id="btn-fft-scale" class="hw-btn" style="width: auto; padding: 4px 12px; font-size: 10px;">线性 (Linear)</button>
                     </div>
-                    <input type="range" id="knob-fft-max" min="100" max="24000" step="100" value="8000">
-                </div>
-                <div class="flex-col">
-                    <div class="flex-between txt-dim font-mono" style="font-size:10px;">
-                        <span>增益(Gain)</span><span id="lbl-fft-gain">x100</span>
+                    <div class="flex-col">
+                        <div class="flex-between txt-dim font-mono" style="font-size:10px;">
+                            <span>量程上限(Hz)</span><span id="lbl-fft-max">20000Hz</span>
+                        </div>
+                        <input type="range" id="knob-fft-max" min="100" max="48000" step="0.01" value="20000">
                     </div>
-                    <input type="range" id="knob-fft-gain" min="10" max="4000" step="10" value="100">
+                    <div class="flex-col">
+                        <div class="flex-between txt-dim font-mono" style="font-size:10px;">
+                            <span>增益(Gain)</span><span id="lbl-fft-gain">x100</span>
+                        </div>
+                        <input type="range" id="knob-fft-gain" min="10" max="4000" step="0.01" value="100">
+                    </div>
                 </div>
-            </div>
 
-            <!-- 垂直控制：下拉选择频道 + 单卡片 -->
-            <div class="hw-group">
-                <div class="group-title">VERTICAL (垂直)</div>
-                <div class="flex-col" style="gap: 12px;">
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
-                        <button id="ch1-toggle" class="hw-btn active txt-ch1">CH1</button>
-                        <button id="ch2-toggle" class="hw-btn active txt-ch2">CH2</button>
-                        <button id="ch3-toggle" class="hw-btn txt-ch3">CH3</button>
-                        <button id="ch4-toggle" class="hw-btn txt-ch4">CH4</button>
-                        <button id="ch5-toggle" class="hw-btn txt-ch5">CH5</button>
-                        <button id="ch6-toggle" class="hw-btn txt-ch6">CH6</button>
-                        <button id="ch7-toggle" class="hw-btn txt-ch7">CH7</button>
-                        <button id="ch8-toggle" class="hw-btn txt-ch8">CH8</button>
+                <!-- 垂直控制：下拉选择频道 + 单卡片 -->
+                <div class="hw-group">
+                    <div class="group-title">VERTICAL (垂直)</div>
+                    <div class="flex-col" style="gap: 12px;">
+                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+                            <button id="ch1-toggle" class="hw-btn active txt-ch1">CH1</button>
+                            <button id="ch2-toggle" class="hw-btn active txt-ch2">CH2</button>
+                            <button id="ch3-toggle" class="hw-btn txt-ch3">CH3</button>
+                            <button id="ch4-toggle" class="hw-btn txt-ch4">CH4</button>
+                            <button id="ch5-toggle" class="hw-btn txt-ch5">CH5</button>
+                            <button id="ch6-toggle" class="hw-btn txt-ch6">CH6</button>
+                            <button id="ch7-toggle" class="hw-btn txt-ch7">CH7</button>
+                            <button id="ch8-toggle" class="hw-btn txt-ch8">CH8</button>
+                        </div>
+                        <div class="ch-box ch1">
+                            <div class="flex-between items-center">
+                                <span class="txt-dim font-mono" style="font-size:11px;">选择频道</span>
+                                <select id="vertical-ch-select" class="hw-select" style="width: 100px;">
+                                    <option value="1">CH1</option><option value="2">CH2</option><option value="3">CH3</option><option value="4">CH4</option>
+                                    <option value="5">CH5</option><option value="6">CH6</option><option value="7">CH7</option><option value="8">CH8</option>
+                                </select>
+                            </div>
+                            <div class="flex-col">
+                                <div class="flex-between txt-dim font-mono" style="font-size:10px;"><span>POS</span><span id="lbl-pos-sel">0.00</span></div>
+                                <input type="range" id="knob-pos-sel" min="-1" max="1" step="0.01" value="0">
+                            </div>
+                            <div class="flex-col">
+                                <div class="flex-between txt-dim font-mono" style="font-size:10px;"><span>SCALE</span></div>
+                                <div class="flat-input-box">
+                                    <input type="number" id="num-scale-sel" value="0.25" step="0.01" min="0.001">
+                                    <div class="spin-btns">
+                                        <div id="btn-sel-up">▲</div>
+                                        <div id="btn-sel-dn">▼</div>
+                                    </div>
+                                    <span class="txt-dim font-mono" style="font-size:10px; margin-left: 4px;">V</span>
+                                </div>
+                            </div>
+                            <div class="flex-col">
+                                <div class="flex-between txt-dim font-mono" style="font-size:10px;"><span>CPL</span></div>
+                                <select id="cpl-ch-sel" class="hw-select" style="height: 28px; padding: 2px 8px;">
+                                    <option value="AC">AC</option>
+                                    <option value="DC" selected>DC</option>
+                                    <option value="GND">GND</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="ch-box ch1">
+                </div>
+
+                <!-- 水平与触发：时基、小地图、触发源/边沿/电平 -->
+                <div class="grid-2">
+                    <div class="hw-group">
+                        <div class="group-title">HORIZONTAL (水平)</div>
+                        <div style="position:relative; width:100%; height:44px; background:#050505; border-radius:4px; overflow:hidden;" id="minimap-container">
+                            <canvas id="minimap-canvas" style="width:100%; height:100%; position:absolute; left:0; top:0;"></canvas>
+                            <div id="minimap-highlight" style="position:absolute; left:0%; width:10%; height:100%; background:rgba(56, 189, 248, 0.25); border-left:1px solid #38bdf8; border-right:1px solid #38bdf8; pointer-events:none;"></div>
+                            <div style="position:absolute; left:50%; top:0; width:1px; height:100%; border-left:1px dashed rgba(255,255,255,0.4); pointer-events:none;"></div>
+                        </div>
+                        <div class="flex-col">
+                            <div class="flex-between txt-dim font-mono" style="font-size:10px;"><span>POS (位置)</span><span id="lbl-hpos">50.0%</span></div>
+                            <input type="range" id="knob-hpos" min="0" max="100" step="0.01" value="50">
+                        </div>
+                        <div class="flex-col">
+                            <div class="flex-between txt-dim font-mono" style="font-size:10px;"><span>SEC/DIV</span><span id="lbl-timebase">1.0ms</span></div>
+                            <input type="range" id="knob-timebase" min="-50" max="50" step="0.01" value="0" style="direction:ltr;">
+                            <div class="txt-dim font-mono" style="font-size:8px;text-align:center;">← 放大 | 缩小 →</div>
+                        </div>
+                    </div>
+                    <div class="hw-group">
+                        <div class="group-title">TRIGGER (触发)</div>
+                        <button id="btn-trig-en" class="hw-btn">触发: 关</button>
+                        <select id="trig-src" class="hw-select">
+                            <option value="CH1">SRC: CH1</option>
+                            <option value="CH2">SRC: CH2</option>
+                            <option value="CH3">SRC: CH3</option>
+                            <option value="CH4">SRC: CH4</option>
+                            <option value="CH5">SRC: CH5</option>
+                            <option value="CH6">SRC: CH6</option>
+                            <option value="CH7">SRC: CH7</option>
+                            <option value="CH8">SRC: CH8</option>
+                        </select>
+                        <button id="btn-edge" class="hw-btn">边沿: ↗ 上升沿</button>
+                        <div class="flex-col" style="margin-top: auto;">
+                            <div class="flex-between txt-dim font-mono" style="font-size:10px;"><span>LEVEL</span><span id="lbl-tlevel">0.00V</span></div>
+                            <input type="range" id="knob-tlevel" min="-1" max="1" step="0.01" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 输入源：内置信号发生器 / 声卡 / 音频文件 -->
+                <div class="hw-group" style="border-top: 3px solid #1e3a8a; border-radius: 0 0 var(--radius-md) var(--radius-md);">
+                    <div class="group-title"><span>INPUT(输入)</span><span style="color:#3b82f6; font-size: 10px;">SIGNAL GEN</span></div>
+                    <div class="ch-box" style="padding: 16px; gap: 16px;">
                         <div class="flex-between items-center">
                             <span class="txt-dim font-mono" style="font-size:11px;">选择频道</span>
-                            <select id="vertical-ch-select" class="hw-select" style="width: 100px;">
+                            <select id="input-ch-select" class="hw-select" style="width: 100px;">
                                 <option value="1">CH1</option><option value="2">CH2</option><option value="3">CH3</option><option value="4">CH4</option>
                                 <option value="5">CH5</option><option value="6">CH6</option><option value="7">CH7</option><option value="8">CH8</option>
                             </select>
                         </div>
-                        <div class="flex-col">
-                            <div class="flex-between txt-dim font-mono" style="font-size:10px;"><span>POS</span><span id="lbl-pos-sel">0.00</span></div>
-                            <input type="range" id="knob-pos-sel" min="-1" max="1" step="0.01" value="0">
-                        </div>
-                        <div class="flex-col">
-                            <div class="flex-between txt-dim font-mono" style="font-size:10px;"><span>SCALE</span></div>
-                            <div class="flat-input-box">
-                                <input type="number" id="num-scale-sel" value="0.25" step="0.05" min="0.001">
-                                <div class="spin-btns">
-                                    <div id="btn-sel-up">▲</div>
-                                    <div id="btn-sel-dn">▼</div>
+                        <div id="input-gen-card" class="flex-row items-start" style="gap:12px;">
+                            <div class="flex-col" style="width: 60px; gap: 6px;">
+                                <div id="input-gen-label" class="txt-ch1 font-mono" style="font-size:11px; font-weight:bold;">CH1</div>
+                                <select id="gen-type-sel" class="hw-select" style="padding: 4px;">
+                                    <option value="off">OFF</option>
+                                    <option value="sine">SIN</option>
+                                    <option value="square">SQR</option>
+                                    <option value="triangle">TRI</option>
+                                </select>
+                            </div>
+                            <div class="flex-col" style="flex:1; gap: 8px;">
+                                <div class="flex-col" style="gap: 4px;">
+                                    <div class="flex-between txt-dim font-mono" style="font-size:10px;">
+                                        <span>FREQ</span>
+                                        <div class="flat-input-box" style="height:22px; width:70px;">
+                                            <input type="number" id="num-gen-freq-sel" value="1000" min="1" max="19000">
+                                            <span class="txt-dim" style="margin-left:2px;">Hz</span>
+                                        </div>
+                                    </div>
+                                    <input type="range" id="knob-gen-freq-sel" min="0" max="448" step="0.01" value="300">
                                 </div>
-                                <span class="txt-dim font-mono" style="font-size:10px; margin-left: 4px;">V</span>
+                                <div class="flex-col" style="gap: 4px;">
+                                    <div class="flex-between txt-dim font-mono" style="font-size:10px;">
+                                        <span>AMP</span>
+                                        <div class="flat-input-box" style="height:22px; width:70px;">
+                                            <input type="number" id="num-gen-amp-sel" value="0.50" min="0" max="20" step="0.01">
+                                            <span class="txt-dim" style="margin-left:2px;">V</span>
+                                        </div>
+                                    </div>
+                                    <input type="range" id="knob-gen-amp-sel" min="0" max="20" step="0.01" value="0.5">
+                                </div>
                             </div>
                         </div>
-                        <div class="flex-col">
-                            <div class="flex-between txt-dim font-mono" style="font-size:10px;"><span>CPL</span></div>
-                            <select id="cpl-ch-sel" class="hw-select" style="height: 28px; padding: 2px 8px;">
-                                <option value="AC">AC</option>
-                                <option value="DC" selected>DC</option>
-                                <option value="GND">GND</option>
+                        <div class="stereo-out-row flex-col" style="gap: 8px; padding-top: 8px; border-top: 1px dashed var(--border-color);">
+                            <div class="txt-dim font-mono" style="font-size:10px;">双声道输出</div>
+                            <div class="flex-row items-center" style="gap: 12px;">
+                                <div class="flex-row items-center" style="gap: 6px;">
+                                    <span class="txt-dim" style="font-size:10px;">左(L)</span>
+                                    <select id="awg-out-left" class="hw-select" style="width: 70px;">
+                                        <option value="1">CH1</option><option value="2">CH2</option><option value="3">CH3</option><option value="4">CH4</option>
+                                        <option value="5">CH5</option><option value="6">CH6</option><option value="7">CH7</option><option value="8">CH8</option>
+                                    </select>
+                                </div>
+                                <div class="flex-row items-center" style="gap: 6px;">
+                                    <span class="txt-dim" style="font-size:10px;">右(R)</span>
+                                    <select id="awg-out-right" class="hw-select" style="width: 70px;">
+                                        <option value="1">CH1</option><option value="2" selected>CH2</option><option value="3">CH3</option><option value="4">CH4</option>
+                                        <option value="5">CH5</option><option value="6">CH6</option><option value="7">CH7</option><option value="8">CH8</option>
+                                    </select>
+                                </div>
+                                <button id="btn-awg-spk" class="hw-btn font-mono" style="color: var(--text-dim);">🔈 扬声器: 关</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 音频输入：麦克风 / 示波器音乐文件 -->
+                    <div class="audio-control-cluster" style="position: relative; min-height: 80px;">
+                        <div class="flex-row" style="margin-top: 8px;">
+                            <button id="btn-mic" class="hw-btn" style="flex: 1;">声卡输入</button>
+                            <select id="file-select" class="hw-select" style="flex: 1.2; text-align: center; font-weight: bold;">
+                                <option value="" disabled selected hidden>📂 示波器音乐</option>
+                                <option value="LOCAL">↳ 📁 本地上传...</option>
+                                <option value="https://wanghaohan.com/rubbish/WebDSO/audio/oscillofun-wave.flac">🎵 oscillofun-wave</option>
+                                <option value="https://wanghaohan.com/rubbish/WebDSO/audio/primer-final.flac">🎵 primer-final</option>
+                            </select>
+                            <input type="file" id="file-input" accept="audio/*" style="display:none;" />
+                        </div>
+                        <div id="audio-loading-overlay" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(18,18,20,0.95); z-index:100; flex-direction:column; justify-content:center; align-items:center; border-radius:8px;">
+                            <div id="audio-loading-text" style="color:#00ff88; font-family:'Courier New', monospace; margin-bottom:10px; font-size:12px; font-weight:bold; letter-spacing:1px;">加载数据中...</div>
+                            <div style="width:70%; height:6px; background:#111; border-radius:3px; overflow:hidden; border:1px solid #333; margin-bottom: 12px;">
+                                <div id="audio-progress-bar" style="width:0%; height:100%; background:#00ff88; transition: width 0.1s;"></div>
+                            </div>
+                            <button id="btn-cancel-download" class="hw-btn" style="width: 80px; padding: 6px; font-size: 11px; background: #dc2626; color: #fff;">取消下载</button>
+                        </div>
+                        <audio id="audio-player" style="display:none"></audio>
+                        <div class="audio-panel-row">
+                            <div class="flex-between">
+                                <span class="osd-label">TIME</span>
+                                <span id="lbl-audio-time" class="osd-value">00:00 / 00:00</span>
+                            </div>
+                            <input type="range" id="audio-seek-bar" min="0" max="100" step="0.01" value="0">
+                        </div>
+                        <div class="audio-panel-row secondary">
+                            <button id="btn-audio-toggle" class="osd-btn-primary"> ⏸ </button>
+                            <div class="speed-control-box">
+                                <span class="osd-label">SPEED</span>
+                                <input type="range" id="knob-audio-speed" min="0" max="100" step="0.01" value="90.9">
+                                <span id="lbl-audio-speed" class="osd-value speed" style="width: 45px; text-align: right;">1.00x</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 串口连接：波特率、协议、连接/断开 -->
+                <div class="hw-group">
+                    <div class="group-title">
+                        <span>串口连接 SERIAL</span>
+                        <span id="serial-status-dot" style="font-size: 10px; text-transform: none;">● DISCONNECTED</span>
+                    </div>
+                    <div class="ch-box" id="serial-control-module" style="gap: 12px; padding: 16px;">
+                        <div class="flex-row items-center">
+                            <span class="txt-dim font-mono" style="font-size: 11px; width: 40px;">BPS</span>
+                            <select id="serial-baud" class="hw-select">
+                                <option value="9600">9600</option>
+                                <option value="19200">19200</option>
+                                <option value="38400">38400</option>
+                                <option value="57600">57600</option>
+                                <option value="115200" selected>115200</option>
+                                <option value="230400">230400</option>
+                                <option value="460800">460800</option>
+                                <option value="921600">921600</option>
+                                <option value="2000000">2M (CH34x/CP2102)</option>
+                                <option value="3000000">3M (FT232R)</option>
+                                <option value="6000000">6M (CP2102N)</option>
+                                <option value="12000000">12M (FT232H 极限)</option>
                             </select>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 水平与触发：时基、小地图、触发源/边沿/电平 -->
-            <div class="grid-2">
-                <div class="hw-group">
-                    <div class="group-title">HORIZONTAL (水平)</div>
-                    <div style="position:relative; width:100%; height:44px; background:#050505; border-radius:4px; overflow:hidden;" id="minimap-container">
-                        <canvas id="minimap-canvas" style="width:100%; height:100%; position:absolute; left:0; top:0;"></canvas>
-                        <div id="minimap-highlight" style="position:absolute; left:0%; width:10%; height:100%; background:rgba(56, 189, 248, 0.25); border-left:1px solid #38bdf8; border-right:1px solid #38bdf8; pointer-events:none;"></div>
-                        <div style="position:absolute; left:50%; top:0; width:1px; height:100%; border-left:1px dashed rgba(255,255,255,0.4); pointer-events:none;"></div>
-                    </div>
-                    <div class="flex-col">
-                        <div class="flex-between txt-dim font-mono" style="font-size:10px;"><span>POS (位置)</span><span id="lbl-hpos">50.0%</span></div>
-                        <input type="range" id="knob-hpos" min="0" max="100" step="0.1" value="50">
-                    </div>
-                    <div class="flex-col">
-                        <div class="flex-between txt-dim font-mono" style="font-size:10px;"><span>SEC/DIV</span><span id="lbl-timebase">5.0ms</span></div>
-                        <input type="range" id="knob-timebase" min="1" max="34" step="1" value="5" dir="rtl">
-                    </div>
-                </div>
-                <div class="hw-group">
-                    <div class="group-title">TRIGGER (触发)</div>
-                    <button id="btn-trig-en" class="hw-btn">触发: 关</button>
-                    <select id="trig-src" class="hw-select">
-                        <option value="CH1">SRC: CH1</option>
-                        <option value="CH2">SRC: CH2</option>
-                        <option value="CH3">SRC: CH3</option>
-                        <option value="CH4">SRC: CH4</option>
-                        <option value="CH5">SRC: CH5</option>
-                        <option value="CH6">SRC: CH6</option>
-                        <option value="CH7">SRC: CH7</option>
-                        <option value="CH8">SRC: CH8</option>
-                    </select>
-                    <button id="btn-edge" class="hw-btn">边沿: ↗ 上升沿</button>
-                    <div class="flex-col" style="margin-top: auto;">
-                        <div class="flex-between txt-dim font-mono" style="font-size:10px;"><span>LEVEL</span><span id="lbl-tlevel">0.00V</span></div>
-                        <input type="range" id="knob-tlevel" min="-1" max="1" step="0.01" value="0">
-                    </div>
-                </div>
-            </div>
-
-            <!-- 输入源：内置信号发生器 / 声卡 / 音频文件 -->
-            <div class="hw-group" style="border-top: 3px solid #1e3a8a; border-radius: 0 0 var(--radius-md) var(--radius-md);">
-                <div class="group-title"><span>INPUT(输入)</span><span style="color:#3b82f6; font-size: 10px;">SIGNAL GEN</span></div>
-                <div class="ch-box" style="padding: 16px; gap: 16px;">
-                    <div class="flex-between items-center">
-                        <span class="txt-dim font-mono" style="font-size:11px;">选择频道</span>
-                        <select id="input-ch-select" class="hw-select" style="width: 100px;">
-                            <option value="1">CH1</option><option value="2">CH2</option><option value="3">CH3</option><option value="4">CH4</option>
-                            <option value="5">CH5</option><option value="6">CH6</option><option value="7">CH7</option><option value="8">CH8</option>
-                        </select>
-                    </div>
-                    <div id="input-gen-card" class="flex-row items-start" style="gap:12px;">
-                        <div class="flex-col" style="width: 60px; gap: 6px;">
-                            <div id="input-gen-label" class="txt-ch1 font-mono" style="font-size:11px; font-weight:bold;">CH1</div>
-                            <select id="gen-type-sel" class="hw-select" style="padding: 4px;">
-                                <option value="off">OFF</option>
-                                <option value="sine">SIN</option>
-                                <option value="square">SQR</option>
-                                <option value="triangle">TRI</option>
+                        <div class="flex-row items-center">
+                            <span class="txt-dim font-mono" style="font-size: 11px; width: 40px;">PROT</span>
+                            <select id="serial-protocol" class="hw-select">
+                                <option value="justfloat">JustFloat (Binary)</option>
+                                <option value="firewater">FireWater (ASCII)</option>
+                                <option value="custom">自定义协议/HEX</option>
                             </select>
                         </div>
-                        <div class="flex-col" style="flex:1; gap: 8px;">
-                            <div class="flex-col" style="gap: 4px;">
-                                <div class="flex-between txt-dim font-mono" style="font-size:10px;">
-                                    <span>FREQ</span>
-                                    <div class="flat-input-box" style="height:22px; width:70px;">
-                                        <input type="number" id="num-gen-freq-sel" value="1000" min="1" max="19000">
-                                        <span class="txt-dim" style="margin-left:2px;">Hz</span>
-                                    </div>
+                        <div class="flex-row" style="gap: 8px; margin-top: 4px;">
+                            <button id="btn-serial-open" class="hw-btn" style="flex: 1; background: #2563eb; color: #fff;">连接串口</button>
+                            <button id="btn-serial-close" class="hw-btn" style="flex: 1; display: none; background: #dc2626; color: #fff;">断开</button>
+                        </div>
+                        <div class="stereo-out-row flex-col" style="gap: 8px; padding-top: 8px; border-top: 1px dashed var(--border-color);">
+                            <div class="txt-dim font-mono" style="font-size:10px;">双声道输出</div>
+                            <div class="flex-row items-center" style="gap: 12px;">
+                                <div class="flex-row items-center" style="gap: 6px;">
+                                    <span class="txt-dim" style="font-size:10px;">左(L)</span>
+                                    <select id="serial-out-left" class="hw-select" style="width: 70px;">
+                                        <option value="1">CH1</option><option value="2">CH2</option><option value="3">CH3</option><option value="4">CH4</option>
+                                        <option value="5">CH5</option><option value="6">CH6</option><option value="7">CH7</option><option value="8">CH8</option>
+                                    </select>
                                 </div>
-                                <input type="range" id="knob-gen-freq-sel" min="0" max="448" step="0.1" value="300">
-                            </div>
-                            <div class="flex-col" style="gap: 4px;">
-                                <div class="flex-between txt-dim font-mono" style="font-size:10px;">
-                                    <span>AMP</span>
-                                    <div class="flat-input-box" style="height:22px; width:70px;">
-                                        <input type="number" id="num-gen-amp-sel" value="0.50" min="0" max="20" step="0.01">
-                                        <span class="txt-dim" style="margin-left:2px;">V</span>
-                                    </div>
+                                <div class="flex-row items-center" style="gap: 6px;">
+                                    <span class="txt-dim" style="font-size:10px;">右(R)</span>
+                                    <select id="serial-out-right" class="hw-select" style="width: 70px;">
+                                        <option value="1">CH1</option><option value="2" selected>CH2</option><option value="3">CH3</option><option value="4">CH4</option>
+                                        <option value="5">CH5</option><option value="6">CH6</option><option value="7">CH7</option><option value="8">CH8</option>
+                                    </select>
                                 </div>
-                                <input type="range" id="knob-gen-amp-sel" min="0" max="20" step="0.01" value="0.5">
+                                <button id="btn-serial-spk" class="hw-btn font-mono" style="color: var(--text-dim);">🔈 监听</button>
                             </div>
-                        </div>
-                    </div>
-                    <div class="stereo-out-row flex-col" style="gap: 8px; padding-top: 8px; border-top: 1px dashed var(--border-color);">
-                        <div class="txt-dim font-mono" style="font-size:10px;">双声道输出</div>
-                        <div class="flex-row items-center" style="gap: 12px;">
-                            <div class="flex-row items-center" style="gap: 6px;">
-                                <span class="txt-dim" style="font-size:10px;">左(L)</span>
-                                <select id="awg-out-left" class="hw-select" style="width: 70px;">
-                                    <option value="1">CH1</option><option value="2">CH2</option><option value="3">CH3</option><option value="4">CH4</option>
-                                    <option value="5">CH5</option><option value="6">CH6</option><option value="7">CH7</option><option value="8">CH8</option>
-                                </select>
-                            </div>
-                            <div class="flex-row items-center" style="gap: 6px;">
-                                <span class="txt-dim" style="font-size:10px;">右(R)</span>
-                                <select id="awg-out-right" class="hw-select" style="width: 70px;">
-                                    <option value="1">CH1</option><option value="2" selected>CH2</option><option value="3">CH3</option><option value="4">CH4</option>
-                                    <option value="5">CH5</option><option value="6">CH6</option><option value="7">CH7</option><option value="8">CH8</option>
-                                </select>
-                            </div>
-                            <button id="btn-awg-spk" class="hw-btn font-mono" style="color: var(--text-dim);">🔈 扬声器: 关</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 音频输入：麦克风 / 示波器音乐文件 -->
-                <div class="audio-control-cluster" style="position: relative; min-height: 80px;">
-                    <div class="flex-row" style="margin-top: 8px;">
-                        <button id="btn-mic" class="hw-btn" style="flex: 1;">声卡输入</button>
-                        <select id="file-select" class="hw-select" style="flex: 1.2; text-align: center; font-weight: bold;">
-                            <option value="" disabled selected hidden>📂 示波器音乐</option>
-                            <option value="LOCAL">↳ 📁 本地上传...</option>
-                            <option value="https://wanghaohan.com/audio/oscillofun-wave.flac">🎵 oscillofun-wave</option>
-                            <option value="https://wanghaohan.com/audio/primer-final.flac">🎵 primer-final</option>
-                        </select>
-                        <input type="file" id="file-input" accept="audio/*" style="display:none;" />
-                    </div>
-                    <div id="audio-loading-overlay" style="display:none; position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(18,18,20,0.95); z-index:100; flex-direction:column; justify-content:center; align-items:center; border-radius:8px;">
-                        <div id="audio-loading-text" style="color:#00ff88; font-family:'Courier New', monospace; margin-bottom:10px; font-size:12px; font-weight:bold; letter-spacing:1px;">加载数据中...</div>
-                        <div style="width:70%; height:6px; background:#111; border-radius:3px; overflow:hidden; border:1px solid #333; margin-bottom: 12px;">
-                            <div id="audio-progress-bar" style="width:0%; height:100%; background:#00ff88; transition: width 0.1s;"></div>
-                        </div>
-                        <button id="btn-cancel-download" class="hw-btn" style="width: 80px; padding: 6px; font-size: 11px; background: #dc2626; color: #fff;">取消下载</button>
-                    </div>
-                    <audio id="audio-player" style="display:none"></audio>
-                    <div class="audio-panel-row">
-                        <div class="flex-between">
-                            <span class="osd-label">TIME</span>
-                            <span id="lbl-audio-time" class="osd-value">00:00 / 00:00</span>
-                        </div>
-                        <input type="range" id="audio-seek-bar" min="0" max="100" step="0.01" value="0">
-                    </div>
-                    <div class="audio-panel-row secondary">
-                        <button id="btn-audio-toggle" class="osd-btn-primary"> ⏸ </button>
-                        <div class="speed-control-box">
-                            <span class="osd-label">SPEED</span>
-                            <input type="range" id="knob-audio-speed" min="0" max="100" step="0.1" value="90.9">
-                            <span id="lbl-audio-speed" class="osd-value speed" style="width: 45px; text-align: right;">1.00x</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 串口连接：波特率、协议、连接/断开 -->
-            <div class="hw-group">
-                <div class="group-title">
-                    <span>串口连接 SERIAL</span>
-                    <span id="serial-status-dot" style="font-size: 10px; text-transform: none;">● DISCONNECTED</span>
-                </div>
-                <div class="ch-box" id="serial-control-module" style="gap: 12px; padding: 16px;">
-                    <div class="flex-row items-center">
-                        <span class="txt-dim font-mono" style="font-size: 11px; width: 40px;">BPS</span>
-                        <select id="serial-baud" class="hw-select">
-                            <option value="9600">9600</option>
-                            <option value="19200">19200</option>
-                            <option value="38400">38400</option>
-                            <option value="57600">57600</option>
-                            <option value="115200" selected>115200</option>
-                            <option value="230400">230400</option>
-                            <option value="460800">460800</option>
-                            <option value="921600">921600</option>
-                            <option value="2000000">2M (CH34x/CP2102)</option>
-                            <option value="3000000">3M (FT232R)</option>
-                            <option value="6000000">6M (CP2102N)</option>
-                            <option value="12000000">12M (FT232H 极限)</option>
-                            <option value="20000000">20M (仅限 com0com)</option>
-                            <option value="50000000">50M (测试性能极限)</option>
-                        </select>
-                    </div>
-                    <div class="flex-row items-center">
-                        <span class="txt-dim font-mono" style="font-size: 11px; width: 40px;">PROT</span>
-                        <select id="serial-protocol" class="hw-select">
-                            <option value="justfloat">JustFloat (Binary)</option>
-                            <option value="firewater">FireWater (ASCII)</option>
-                            <option value="custom">自定义协议/HEX</option>
-                        </select>
-                    </div>
-                    <div class="flex-row" style="gap: 8px; margin-top: 4px;">
-                        <button id="btn-serial-open" class="hw-btn" style="flex: 1; background: #2563eb; color: #fff;">连接串口</button>
-                        <button id="btn-serial-close" class="hw-btn" style="flex: 1; display: none; background: #dc2626; color: #fff;">断开</button>
-                    </div>
-                    <div class="stereo-out-row flex-col" style="gap: 8px; padding-top: 8px; border-top: 1px dashed var(--border-color);">
-                        <div class="txt-dim font-mono" style="font-size:10px;">双声道输出</div>
-                        <div class="flex-row items-center" style="gap: 12px;">
-                            <div class="flex-row items-center" style="gap: 6px;">
-                                <span class="txt-dim" style="font-size:10px;">左(L)</span>
-                                <select id="serial-out-left" class="hw-select" style="width: 70px;">
-                                    <option value="1">CH1</option><option value="2">CH2</option><option value="3">CH3</option><option value="4">CH4</option>
-                                    <option value="5">CH5</option><option value="6">CH6</option><option value="7">CH7</option><option value="8">CH8</option>
-                                </select>
-                            </div>
-                            <div class="flex-row items-center" style="gap: 6px;">
-                                <span class="txt-dim" style="font-size:10px;">右(R)</span>
-                                <select id="serial-out-right" class="hw-select" style="width: 70px;">
-                                    <option value="1">CH1</option><option value="2" selected>CH2</option><option value="3">CH3</option><option value="4">CH4</option>
-                                    <option value="5">CH5</option><option value="6">CH6</option><option value="7">CH7</option><option value="8">CH8</option>
-                                </select>
-                            </div>
-                            <button id="btn-serial-spk" class="hw-btn font-mono" style="color: var(--text-dim);">🔈 监听</button>
                         </div>
                     </div>
                 </div>

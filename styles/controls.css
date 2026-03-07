@@ -50,10 +50,194 @@
     gap: 8px;
 }
 
+/* 新增样式类用于替代HTML中的内联样式 */
+.osd-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--osd-bg);
+    border-bottom: 1px solid var(--osd-border);
+    font-family: monospace;
+    font-size: 11px;
+    color: var(--osd-text);
+    z-index: 10;
+}
+
+.osd-side {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 8px;
+    z-index: 10;
+}
+
+.osd-side-8ch {
+    max-height: calc(100% - 100px);
+    overflow-y: auto;
+}
+
+.osd-box {
+    display: none;
+    border: 1px solid;
+    border-radius: 4px;
+    padding: 4px 6px;
+    font-size: 10px;
+    min-width: 60px;
+}
+
+.osd-title {
+    font-weight: bold;
+    padding: 1px 4px;
+    border-radius: 2px;
+    margin-bottom: 2px;
+    text-align: center;
+}
+
+.measure-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--osd-bg);
+    border-top: 1px solid var(--osd-border);
+    padding: 6px 12px;
+    font-size: 10px;
+    z-index: 10;
+}
+
+.measure-panel-8ch {
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.txt-ch1 { color: var(--ch1-color); }
+.txt-ch2 { color: var(--ch2-color); }
+.txt-ch3 { color: var(--ch3-color); }
+.txt-ch4 { color: var(--ch4-color); }
+.txt-ch5 { color: var(--ch5-color); }
+.txt-ch6 { color: var(--ch6-color); }
+.txt-ch7 { color: var(--ch7-color); }
+.txt-ch8 { color: var(--ch8-color); }
+
+.txt-y { color: var(--color-yellow, #fbbf24); }
+.txt-dim { color: var(--text-dim); }
+
+.font-mono { font-family: monospace; }
+
+.bd-ch1 { border-color: var(--ch1-color); }
+.bd-ch2 { border-color: var(--ch2-color); }
+.bd-ch3 { border-color: var(--ch3-color); }
+.bd-ch4 { border-color: var(--ch4-color); }
+.bd-ch5 { border-color: var(--ch5-color); }
+.bd-ch6 { border-color: var(--ch6-color); }
+.bd-ch7 { border-color: var(--ch7-color); }
+.bd-ch8 { border-color: var(--ch8-color); }
+
+.bg-ch1 { background: var(--ch1-color); color: white; }
+.bg-ch2 { background: var(--ch2-color); color: white; }
+.bg-ch3 { background: var(--ch3-color); color: white; }
+.bg-ch4 { background: var(--ch4-color); color: white; }
+.bg-ch5 { background: var(--ch5-color); color: white; }
+.bg-ch6 { background: var(--ch6-color); color: white; }
+.bg-ch7 { background: var(--ch7-color); color: white; }
+.bg-ch8 { background: var(--ch8-color); color: white; }
+
 .flex-between {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.flat-input-box {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.spin-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.spin-btns div {
+    width: 16px;
+    height: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    font-size: 8px;
+    user-select: none;
+}
+
+.spin-btns div:hover {
+    background: var(--bg-hover);
+}
+
+.ch-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 12px;
+    gap: 8px;
+}
+
+/* 统一按钮样式 - 已合并到统一切换类按钮基础样式中 */
+
+.hw-select {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: var(--text-main);
+    font-size: 11px;
+}
+
+.btn-run {
+    background: var(--color-run);
+    border-color: var(--color-run);
+    color: white;
+}
+
+.btn-run.stopped {
+    background: var(--color-stop);
+    border-color: var(--color-stop);
+}
+
+.osd-run-state {
+    background: var(--color-run);
+    color: #fff;
+    padding: 0 4px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+.osd-trigger-state {
+    background: var(--osd-text);
+    color: var(--bg-panel);
+    padding: 0 4px;
+    border-radius: 2px;
+    font-weight: bold;
+    margin-left: 8px;
+}
+
+.osd-cpl {
+    font-size: 8px;
+}
+
+.osd-scale {
+    font-weight: bold;
 }
 
 /* 通道控制块 (CH1/CH2) */
@@ -103,9 +287,9 @@
     }
 
     .hw-btn.active {
-        background: var(--color-blue) !important;
-        color: #ffffff !important;
-        border-color: var(--color-blue) !important;
+        background: var(--color-blue);
+        border-color: var(--color-blue);
+        color: white;
     }
 
 .btn-run {
@@ -252,6 +436,184 @@ input[type=range] {
         justify-content: space-between;
         margin-bottom: 0;
     }
+
+/* ==========================================
+   新增样式类 - 用于替代HTML内联样式
+   ========================================== */
+
+/* 布局样式 */
+.flex-between-mb-neg4 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: -4px;
+}
+
+.grid-4-col {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.grid-2-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.grid-1p5-1 {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/* 按钮样式 */
+.btn-theme-toggle {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+}
+
+.btn-runstop {
+    font-size: 13px;
+}
+
+.btn-autoset {
+    background: #1e3a8a;
+    color: #93c5fd;
+}
+
+.btn-fft-toggle {
+    background: #4f46e5;
+    color: #fff;
+}
+
+.btn-fft-scale {
+    width: auto;
+    padding: 4px 12px;
+    font-size: 10px;
+}
+
+/* 输入框样式 */
+.flat-input-box-small {
+    height: 22px;
+    width: 70px;
+}
+
+/* 文件输入隐藏 */
+.file-input-hidden {
+    display: none;
+}
+
+/* 测量面板样式 */
+.measure-row {
+    font-family: monospace;
+    white-space: pre;
+}
+
+.measure-value {
+    color: var(--osd-text);
+    font-weight: bold;
+    display: inline-block;
+    text-align: right;
+}
+
+.measure-freq {
+    width: 70px;
+}
+
+.measure-vpp, .measure-vmax, .measure-vmin, .measure-vavg {
+    width: 55px;
+}
+
+/* 小地图容器 */
+.minimap-container {
+    position: relative;
+    width: 100%;
+    height: 44px;
+    background: #050505;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.minimap-canvas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.minimap-highlight {
+    position: absolute;
+    left: 0%;
+    width: 10%;
+    height: 100%;
+    background: rgba(56, 189, 248, 0.25);
+    border-left: 1px solid #38bdf8;
+    border-right: 1px solid #38bdf8;
+    pointer-events: none;
+}
+
+.minimap-center-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    border-left: 1px dashed rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+}
+
+/* 文本样式 */
+.txt-dim-mono-bold {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.txt-dim-mono-small {
+    font-size: 10px;
+}
+
+.txt-dim-mono-xs {
+    font-size: 8px;
+    text-align: center;
+}
+
+/* 布局间距 */
+.flex-col-gap12 {
+    gap: 12px;
+}
+
+.flex-col-gap8 {
+    gap: 8px;
+}
+
+.flex-col-gap4 {
+    gap: 4px;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+    .grid-4-col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .grid-2-col {
+        grid-template-columns: 1fr;
+    }
+    
+    .grid-1p5-1 {
+        grid-template-columns: 1fr;
+    }
+}
 
 .osd-label {
     color: var(--text-dim);

@@ -29,7 +29,7 @@ export function initSerialController() {
     if (DOM.serialBaud) {
         DOM.serialBaud.addEventListener('change', () => {
             const baud = parseInt(DOM.serialBaud.value);
-            console.log(`波特率已选择: ${baud} bps`);
+            // 波特率已选择: ${baud} bps
             // 只记录日志，不改变任何状态
             // 真正的模式切换在点击连接按钮时进行
         });
@@ -52,7 +52,10 @@ export function initSerialController() {
     };
     
     // 定期检查状态（每100ms）
-    setInterval(checkSerialStatus, 100);
+    const serialStatusInterval = setInterval(checkSerialStatus, 100);
+    
+    // 保存引用以便清理
+    STATE.serial._statusInterval = serialStatusInterval;
 
     STATE.serial.speaker = false;
     const btnSerialSpk = document.getElementById('btn-serial-spk');

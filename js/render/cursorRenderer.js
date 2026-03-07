@@ -75,9 +75,18 @@ export function renderMinimap(theme, viewCtx) {
     const step = bufferSize / MINIMAP_POINTS;
 
     // 使用缓存的降采样数据，避免每帧重复计算
+    // 限制缓存大小以防止内存泄漏
     if (!window._minimapCache) window._minimapCache = {};
     if (!window._minimapCache.lastBufferSize) window._minimapCache.lastBufferSize = 0;
     if (!window._minimapCache.lastHead) window._minimapCache.lastHead = -1;
+    
+    // 清理过期缓存（保留最近10个版本）
+    if (window._minimapCache.data) {
+        const keys = Object.keys(window._minimapCache.data);
+        if (keys.length > 10) {
+            keys.slice(0, keys.length - 10).forEach(k => delete window._minimapCache.data[k]);
+        }
+    }
 
     // 检查是否需要重新计算降采样数据
     // 使用简单的时间戳来判断数据是否变化（每100ms更新一次）

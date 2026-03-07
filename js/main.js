@@ -1,5 +1,5 @@
-import { DOM, Buffers, updateTriggerUI, CONFIG, STATE } from './core.js';
-import { resize, draw } from './render/index.js';
+import { DOM, Buffers, updateTriggerUI, CONFIG, STATE, initDOM } from './core.js';
+import { resize, draw, initRenderContexts } from './render/index.js';
 import { channelManager } from './channel.js';
 
 // 导入所有拆分出来的 Controller
@@ -10,7 +10,14 @@ import { initSerialController } from './controllers/serialController.js';
 import { initFftController } from './controllers/fftController.js';
 import { initConfigController } from './controllers/configController.js';
 
+// 初始化DOM引用 - 确保DOM已加载完成
+initDOM();
+
+// 初始化渲染上下文（WebGL/Canvas）
+initRenderContexts();
+
 // 重新收集所有的 DOM 引用（挂载所有 [id] 元素，转换为 camelCase 对象键）
+// 这会补充可能遗漏的动态元素
 document.querySelectorAll('[id]').forEach(el => {
     const camelCaseId = el.id.replace(/-([a-z0-9])/g, (g) => g[1].toUpperCase());
     if (!DOM[camelCaseId]) DOM[camelCaseId] = el;
@@ -72,3 +79,29 @@ setInterval(() => {
         }
     }
 }, 500); // 500毫秒更新一次
+
+/* ==========================================
+   UI Initialization: Random Glass Background
+   ========================================== */
+function initGlassBackground() {
+    // 1. 随机选择 1-5
+    const randomId = Math.floor(Math.random() * 5) + 1;
+    
+    // 2. 构造绝对路径 (Absolute Path)
+    // 原理：以当前页面 URL 为基准，往上跳一级 (../)，进入 background 文件夹
+    // 假设当前是 https://wanghaohan.com/WebDSO/
+    // ../background/3.jpg 会被自动解析为 https://wanghaohan.com/background/3.jpg
+    const bgUrl = new URL(`./background/${randomId}.jpg`, window.location.href).href;
+
+    // 3. 获取面板元素
+    const rightPanel = document.querySelector('.right-panel');
+    
+    // 4. 设置 CSS 变量 (传入绝对路径)
+    if (rightPanel) {
+        rightPanel.style.setProperty('--panel-bg-image', `url('${bgUrl}')`);
+        console.log(`WebDSO: Background loaded from ${bgUrl}`);
+    }
+}
+
+// 立即执行初始化
+initGlassBackground();

@@ -1,6 +1,6 @@
 import { STATE, CONFIG, DOM, updateTriggerUI, showSysModal, Buffers, CHANNEL_COUNT } from './core.js';
 import { AudioState, initAudio, rebuildChannel, updateAWG, rebuildStereoRouting, playBuffer, getLogSpeed, getCurrentTime } from './audio.js';
-import { resize, draw } from './render.js';
+import { resize, draw } from './render/index.js';
 import { SerialEngine } from './serial.js';
 import {
     SYSTEM, BUFFER, GRID, TRIGGER, MEASUREMENT, TIMEBASE, GENERATOR, CURSOR, AUDIO, SERIAL, RENDER,

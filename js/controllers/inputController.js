@@ -250,20 +250,30 @@ export function initInputController() {
             for (let i = 0; i < scanLen; i++) {
                 let val = rawData[i]; if (val > max) max = val; if (val < min) min = val; sum += val;
             }
-            const dcOffset = sum / scanLen; const vpp = max - min;
+            const dcOffset = sum / scanLen; 
+            const vpp = max - min;
             let prevVal = rawData[0] - dcOffset;
             for (let i = 1; i < scanLen; i++) {
                 let val = rawData[i] - dcOffset; if (prevVal < 0 && val >= 0) crossings++; prevVal = val;
             }
             let freq = crossings > 1 ? (crossings * (currentRate / scanLen)) : 0;
-            return { dcOffset, vpp, freq, max, min, valid: vpp > MEASUREMENT.MIN_VALID_VPP }; 
+            // 直流信号（vpp很小）也认为是有效的，只需要有直流偏移即可
+            const valid = (vpp > MEASUREMENT.MIN_VALID_VPP) || (Math.abs(dcOffset) > 0.001);
+            return { dcOffset, vpp, freq, max, min, valid }; 
         };
 
         const stats = Array.from({ length: CHANNEL_COUNT }, (_, i) => analyzeChannel(Buffers['data' + (i + 1)]));
         if (!stats.some(s => s.valid)) return showSysModal('Auto-Set 失败', '所有通道信号均太微弱或无信号，无法自动捕捉');
 
         let targetVPerDiv = 0.01;
-        for (let i = 0; i < CHANNEL_COUNT; i++) { const ch = STATE['ch' + (i + 1)]; if (stats[i].valid && ch.on) targetVPerDiv = Math.max(targetVPerDiv, stats[i].vpp / RENDER_EXT.CYCLE_DISPLAY_FACTOR); }
+        for (let i = 0; i < CHANNEL_COUNT; i++) { 
+            const ch = STATE['ch' + (i + 1)]; 
+            if (stats[i].valid && ch.on) {
+                // 直流信号使用 max-min 作为参考，有频率信号使用 vpp
+                const range = Math.max(stats[i].vpp, stats[i].max - stats[i].min);
+                targetVPerDiv = Math.max(targetVPerDiv, range / RENDER_EXT.CYCLE_DISPLAY_FACTOR);
+            }
+        }
         let unifiedScale = Math.max(0.01, Math.min(1000, 1.0 / targetVPerDiv));
 
         for (let i = 0; i < CHANNEL_COUNT; i++) {
@@ -289,13 +299,19 @@ export function initInputController() {
             }
         }
 
+        // 直流信号也设置默认时基
         if (masterFreq > 0) {
             let targetSecPerDiv = ((TIMEBASE.MS_TO_S / masterFreq) * 4) / CONFIG.gridX;
             targetSecPerDiv = Math.max(TIMEBASE.MIN_MS, Math.min(TIMEBASE.MAX_MS, targetSecPerDiv));
             STATE.secPerDiv = targetSecPerDiv;
             DOM.knobTimebase.value = targetSecPerDiv;
             if(DOM.lblTimebase) DOM.lblTimebase.innerText = targetSecPerDiv.toFixed(2) + 'ms';
-            // osdTimebase 由渲染循环更新
+        } else {
+            // 直流信号：设置一个默认的1ms时基
+            const defaultSecPerDiv = 1.0;
+            STATE.secPerDiv = defaultSecPerDiv;
+            DOM.knobTimebase.value = defaultSecPerDiv;
+            if(DOM.lblTimebase) DOM.lblTimebase.innerText = defaultSecPerDiv.toFixed(2) + 'ms';
         }
 
         STATE.trigger.enabled = true; STATE.trigger.src = trigSrc; 

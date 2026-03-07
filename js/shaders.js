@@ -52,7 +52,7 @@ export const fsSource = `
         float alpha;
         
         // 计算线段发散标准差
-        float sigma = u_size / (2.0 + 2.0 * 1000.0 * u_size / 50.0 + 0.0 * pow(u_intensity, 2.0));
+        float sigma = u_size / (2.0 + 2.0 * 1000.0 * u_size / 50.0);
         
         // 区分孤立点与连续线段的渲染逻辑
         if (len < EPS) {
