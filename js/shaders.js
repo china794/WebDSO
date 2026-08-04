@@ -148,6 +148,30 @@ export const vsComposite = `
 `;
 
 /**
+ * 7. 余辉衰减 - 顶点着色器 (Fade Vertex Shader)
+ * 全屏 quad, 同 vsBloom
+ */
+export const vsFade = `
+    attribute vec2 a_pos;
+    void main() {
+        gl_Position = vec4(a_pos, 0.0, 1.0);
+    }
+`;
+
+/**
+ * 8. 余辉衰减 - 片段着色器 (Fade Fragment Shader)
+ * 输出一个纯色 (半透明背景色), 通过混合实现乘法衰减:
+ * 旧帧内容按 (1-alpha) 保留, 逐步淡出。
+ */
+export const fsFade = `
+    precision highp float;
+    uniform vec4 u_color;
+    void main() {
+        gl_FragColor = u_color;
+    }
+`;
+
+/**
  * 6. 余辉合成 - 片段着色器 (Composite Fragment Shader)
  * 采样累积 FBO, 做 HDR 色调映射 (Reinhard) 后输出到屏幕。
  * HDR 模式下重叠扫描的信号累积可超过 1.0, 用 Reinhard 压缩防止纯白,

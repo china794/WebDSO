@@ -23,6 +23,9 @@ import {
     posAttrComposite,
     texUniComposite,
     tonemapUniComposite,
+    fadeProgram,
+    posAttrFade,
+    colorUniFade,
     fboHDR,
     getPhosphorDecay
 } from './context.js';
@@ -31,6 +34,8 @@ import { projectXYZ } from './xyzRenderer.js';
 let posAttr, dataAttr, colorUni, sizeUni, intensityUni, densityAlphaUni;
 let vbo;
 let glDataArray;
+// 余辉 FBO 是否已初始化 (首帧清一次基线)
+let _fboInitialized = false;
 
 // 注册给 context.js 的 restore 回调使用（避免循环依赖）
 window.__WEBDSO_RESET_WEBGL = () => resetWebGLVars();
@@ -60,6 +65,7 @@ export function resetWebGLVars() {
     posAttr = dataAttr = colorUni = sizeUni = intensityUni = densityAlphaUni = undefined;
     vbo = undefined;
     glDataArray = undefined;
+    _fboInitialized = false;
 }
 
 /**
@@ -249,11 +255,34 @@ export function renderWaveforms(theme, isLight, viewCtx) {
         // ==== 余辉模式: 画进累积 FBO ====
         gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
         gl.viewport(0, 0, currentFboWidth, currentFboHeight);
-        // 半透明清屏 = 乘法衰减老帧: 背景色 * (1-decay) + 老帧 * decay
+        // 衰减 pass: 画覆盖全屏的半透明背景色四边形。
+        // 用混合让旧波形按 decay 保留:
+        //   FBO新 = 背景*(1-decay) + FBO旧*decay
+        // gl.clear() 不经过混合会直接擦掉旧帧, 无法衰减, 故用四边形覆盖。
         gl.enable(gl.BLEND);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-        gl.clearColor(theme.bg[0], theme.bg[1], theme.bg[2], 1 - decay);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.disable(gl.DEPTH_TEST);
+        // 首次进入余辉模式时清一次 FBO 建立干净基线 (此后靠衰减 pass 收敛)
+        if (!_fboInitialized) {
+            gl.clearColor(theme.bg[0], theme.bg[1], theme.bg[2], 1);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+            _fboInitialized = true;
+        }
+        if (fadeProgram) {
+            // 衰减 pass: 画覆盖全屏的半透明背景色四边形。
+            // alpha = decay (每帧衰减量), 混合后:
+            //   FBO新 = 背景*decay + FBO旧*(1-decay)   → 旧波形按 (1-decay) 保留
+            gl.useProgram(fadeProgram);
+            gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
+            gl.enableVertexAttribArray(posAttrFade);
+            gl.vertexAttribPointer(posAttrFade, 2, gl.FLOAT, false, 0, 0);
+            gl.uniform4f(colorUniFade, theme.bg[0], theme.bg[1], theme.bg[2], decay);
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+        } else {
+            // fadeProgram 不可用时降级: 直接全清 (无余辉保留, 退化为普通模式)
+            gl.clearColor(theme.bg[0], theme.bg[1], theme.bg[2], 1);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+        }
         // 新波形加法叠加 (恢复原混合)
         gl.blendFunc(gl.ONE, isLight ? gl.ONE_MINUS_SRC_ALPHA : gl.ONE);
 

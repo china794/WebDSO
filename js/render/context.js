@@ -32,6 +32,10 @@ export let compositeProgram = null;
 export let posAttrComposite = null;
 export let texUniComposite = null;
 export let tonemapUniComposite = null;
+// 余辉衰减 (fade) 资源：全屏半透明背景色四边形
+export let fadeProgram = null;
+export let posAttrFade = null;
+export let colorUniFade = null;
 // HDR 半浮点纹理支持（运行时检测）
 export let fboHDR = false;
 // 每帧余辉衰减量（由 webglRenderer 设置）
@@ -196,6 +200,29 @@ function initWebGLResources() {
         posAttrComposite = gl.getAttribLocation(compositeProgram, 'a_pos');
         texUniComposite = gl.getUniformLocation(compositeProgram, 'u_texture');
         tonemapUniComposite = gl.getUniformLocation(compositeProgram, 'u_tonemap');
+    }
+
+    // 余辉衰减 program：全屏纯色四边形，通过混合衰减旧帧
+    const { vsFade, fsFade } = window.__WEBDSO_SHADERS || {};
+    fadeProgram = gl.createProgram();
+    if (vsFade && fsFade) {
+        const vsFShader = createShader(gl, gl.VERTEX_SHADER, vsFade);
+        const fsFShader = createShader(gl, gl.FRAGMENT_SHADER, fsFade);
+        if (vsFShader && fsFShader) {
+            gl.attachShader(fadeProgram, vsFShader);
+            gl.attachShader(fadeProgram, fsFShader);
+            gl.linkProgram(fadeProgram);
+            if (!gl.getProgramParameter(fadeProgram, gl.LINK_STATUS)) {
+                console.error('Fade program link error:', gl.getProgramInfoLog(fadeProgram));
+                fadeProgram = null;
+            }
+        }
+    } else {
+        fadeProgram = null;
+    }
+    if (fadeProgram) {
+        posAttrFade = gl.getAttribLocation(fadeProgram, 'a_pos');
+        colorUniFade = gl.getUniformLocation(fadeProgram, 'u_color');
     }
 
     // HDR 能力检测：half-float 纹理可作渲染目标才启用。
