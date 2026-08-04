@@ -23,6 +23,7 @@ import {
     posAttrComposite,
     texUniComposite,
     tonemapUniComposite,
+    gainUniComposite,
     fadeProgram,
     posAttrFade,
     colorUniFade,
@@ -298,6 +299,8 @@ export function renderWaveforms(theme, isLight, viewCtx) {
         gl.vertexAttribPointer(posAttrComposite, 2, gl.FLOAT, false, 0, 0);
         // HDR 时开启色调映射(压缩超亮), 否则直通
         gl.uniform1f(tonemapUniComposite, fboHDR ? 1.0 : 0.0);
+        // 亮度增益: 用户可调, 防止累积后波形饱和成白色
+        gl.uniform1f(gainUniComposite, STATE.phosphor?.gain ?? 1.0);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, fboTexture);
         gl.uniform1i(texUniComposite, 0);

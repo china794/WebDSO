@@ -183,13 +183,16 @@ export const fsComposite = `
     varying vec2 v_texCoord;
     uniform sampler2D u_texture;
     uniform float u_tonemap;   // 色调映射强度: 0 = 直通 (普通余辉), >0 = HDR 压缩
+    uniform float u_gain;      // 亮度增益: <1 压低亮度, 1 直通, >1 增强
 
     void main() {
         vec4 c = texture2D(u_texture, v_texCoord);
+        // 亮度增益: 直接缩放 RGB, 防止累积后波形饱和成白色
+        vec3 g = c.rgb * u_gain;
         // HDR 色调映射: Reinhard 压缩, 让重叠累积的超亮处渐变而非纯白
-        float lum = dot(c.rgb, vec3(0.299, 0.587, 0.114));
+        float lum = dot(g, vec3(0.299, 0.587, 0.114));
         float scale = 1.0 / (1.0 + u_tonemap * lum);
-        vec3 mapped = c.rgb * scale;
+        vec3 mapped = g * scale;
         // 钳到有效范围 (防浮点误差)
         gl_FragColor = vec4(clamp(mapped, 0.0, 1.0), 1.0);
     }

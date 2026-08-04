@@ -323,6 +323,8 @@ export const RENDER = {
     PHOSPHOR_MIN_DECAY: 0.01,
     /** 余辉衰减滑块最大值 (短余辉) */
     PHOSPHOR_MAX_DECAY: 0.4,
+    /** 余辉默认合成亮度增益 (1=直通, <1 压低防饱和) */
+    PHOSPHOR_GAIN: 0.55,
 };
 
 // ==================== 颜色配置 ====================

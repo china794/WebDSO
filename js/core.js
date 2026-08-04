@@ -79,6 +79,7 @@ const uiState = {
     phosphor: {
         on: RENDER.PHOSPHOR_DEFAULT_ON,
         decay: RENDER.PHOSPHOR_DECAY,
+        gain: RENDER.PHOSPHOR_GAIN,   // 合成亮度增益 (<1 压低亮度防饱和)
     },
     trigger: {
         src: 'CH1',

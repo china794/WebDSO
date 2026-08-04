@@ -125,6 +125,14 @@ export function initInputController() {
             if (DOM.lblPhosphorDecay) DOM.lblPhosphorDecay.innerText = '衰减 x' + v;
         });
     }
+    // 波形亮度增益滑块 (10-200 → 增益 0.1-2.0)
+    if (DOM.knobPhosphorGain) {
+        DOM.knobPhosphorGain.addEventListener('input', (e) => {
+            const v = parseInt(e.target.value);
+            STATE.phosphor.gain = v / 100;
+            if (DOM.lblPhosphorGain) DOM.lblPhosphorGain.innerText = 'x' + v;
+        });
+    }
     // trail 滑块
     if (DOM.knobTrail) {
         DOM.knobTrail.addEventListener('input', (e) => {

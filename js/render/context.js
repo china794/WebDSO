@@ -32,6 +32,7 @@ export let compositeProgram = null;
 export let posAttrComposite = null;
 export let texUniComposite = null;
 export let tonemapUniComposite = null;
+export let gainUniComposite = null;
 // 余辉衰减 (fade) 资源：全屏半透明背景色四边形
 export let fadeProgram = null;
 export let posAttrFade = null;
@@ -200,6 +201,7 @@ function initWebGLResources() {
         posAttrComposite = gl.getAttribLocation(compositeProgram, 'a_pos');
         texUniComposite = gl.getUniformLocation(compositeProgram, 'u_texture');
         tonemapUniComposite = gl.getUniformLocation(compositeProgram, 'u_tonemap');
+        gainUniComposite = gl.getUniformLocation(compositeProgram, 'u_gain');
     }
 
     // 余辉衰减 program：全屏纯色四边形，通过混合衰减旧帧
