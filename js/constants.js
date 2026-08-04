@@ -317,14 +317,14 @@ export const RENDER = {
     FFT_WINDOW: 'hann',
     /** 余辉默认开启 */
     PHOSPHOR_DEFAULT_ON: true,
-    /** 余辉默认每帧衰减量 (0.06 ≈ 17帧余辉) */
-    PHOSPHOR_DECAY: 0.06,
+    /** 余辉默认每帧衰减量 (对应滑块 x30, 0.1553) */
+    PHOSPHOR_DECAY: 0.1553,
     /** 余辉衰减滑块最小值 (长余辉) */
     PHOSPHOR_MIN_DECAY: 0.01,
     /** 余辉衰减滑块最大值 (短余辉) */
     PHOSPHOR_MAX_DECAY: 0.4,
-    /** 余辉默认合成亮度增益 (1=直通, <1 压低防饱和) */
-    PHOSPHOR_GAIN: 0.55,
+    /** 余辉默认合成亮度增益 (对应滑块 x30 = 0.3) */
+    PHOSPHOR_GAIN: 0.3,
 };
 
 // ==================== 颜色配置 ====================
