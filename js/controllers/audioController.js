@@ -28,7 +28,13 @@ async function ensureNoiseSuppressor() {
             return null;
         }
     }
-    const node = new AudioWorkletNode(AudioState.audioCtx, MIC.PROCESSOR_NAME);
+    // outputChannelCount: 2 — 关键: AudioWorkletNode 默认只有 1 个输出声道,
+    // 麦克风立体声/镜像信号经此节点到 splitter 时右声道必须保留, 否则右侧始终为 0。
+    const node = new AudioWorkletNode(AudioState.audioCtx, MIC.PROCESSOR_NAME, {
+        outputChannelCount: [2],
+        channelCount: 2,
+        channelCountMode: 'explicit',
+    });
     node.port.postMessage({ type: 'enable', value: STATE.mic?.denoise !== false });
     node.port.postMessage({ type: 'strength', value: STATE.mic?.strength ?? MIC.DENOISE_STRENGTH });
     node.port.postMessage({ type: 'gate', value: MIC.GATE_THRESHOLD });

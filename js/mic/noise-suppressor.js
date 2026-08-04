@@ -149,15 +149,20 @@ class NoiseSuppressorProcessor extends AudioWorkletProcessor {
         this.N = this.fftSize;
         this.half = this.fftSize >> 1;
 
-        // 输入缓冲 (累积 128 样本块到 FFT 帧)
-        this.inputBuf = new Float32Array(this.fftSize);
-        this.inputPos = 0;
+        // 输入缓冲 — 每声道独立, 滑动窗 (50% 重叠):
+        // 每 128 样本块整体左移 128, 新样本写入尾部; 每凑够 hopSize 样本出一帧。
+        // 帧间隔 = hopSize, 与 OLA 写入错开完全同步, 满足 Hann 窗 COLA 恒等重构。
+        this.inputBuf = [new Float32Array(this.fftSize), new Float32Array(this.fftSize)];
+        this.pendingSamples = 0;
 
-        // 输出缓冲 (OLA 重叠相加)
-        this.olaBuf = new Float32Array(this.fftSize + this.hopSize);
-        this.outputPos = 0;
+        // 输出缓冲 (OLA 重叠相加) — 每声道独立
+        // 写入: processFrame 从偏移 0 叠加 (缓冲头部始终对应当前时间)。
+        // 读取: 每 128 样本块从 olaRead 消费, 每消费满 hopSize 整体左移 hopSize 并清空尾部。
+        // 帧间隔与消费步长同为 hopSize, 读写严格同步。
+        this.olaBuf = [new Float32Array(this.fftSize + this.hopSize), new Float32Array(this.fftSize + this.hopSize)];
+        this.olaRead = 0;      // 下一块输出从 olaBuf 读取的起始偏移
 
-        // FFT 工作缓冲
+        // FFT 工作缓冲 (单声道计算, L/R 各跑一轮共享缓冲)
         this.hann = new Float32Array(this.fftSize);
         for (let i = 0; i < this.fftSize; i++) this.hann[i] = 0.5 * (1 - Math.cos(2 * Math.PI * i / (this.fftSize - 1)));
         this.frame = new Float32Array(this.fftSize);
@@ -213,46 +218,71 @@ class NoiseSuppressorProcessor extends AudioWorkletProcessor {
 
     /**
      * 主处理循环。Web Audio 每块 128 样本调用一次。
+     * 双声道: L/R 各自独立走 FFT 降噪管线, 各自 OLA 输出。
+     * 输入/输出声道数在 audioController 里固定为 2 (outputChannelCount)。
      */
     process(inputs, outputs) {
         const input = inputs[0];
         const output = outputs[0];
         if (!input || !input[0]) return true;
+
         const inCh = input[0];
         const outCh = output[0];
+        // 声道数判定: 单声道输入 (大多数物理麦克风) 时把 L 镜像到 R,
+        // 保证右侧通道始终有信号; 立体声输入则双通道各自独立处理。
+        const isMono = input.length < 2;
+        const inCh2 = isMono ? inCh : input[1];
+        const outCh2 = output[1] || outCh;
 
-        // 降噪关闭 → 直通
+        // 降噪关闭 → 双声道直通
         if (!this.enabled) {
-            for (let i = 0; i < 128; i++) outCh[i] = inCh[i];
+            for (let i = 0; i < 128; i++) {
+                outCh[i] = inCh[i];
+                outCh2[i] = inCh2[i];
+            }
             return true;
         }
 
-        // 写入输入缓冲
+        // 写入输入缓冲 (L/R) — 滑动窗
+        // 每块先左移 128 再填尾部, 保持 inputBuf 始终是最近 fftSize 个样本
+        for (let ch = 0; ch < 2; ch++) this.inputBuf[ch].copyWithin(0, 128);
         for (let i = 0; i < 128; i++) {
-            this.inputBuf[this.inputPos++] = inCh[i];
-            if (this.inputPos >= this.fftSize) {
-                this.processFrame();
-                this.inputPos = 0;
-            }
+            this.inputBuf[0][this.fftSize - 128 + i] = inCh[i];
+            this.inputBuf[1][this.fftSize - 128 + i] = inCh2[i];
+        }
+        this.pendingSamples += 128;
+
+        // 每攒够 hopSize 样本出一帧 (两声道各处理一次)
+        while (this.pendingSamples >= this.hopSize) {
+            this.processFrame(0);
+            this.processFrame(1);
+            this.pendingSamples -= this.hopSize;
         }
 
-        // 从 OLA 输出缓冲取 128 样本
+        // 从 OLA 缓冲输出 128 样本 (L/R)
         for (let i = 0; i < 128; i++) {
-            if (this.outputPos < this.olaBuf.length) {
-                outCh[i] = this.olaBuf[this.outputPos++];
-            } else {
-                outCh[i] = 0;
+            outCh[i] = this.olaBuf[0][this.olaRead];
+            outCh2[i] = this.olaBuf[1][this.olaRead];
+            this.olaRead++;
+            if (this.olaRead >= this.hopSize) {
+                // 头部 hopSize 样本已消费完, 前移并清空尾部
+                for (let ch = 0; ch < 2; ch++) {
+                    this.olaBuf[ch].copyWithin(0, this.hopSize);
+                    this.olaBuf[ch].fill(0, this.fftSize);
+                }
+                this.olaRead = 0;
             }
         }
         return true;
     }
 
-    /** 处理一个完整 FFT 帧 */
-    processFrame() {
+    /** 处理一个完整 FFT 帧 (声道 ch: 0=L, 1=R) */
+    processFrame(ch) {
         const { N, half } = this;
+        const inBuf = this.inputBuf[ch];
 
         // 1. 加窗
-        for (let i = 0; i < N; i++) this.frame[i] = this.inputBuf[i] * this.hann[i];
+        for (let i = 0; i < N; i++) this.frame[i] = inBuf[i] * this.hann[i];
 
         // 2. FFT → 幅度谱 + 相位
         realFFT(this.fft, this.frame, this.reOut, this.imOut, this.magIn);
@@ -262,7 +292,7 @@ class NoiseSuppressorProcessor extends AudioWorkletProcessor {
 
         // 帧能量 (用于噪声门)
         let frameEnergy = 0;
-        for (let i = 0; i < N; i++) frameEnergy += this.inputBuf[i] * this.inputBuf[i];
+        for (let i = 0; i < N; i++) frameEnergy += inBuf[i] * inBuf[i];
         frameEnergy = Math.sqrt(frameEnergy / N);
 
         // 3. 噪声谱学习
@@ -304,14 +334,13 @@ class NoiseSuppressorProcessor extends AudioWorkletProcessor {
         }
 
         // 7. iFFT → OLA 重叠相加
+        // 当前帧时间对齐在窗口起点 (输入已是最近 N 个样本)。
+        // 读取端每消费 hopSize 样本就把缓冲整体左移 hopSize 并清空尾部,
+        // 所以这里始终从偏移 0 开始叠加, 与已消费位置严格对齐。
         const magForIfft = this.magSmooth;
         realIFFT(this.fft, magForIfft, this.phaseIn, this.reOut, this.imOut, this.frame);
-        for (let i = 0; i < N; i++) {
-            this.olaBuf[i] += this.frame[i] * gain;
-        }
-        // 前移 OLA 缓冲: 头部 hopSize 个样本已输出, 前移并清空尾部
-        this.olaBuf.copyWithin(0, this.hopSize);
-        this.olaBuf.fill(0, N);
+        const ola = this.olaBuf[ch];
+        for (let i = 0; i < N; i++) ola[i] += this.frame[i] * gain;
     }
 }
 
