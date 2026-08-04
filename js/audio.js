@@ -62,7 +62,10 @@ export function initAudio() {
             AudioState['ch' + i + 'Panner'] = AudioState.audioCtx.createStereoPanner();
             AudioState['ch' + i + 'Panner'].pan.value = 0;
             AudioState['ch' + i + 'Mixer'].connect(AudioState['ch' + i + 'Panner']);
-            AudioState['ch' + i + 'Panner'].connect(AudioState.panMaster);
+            // 注意: chPanner 不再连接到扬声器 (panMaster→destination 路径已移除)。
+            // 麦克风/文件/AWG 经 chMixer→chPanner 仅用于采集 (chPanner 之后的连接被断开),
+            // 从物理上杜绝声卡输入进扬声器。AWG 监听走 merger→awgSpeakerGain 独立路径。
+            // (chPanner.pan 由 updateAutoPan 调节, 保留节点但不再连向 destination)
             
             const bias = AudioState.audioCtx.createConstantSource();
             bias.offset.value = AUDIO.DC_BIAS;
