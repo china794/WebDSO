@@ -603,6 +603,10 @@ input[type=range]:focus {
     border-top: 3px solid var(--ch2-color);
 }
 
+.mic-card {
+    border-top: 3px solid var(--ch1-color);
+}
+
 .audio-loading-overlay {
     display: flex;
     flex-direction: column;
