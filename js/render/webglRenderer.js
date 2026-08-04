@@ -1,0 +1,293 @@
+/**
+ * ==========================================
+ * WebGL Renderer - WebGL 波形渲染器
+ * ==========================================
+ * 负责使用 WebGL 渲染波形数据
+ */
+
+import { STATE, CONFIG, XY_PTS, ALPHA_LUT, GL_CONST, DOM, CHANNEL_COUNT, Buffers } from '../core.js';
+import { BUFFER, WEBGL, COLOR } from '../constants.js';
+import {
+    gl,
+    shaderProgram,
+    bloomProgram,
+    fboTexture,
+    currentFboWidth,
+    currentFboHeight,
+    quadVBO,
+    posAttrBloom,
+    texUniBloom,
+    texSizeUniBloom
+} from './context.js';
+import { projectXYZ } from './xyzRenderer.js';
+
+let posAttr, dataAttr, colorUni, sizeUni, intensityUni, densityAlphaUni;
+let vbo;
+let glDataArray;
+
+// 注册给 context.js 的 restore 回调使用（避免循环依赖）
+window.__WEBDSO_RESET_WEBGL = () => resetWebGLVars();
+
+/** 初始化 WebGL 变量 */
+function initWebGLVars() {
+    if (posAttr !== undefined) return;
+    if (!gl || !shaderProgram) return;
+
+    posAttr = gl.getAttribLocation(shaderProgram, 'a_position');
+    dataAttr = gl.getAttribLocation(shaderProgram, 'a_data');
+    colorUni = gl.getUniformLocation(shaderProgram, 'u_color');
+    sizeUni = gl.getUniformLocation(shaderProgram, 'u_size');
+    intensityUni = gl.getUniformLocation(shaderProgram, 'u_intensity');
+    densityAlphaUni = gl.getUniformLocation(shaderProgram, 'u_densityAlpha');
+
+    vbo = gl.createBuffer();
+    glDataArray = new Float32Array(CONFIG.fftSize * BUFFER.VERTEX_MULTIPLIER);
+}
+
+/**
+ * 重置 WebGL 缓存变量（在 webglcontextrestored 时调用）。
+ * context 恢复后 attrib location / VBO 在新 context 上失效，
+ * 必须清空守卫让 initWebGLVars 重新绑定。
+ */
+export function resetWebGLVars() {
+    posAttr = dataAttr = colorUni = sizeUni = intensityUni = densityAlphaUni = undefined;
+    vbo = undefined;
+    glDataArray = undefined;
+}
+
+/**
+ * 使用 WebGL 绘制单条波形轨迹 (Y-T 或 X-Y 模式)
+ * @param {Float32Array} dataBuffer - 数据源
+ * @param {Array} colorArr - RGB 颜色数组 [r,g,b]
+ * @param {boolean} isXY - 是否为 XY/XYZ 模式
+ * @param {Float32Array|null} pData2_XY - XY 模式下的 Y 通道数据
+ * @param {Object} theme - 主题颜色
+ * @param {boolean} isLight - 是否浅色主题
+ * @param {Object|null} viewCtx - Y-T 模式下的视角上下文
+ * @param {number|null} customLength - 3D XYZ 模式：自定义数据长度（从索引 0 开始）
+ *  */
+export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLight, viewCtx, customLength, customAlphas) {
+    if (!gl) return;
+    // 着色器/VBO 未就绪时跳过，避免对未定义 glDataArray 写入崩溃
+    if (!shaderProgram || posAttr === undefined || !glDataArray) return;
+    initWebGLVars();
+
+    let aspect = DOM.glCanvas.height / DOM.glCanvas.width;
+    let vIdx = 0, pointCount = 0;
+
+    const isSerial = STATE.current && STATE.current.isSerial;
+    let uSize = isLight ? 0.002 : ((STATE.current && STATE.current.lineSize) ? STATE.current.lineSize : 0.002);
+    let uIntensity = isXY ? 1.0 : 2.0;
+    const densityAlpha = 1.0;
+
+    const pushV = (vx, vy, lx, ly, len) => {
+        glDataArray[vIdx++] = vx; glDataArray[vIdx++] = vy;
+        glDataArray[vIdx++] = lx; glDataArray[vIdx++] = ly;
+        glDataArray[vIdx++] = len; pointCount++;
+    };
+
+    const addPt = (p0x, p0y, p1x, p1y) => {
+        let dx = p1x - p0x, dy = p1y - p0y, z = Math.sqrt(dx * dx + dy * dy);
+        let dX = (z > 1E-6 ? dx / z : 1.0) * uSize, dY = (z > 1E-6 ? dy / z : 0.0) * uSize;
+        let nX = -dY, nY = dX;
+        pushV(p0x - dX - nX, p0y - dY - nY, -uSize, -uSize, z);
+        pushV(p0x - dX + nX, p0y - dY + nY, -uSize, uSize, z);
+        pushV(p1x + dX - nX, p1y + dY - nY, z + uSize, -uSize, z);
+        pushV(p0x - dX + nX, p0y - dY + nY, -uSize, uSize, z);
+        pushV(p1x + dX - nX, p1y + dY - nY, z + uSize, -uSize, z);
+        pushV(p1x + dX + nX, p1y + dY + nY, z + uSize, uSize, z);
+    };
+
+    if (!isXY) {
+        // ==== Y-T 模式：不变 ====
+        let loopStart = Math.max(viewCtx.startIdxInt, 0);
+        const bufferSize = STATE.current.isSerial ? BUFFER.SERIAL_FFT_SIZE : CONFIG.fftSize;
+        let loopEnd = Math.min(viewCtx.endIdxInt - 1, bufferSize - 1);
+
+        const canvasWidth = gl.canvas.width / (window.devicePixelRatio || 1);
+        const maxRenderPoints = Math.min(Math.ceil(canvasWidth * 2), 4000);
+        const totalPoints = loopEnd - loopStart;
+        let step = 1;
+        if (totalPoints > maxRenderPoints) step = Math.ceil(totalPoints / maxRenderPoints);
+
+        if (step > 1) {
+            for (let i = loopStart; i < loopEnd; i += step) {
+                const endIdx = Math.min(i + step, loopEnd);
+                let maxVal = dataBuffer[i];
+                let minVal = maxVal;
+                for (let j = i + 1; j < endIdx; j++) {
+                    const val = dataBuffer[j];
+                    if (val > maxVal) maxVal = val;
+                    if (val < minVal) minVal = val;
+                }
+                const x = ((i - viewCtx.startIdxFloat) / viewCtx.ptsToShow) * 2.0 - 1.0;
+                const x2 = ((endIdx - viewCtx.startIdxFloat) / viewCtx.ptsToShow) * 2.0 - 1.0;
+                addPt(x, minVal, x, maxVal);
+                if (x2 > x) addPt(x, maxVal, x2, (dataBuffer[endIdx] + dataBuffer[endIdx - 1]) / 2);
+            }
+        } else {
+            for (let i = loopStart; i < loopEnd; i++) {
+                addPt(((i - viewCtx.startIdxFloat) / viewCtx.ptsToShow) * 2.0 - 1.0, dataBuffer[i],
+                      ((i + 1 - viewCtx.startIdxFloat) / viewCtx.ptsToShow) * 2.0 - 1.0, dataBuffer[i+1]);
+            }
+        }
+    } else if (customLength !== undefined && customLength > 0) {
+        // ==== 3D XYZ：直接渲染投影数据，不使用 ALPHA_LUT 索引 ====
+        // 因为投影数据在 buffer 中的位置索引与 ALPHA_LUT 不完全匹配
+        const len = customLength;
+        const yData = pData2_XY;
+        // 直接从索引0开始绘制，不用 sIdx 偏移
+        // 用 len 内的位置生成透明度：与 ALPHA_LUT 等价的 pow(i/len, 30)
+        // 这样不受固定缓冲区位置的限制
+        for (let i = 1; i < len - 1; i++) {
+            const a = Math.pow(i / len, 26);
+            if (a < COLOR.MIN_ALPHA) continue;
+            addPt(dataBuffer[i] * aspect, yData ? yData[i] : 0,
+                  dataBuffer[i + 1] * aspect, yData ? yData[i + 1] : 0);
+        }
+    } else {
+        // ==== 标准 2D XY 模式（去重 + Catmull-Rom 样条插值） ====
+        // bytebeat 等信号源有 12:1 样本保持，保持段内相邻点重合 → 显示为光点。
+        // 方案：去重冗余重合点，再用 Catmull-Rom 样条插值恢复连续平滑轨迹。
+        let sIdx = Math.max(0, CONFIG.fftSize - XY_PTS - 1);
+
+        // 1. 收集 XY 数据点（x 已乘 aspect 到屏幕坐标）
+        const ptsX = [], ptsY = [];
+        for (let i = 1; i < XY_PTS - 1; i++) {
+            if (ALPHA_LUT[i] < COLOR.MIN_ALPHA) continue;
+            ptsX.push(dataBuffer[sIdx + i] * aspect);
+            ptsY.push(pData2_XY[sIdx + i]);
+        }
+        if (ptsX.length < 2) return;
+
+        // 2. 去重：只保留真正不同的点（欧氏距离 > eps），消除保持段冗余重合点
+        const DEDUP_EPS = 1e-4;
+        const cx = [ptsX[0]], cy = [ptsY[0]];
+        for (let i = 1; i < ptsX.length; i++) {
+            const dx = ptsX[i] - cx[cx.length - 1];
+            const dy = ptsY[i] - cy[cy.length - 1];
+            if (Math.hypot(dx, dy) > DEDUP_EPS) {
+                cx.push(ptsX[i]);
+                cy.push(ptsY[i]);
+            }
+        }
+        if (cx.length < 2) return;
+
+        // 3. Catmull-Rom 样条插值：相邻去重点间细分，轨迹平滑且经过所有真点
+        const MAX_STEP = 0.008;   // 插值步长（NDC），越小越平滑
+        const n = cx.length;
+        // 每段 [P[i], P[i+1]] 用 P[i-1] 和 P[i+2] 作控制点
+        for (let i = 0; i < n - 1; i++) {
+            const p0x = cx[Math.max(0, i - 1)], p0y = cy[Math.max(0, i - 1)];
+            const p1x = cx[i], p1y = cy[i];
+            const p2x = cx[i + 1], p2y = cy[i + 1];
+            const p3x = cx[Math.min(n - 1, i + 2)], p3y = cy[Math.min(n - 1, i + 2)];
+
+            const segLen = Math.hypot(p2x - p1x, p2y - p1y);
+            const steps = Math.max(2, Math.round(segLen / MAX_STEP));
+
+            let prevX = p1x, prevY = p1y;
+            for (let s = 1; s <= steps; s++) {
+                const t = s / steps;
+                const t2 = t * t, t3 = t2 * t;
+                // Catmull-Rom 基函数
+                const x = 0.5 * (
+                    (2 * p1x) +
+                    (-p0x + p2x) * t +
+                    (2 * p0x - 5 * p1x + 4 * p2x - p3x) * t2 +
+                    (-p0x + 3 * p1x - 3 * p2x + p3x) * t3
+                );
+                const y = 0.5 * (
+                    (2 * p1y) +
+                    (-p0y + p2y) * t +
+                    (2 * p0y - 5 * p1y + 4 * p2y - p3y) * t2 +
+                    (-p0y + 3 * p1y - 3 * p2y + p3y) * t3
+                );
+                addPt(prevX, prevY, x, y);
+                prevX = x; prevY = y;
+            }
+        }
+    }
+
+    if (pointCount > 0) {
+        gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+        gl.bufferData(gl.ARRAY_BUFFER, glDataArray.subarray(0, vIdx), gl.STREAM_DRAW);
+        gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, GL_CONST.BYTES_PER_VERTEX, GL_CONST.POS_OFFSET);
+        gl.enableVertexAttribArray(posAttr);
+        gl.vertexAttribPointer(dataAttr, 3, gl.FLOAT, false, GL_CONST.BYTES_PER_VERTEX, GL_CONST.DATA_OFFSET);
+        gl.enableVertexAttribArray(dataAttr);
+        gl.uniform1f(sizeUni, uSize);
+        gl.uniform1f(intensityUni, uIntensity);
+        gl.uniform1f(densityAlphaUni, densityAlpha);
+        gl.uniform3fv(colorUni, colorArr);
+        gl.drawArrays(gl.TRIANGLES, 0, pointCount);
+    }
+}
+
+/**
+ * 遍历并渲染所有开启通道的波形
+ */
+export function renderWaveforms(theme, isLight, viewCtx) {
+    if (!gl) return;
+    initWebGLVars();
+
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, currentFboWidth, currentFboHeight);
+    gl.clearColor(theme.bg[0], theme.bg[1], theme.bg[2], theme.bg[3]);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
+    if (STATE.mode === 'YT') {
+        for (let i = 1; i <= CHANNEL_COUNT; i++) {
+            if (STATE['ch' + i].on) {
+                renderGLTrace(Buffers['pData' + i], theme['c' + i], false, null, theme, isLight, viewCtx);
+            }
+        }
+    } else if (STATE.mode === 'XY') {
+        let activeCount = 0;
+        for (let i = 1; i <= CHANNEL_COUNT; i++) {
+            if (STATE['ch' + i]?.on) activeCount++;
+        }
+
+        if (activeCount >= 3 && STATE['ch1']?.on && STATE['ch2']?.on && STATE['ch3']?.on) {
+            // XYZ 3D
+            const proj = projectXYZ(Buffers.pData1, Buffers.pData2, Buffers.pData3);
+            if (proj && proj.length >= 20) {
+                const cycles = STATE.view3d?.trailLen || 3;
+                const estPeriod = Math.max(50, Math.floor(proj.length / 20));
+                const tailSamples = Math.min(proj.length, cycles * estPeriod);
+                const srcOff = proj.length - tailSamples;
+                if (tailSamples < 4) return;
+                const xData = new Float32Array(tailSamples);
+                const yData = new Float32Array(tailSamples);
+                for (let k = 0; k < tailSamples; k++) {
+                    xData[k] = proj.xArr[srcOff + k];
+                    yData[k] = proj.yArr[srcOff + k];
+                }
+                const alphas = new Float32Array(tailSamples);
+                for (let k = 0; k < tailSamples; k++) {
+                    alphas[k] = Math.pow(k / tailSamples, 4);
+                }
+                renderGLTrace(xData, theme.cM || theme.cXY, true, yData, theme, isLight, null, tailSamples);
+            }
+        } else if (activeCount >= 2) {
+            // 标准 2D XY 李萨如图
+            renderGLTrace(Buffers.pData1, theme.cXY, true, Buffers.pData2, theme, isLight, viewCtx);
+        }
+    }
+}
+
+export function applyBloom() {
+    if (!gl) return;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, currentFboWidth, currentFboHeight);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(bloomProgram);
+    gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
+    gl.enableVertexAttribArray(posAttrBloom);
+    gl.vertexAttribPointer(posAttrBloom, 2, gl.FLOAT, false, 0, 0);
+    gl.uniform2f(texSizeUniBloom, currentFboWidth, currentFboHeight);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, fboTexture);
+    gl.uniform1i(texUniBloom, 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+}

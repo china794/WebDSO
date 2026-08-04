@@ -1,0 +1,249 @@
+/* ==========================================
+   Layout - 主布局与主题变量
+   ========================================== */
+
+:root {
+    /* --- 深色模式 (默认) --- */
+    /* 纯色实底，无半透明/毛玻璃 */
+    --bg-body: #0a0a0c;
+    --bg-panel: #16161a;
+    --bg-card: #1f1f24;
+    --bg-hover: #2a2a31;
+    --bg-input: #131317;
+    --border-color: #2e2e36;
+    --text-main: #f4f4f5;
+    --text-dim: #9a9aa3;
+    --osd-text: #ffffff;
+    --osd-bg: #1a1a1e;
+    --osd-border: #2e2e36;
+    
+    /* 核心主题色 (8 通道) */
+    --ch1-color: #FF3B30; --ch2-color: #007AFF; --ch3-color: #4CD964; --ch4-color: #00D4AA;
+    --ch5-color: #AF52DE; --ch6-color: #5AC8FA; --ch7-color: #FF9500; --ch8-color: #FF2D55;
+    --math-color: #c084fc;
+    --color-run: #22c55e;
+    --color-stop: #ef4444;
+    --color-blue: #3b82f6;
+    --color-green: #4ade80;
+    --color-purple: #a855f7;
+    
+    /* 其他全局属性 */
+    --shadow-color: rgba(0,0,0,0.6);
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+}
+
+/* --- 浅色模式 (Light Mode) --- */
+[data-theme="light"] {
+    --bg-body: #e9eaee;
+    --bg-panel: #ffffff;
+    --bg-card: #f4f4f6;
+    --bg-hover: #e8e8ec;
+    --bg-input: #f0f0f3;
+    --border-color: #d6d6dc;
+    --text-main: #18181b;
+    --text-dim: #71717a;
+    --osd-bg: #f4f4f6;
+    --osd-border: #d6d6dc;
+    --osd-text: #18181b;
+    --ch1-color: #C41E3A; --ch2-color: #0056B3; --ch3-color: #228B22; --ch4-color: #008B6B;
+    --ch5-color: #7030A0; --ch6-color: #008B8B; --ch7-color: #D2691E; --ch8-color: #B03060;
+    --math-color: #9333ea;
+    --color-run: #16a34a;
+    --color-stop: #dc2626;
+    --color-blue: #2563eb;
+    --color-green: #16a34a;
+    --color-purple: #7e22ce;
+    --shadow-color: rgba(0,0,0,0.1);
+}
+
+/* --- 经典绿模式 (Phosphor Green) --- */
+[data-theme="green"] {
+    --bg-body: #0a100a;
+    --bg-panel: #0e1a0e;
+    --bg-card: #13251a;
+    --bg-hover: #1a301e;
+    --bg-input: #0a140c;
+    --border-color: #1c3a24;
+    --text-main: #4ade80;
+    --text-dim: #2a8f4f;
+    --osd-bg: #0d1a12;
+    --osd-border: #1c3a24;
+    --osd-text: #86efac;
+    --ch1-color: #4ade80; --ch2-color: #22d3ee; --ch3-color: #fbbf24; --ch4-color: #f472b6;
+    --ch5-color: #a78bfa; --ch6-color: #34d399; --ch7-color: #fb923c; --ch8-color: #f87171;
+    --math-color: #c084fc;
+    --color-run: #16a34a;
+    --color-stop: #dc2626;
+    --color-blue: #22d3ee;
+    --color-green: #4ade80;
+    --color-purple: #a78bfa;
+    --shadow-color: rgba(0, 0, 0, 0.8);
+}
+
+/* --- 琥珀模式 (Amber Monochrome) --- */
+[data-theme="amber"] {
+    --bg-body: #100d07;
+    --bg-panel: #171208;
+    --bg-card: #201a0d;
+    --bg-hover: #2a2212;
+    --bg-input: #0f0c06;
+    --border-color: #3a3015;
+    --text-main: #fbbf24;
+    --text-dim: #a8780a;
+    --osd-bg: #171208;
+    --osd-border: #3a3015;
+    --osd-text: #fcd34d;
+    --ch1-color: #fbbf24; --ch2-color: #f59e0b; --ch3-color: #fbbf24; --ch4-color: #f59e0b;
+    --ch5-color: #fbbf24; --ch6-color: #f59e0b; --ch7-color: #fbbf24; --ch8-color: #f59e0b;
+    --math-color: #fcd34d;
+    --color-run: #fbbf24;
+    --color-stop: #b45309;
+    --color-blue: #f59e0b;
+    --color-green: #fbbf24;
+    --color-purple: #fcd34d;
+    --shadow-color: rgba(0, 0, 0, 0.8);
+}
+
+/* 全局重置 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* 根容器：除了移动端外，禁止 body 滚动 */
+body {
+    background: var(--bg-body);
+    color: var(--text-main);
+    /* 中英文混排统一字体栈 */
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+                 "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+    font-size: 12px;
+    line-height: 1.4;
+    user-select: none;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* View Transitions */
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 2; }
+
+/* 滚动条样式 */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* ==========================================
+   Main Layout Container (扁平拼接)
+   ========================================== */
+.main-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    padding: 0; /* 无外边距 */
+    gap: 0;     /* 无间隙 */
+    background: var(--bg-body);
+    align-items: stretch;
+    justify-content: flex-start;
+}
+
+/* 左侧：波形显示区 */
+.left-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    background: #000;
+}
+
+/* 波形屏幕：无边框、无圆角 */
+.screen-wrapper {
+    flex: 1;
+    width: 100%;
+    background: #000;
+    border: none;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: none;
+}
+
+.screen-container { width: 100%; height: 100%; position: relative; cursor: crosshair; }
+canvas { display: block; width: 100%; height: 100%; }
+
+/* ==========================================
+   Right Panel: 固定框架 (Fixed Frame)
+   负责背景显示，不负责内容滚动
+   ========================================== */
+.right-panel {
+    /* 固定 480px 在窄屏（1024-1280px）会挤压左侧波形区，
+       改用响应式宽度，兼顾窄屏可用性与宽屏空间利用 */
+    width: clamp(360px, 38vw, 520px);
+    flex-shrink: 0;
+    height: 100%;
+
+    /* 核心布局 */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* 禁止这里滚动 */
+    padding: 0;       /* 内边距移交给 panel-content */
+
+    /* 纯色实底，无毛玻璃/半透明/背景图 */
+    border: none;
+    border-left: 1px solid var(--border-color);
+    border-radius: 0;
+    background: var(--bg-panel);
+}
+
+/* ==========================================
+   Panel Content: 滚动内容层 (Scrollable Content)
+   ========================================== */
+.panel-content {
+    /* 1. 填满高度并允许滚动 */
+    flex: 1;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    
+    /* 2. 内边距 (Padding) 在这里定义 */
+    padding: 24px;
+    
+    /* 3. 布局模式 (解决挤在一起的问题) */
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* 控件之间的间距 */
+}
+
+/* 响应式调整：1024-1280px 之间右栏过窄会导致控制面板拥挤，
+   提前到 1280px 断点竖排，保证左波形区有足够宽度 */
+@media (max-width: 1280px) {
+    body { overflow-y: auto; height: auto; }
+    .main-container { flex-direction: column; height: auto; }
+
+    .left-panel { width: 100%; aspect-ratio: 5 / 4; flex-shrink: 0; }
+
+    .right-panel {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    /* 移动端滚动适配 */
+    .panel-content {
+        height: auto;
+        max-height: 60vh;
+        padding: 16px;
+        gap: 16px; /* 移动端间距稍微小一点 */
+    }
+}

@@ -1,0 +1,121 @@
+/* ==========================================
+   OSD - 屏幕叠加显示
+   ========================================== */
+
+/* 顶部 OSD：运行状态、时基、触发 */
+.osd-top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: transparent; 
+    color: var(--osd-text); 
+    padding: 8px 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    font-family: monospace;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* 右侧 OSD：通道档位 */
+.osd-side-8ch {
+    gap: 4px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+.osd-side-8ch .osd-box {
+    min-width: 48px;
+    padding: 2px 6px;
+}
+.osd-side {
+    position: absolute;
+    right: 16px;
+    top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-family: monospace;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* 单个 OSD 信息框 */
+.osd-box {
+    background: var(--osd-bg); 
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--osd-border); 
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 8px;
+    min-width: 60px;
+}
+
+.osd-title {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 10px;
+    margin-bottom: 2px;
+}
+
+/* 测量面板 */
+.measure-panel-8ch {
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    max-width: 90%;
+}
+.measure-panel {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    background: var(--osd-bg); 
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--osd-border); 
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: none;
+    justify-content: space-between;
+    gap: 20px;
+    font-family: monospace;
+    font-size: 12px;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* 通道颜色类 (CH1-CH8) */
+.txt-y { color: var(--ch1-color); } .txt-c { color: var(--ch2-color); }
+.bg-y { background: rgba(234,179,8,0.2); color: var(--ch1-color); }
+.bg-c { background: rgba(6,182,212,0.2); color: var(--ch2-color); }
+.txt-ch1 { color: var(--ch1-color); } .bg-ch1 { background: rgba(234,179,8,0.2); color: var(--ch1-color); } .bd-ch1 { border-color: var(--ch1-color); }
+.txt-ch2 { color: var(--ch2-color); } .bg-ch2 { background: rgba(6,182,212,0.2); color: var(--ch2-color); } .bd-ch2 { border-color: var(--ch2-color); }
+.txt-ch3 { color: var(--ch3-color); } .bg-ch3 { background: rgba(34,197,94,0.2); color: var(--ch3-color); } .bd-ch3 { border-color: var(--ch3-color); }
+.txt-ch4 { color: var(--ch4-color); } .bg-ch4 { background: rgba(236,72,153,0.2); color: var(--ch4-color); } .bd-ch4 { border-color: var(--ch4-color); }
+.txt-ch5 { color: var(--ch5-color); } .bg-ch5 { background: rgba(249,115,22,0.2); color: var(--ch5-color); } .bd-ch5 { border-color: var(--ch5-color); }
+.txt-ch6 { color: var(--ch6-color); } .bg-ch6 { background: rgba(168,85,247,0.2); color: var(--ch6-color); } .bd-ch6 { border-color: var(--ch6-color); }
+.txt-ch7 { color: var(--ch7-color); } .bg-ch7 { background: rgba(132,204,22,0.2); color: var(--ch7-color); } .bd-ch7 { border-color: var(--ch7-color); }
+.txt-ch8 { color: var(--ch8-color); } .bg-ch8 { background: rgba(225,29,72,0.2); color: var(--ch8-color); } .bd-ch8 { border-color: var(--ch8-color); }
+
+.txt-p {
+    color: var(--math-color);
+}
+
+.bg-p {
+    background: rgba(192,132,252,0.2);
+    color: var(--math-color);
+}
+
+.txt-g {
+    color: #4ade80;
+}
+
+.txt-dim {
+    color: var(--text-dim);
+}
+
+.font-mono {
+    font-family: 'Courier New', monospace;
+}

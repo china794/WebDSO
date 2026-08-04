@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="48" fill="#09090b"/>
+  <g stroke="rgba(59,130,246,0.3)" stroke-width="1">
+    <line x1="64" y1="256" x2="448" y2="256"/>
+    <line x1="256" y1="64" x2="256" y2="448"/>
+  </g>
+  <polyline points="64,320 96,256 128,293 160,213 192,266 224,160 256,240 288,133 320,226 352,186 384,240 416,266 448,256"
+    fill="none" stroke="#3b82f6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="64,213 96,266 128,186 160,240 192,160 224,213 256,133 288,200 320,173 352,226 384,200 416,253 448,226"
+    fill="none" stroke="#10b981" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+  <text x="256" y="480" text-anchor="middle" fill="#a1a1aa" font-family="monospace" font-size="24">WebDSO</text>
+</svg>

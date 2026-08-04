@@ -1,0 +1,851 @@
+/* ==========================================
+   Controls - 全新控制面板样式
+   分区卡片式布局 · 紧凑展开 · 现代视觉
+   ========================================== */
+
+/* ===== 布局基础 ===== */
+.ctrl-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* 卡片头部 */
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+/* 运行卡顶部色条 */
+.run-card {
+    border-top: 3px solid var(--color-run);
+}
+
+.card-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-main);
+    margin: 0;
+    text-transform: uppercase;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.card-title span {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--text-dim);
+    letter-spacing: 0;
+}
+
+.card-badge {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 2px 6px;
+}
+
+.ch-badge {
+    font-family: monospace;
+    letter-spacing: 1px;
+}
+
+/* ===== 面板顶部工具条 ===== */
+.panel-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 0 8px;
+}
+
+.panel-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.brand-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-green);
+    box-shadow: 0 0 8px var(--color-green);
+}
+
+.brand-title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--text-main);
+}
+
+.brand-sub {
+    font-size: 10px;
+    color: var(--text-dim);
+}
+
+.toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.theme-select {
+    width: 110px;
+}
+
+/* ===== 控制行/堆叠布局 ===== */
+.ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.ctrl-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.ctrl-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.ctrl-value {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-main);
+    font-family: 'Courier New', monospace;
+    margin-left: auto;
+}
+
+/* ===== 按钮网格 ===== */
+.btn-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+.btn-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+/* 运行/自动并排 */
+.run-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 8px;
+}
+
+.run-grid .btn-runstop {
+    font-size: 13px;
+}
+
+.run-grid .btn-autoset {
+    font-size: 13px;
+}
+
+/* 单通道物理旋钮横排：POS / SCALE / CPL */
+.vert-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.vert-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    min-width: 0;
+}
+
+.vert-item .ctrl-row {
+    gap: 4px;
+}
+
+.vert-item .ctrl-value {
+    font-size: 10px;
+}
+
+/* 水平旋钮横排：POS / SEC-DIV / LEVEL */
+.horiz-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.horiz-grid:has(.horiz-item:only-child) {
+    grid-template-columns: 1fr;
+}
+
+.horiz-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    min-width: 0;
+}
+
+.horiz-item .ctrl-row {
+    gap: 4px;
+}
+
+.horiz-item .ctrl-value {
+    font-size: 10px;
+}
+
+.math-full-row {
+    grid-column: 1 / -1;
+}
+
+/* ===== 通道切换网格 ===== */
+.ch-toggle-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+
+/* ===== 按钮基础 ===== */
+.hw-btn {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 9px 6px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.2;
+    font-family: inherit;
+}
+
+.hw-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--color-blue);
+}
+
+.hw-btn:active {
+    transform: scale(0.98);
+}
+
+.hw-btn.active {
+    background: var(--color-blue);
+    border-color: var(--color-blue);
+    color: #fff;
+}
+
+/* 小按钮 */
+.small-inline-btn {
+    width: auto;
+    padding: 4px 10px;
+    font-size: 11px;
+}
+
+/* ===== 运行按钮 ===== */
+.btn-run {
+    background: var(--color-run);
+    border: none;
+    color: #fff;
+    font-size: 13px;
+    padding: 12px;
+}
+
+.btn-run:hover {
+    filter: brightness(1.1);
+    border: none;
+}
+
+.btn-run.stopped {
+    background: var(--color-stop);
+    border: none;
+}
+
+.btn-autoset {
+    background: #1e3a8a;
+    color: #93c5fd;
+    border-color: #1e3a8a;
+    font-size: 13px;
+    padding: 12px;
+}
+
+.btn-autoset:hover {
+    background: #2747a0;
+    color: #bfdbfe;
+}
+
+.btn-fft-toggle {
+    background: #4f46e5;
+    color: #fff;
+    border-color: #4f46e5;
+    font-size: 13px;
+}
+
+.btn-primary {
+    background: var(--color-blue);
+    color: #fff;
+    border-color: var(--color-blue);
+}
+
+.btn-danger {
+    background: var(--color-stop);
+    color: #fff;
+    border-color: var(--color-stop);
+}
+
+.btn-audio-toggle {
+    width: 44px;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+/* ===== 选择框 ===== */
+.hw-select {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 7px 8px;
+    color: var(--text-main);
+    font-size: 11px;
+    font-weight: 500;
+    width: 100%;
+    cursor: pointer;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.hw-select:focus {
+    border-color: var(--color-blue);
+}
+
+/* ===== 输入框 ===== */
+.flat-input-box {
+    display: flex;
+    align-items: center;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 3px 6px;
+    height: 26px;
+    box-sizing: border-box;
+}
+
+.flat-input-box input[type="number"] {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-main);
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    flex: 1;
+    width: 0;
+    min-width: 0;
+}
+
+.spin-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-right: 4px;
+}
+
+.spin-btns div {
+    color: var(--text-dim);
+    font-size: 7px;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    padding: 1px 2px;
+}
+
+.spin-btns div:hover {
+    color: var(--text-main);
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* ===== 滑块 ===== */
+input[type=range] {
+    -webkit-appearance: none;
+    background: transparent;
+    width: 100%;
+    height: 20px;
+    margin: 0;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    height: 4px;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 14px;
+    width: 14px;
+    border-radius: 7px;
+    background: var(--color-blue);
+    cursor: pointer;
+    margin-top: -6px;
+    transition: 0.1s;
+    box-shadow: 0 0 4px rgba(59,130,246,0.4);
+}
+
+input[type=range]::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+/* 时基摇杆提示 */
+.timebase-hint {
+    font-size: 8px;
+    color: var(--text-dim);
+    text-align: center;
+    font-family: monospace;
+    letter-spacing: 1px;
+}
+
+/* ===== 通道盒 ===== */
+.ch-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 3px solid var(--ch1-color);
+    transition: border-top-color 0.2s;
+}
+
+.ch-box.ch1 { border-top-color: var(--ch1-color); }
+.ch-box.ch2 { border-top-color: var(--ch2-color); }
+.ch-box.ch3 { border-top-color: var(--ch3-color); }
+.ch-box.ch4 { border-top-color: var(--ch4-color); }
+.ch-box.ch5 { border-top-color: var(--ch5-color); }
+.ch-box.ch6 { border-top-color: var(--ch6-color); }
+.ch-box.ch7 { border-top-color: var(--ch7-color); }
+.ch-box.ch8 { border-top-color: var(--ch8-color); }
+
+/* ===== 触发区 ===== */
+.trig-header {
+    margin-top: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.filter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ===== 小地图 ===== */
+.minimap-container {
+    position: relative;
+    width: 100%;
+    height: 44px;
+    background: #050505;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.minimap-canvas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.minimap-highlight {
+    position: absolute;
+    left: 0%;
+    width: 10%;
+    height: 100%;
+    background: rgba(56, 189, 248, 0.25);
+    border-left: 1px solid #38bdf8;
+    border-right: 1px solid #38bdf8;
+    pointer-events: none;
+}
+
+.minimap-center-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    border-left: 1px dashed rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+}
+
+/* ===== 信号发生器 ===== */
+.gen-card {
+    border-top: 3px solid var(--color-blue);
+}
+
+.gen-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.gen-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.gen-params {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.gen-param-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.gen-param {
+    flex: 1;
+    min-width: 140px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.gen-param-extra .gen-param {
+    display: none;
+}
+
+.gen-param-extra .gen-param.visible {
+    display: flex;
+}
+
+/* ===== 双声道输出 ===== */
+.stereo-out {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-color);
+}
+
+.stereo-label {
+    font-weight: 600;
+}
+
+.stereo-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.stereo-row .hw-select {
+    width: 62px;
+    padding: 5px 4px;
+}
+
+/* ===== FFT / Math 分组 ===== */
+.math-group, .fft-group {
+    padding: 10px;
+    gap: 10px;
+}
+
+/* ===== 音频区 ===== */
+.audio-card {
+    border-top: 3px solid var(--ch2-color);
+}
+
+.audio-loading-overlay {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+    background: var(--bg-panel);
+    border-radius: var(--radius-md);
+    position: relative;
+    z-index: 100;
+}
+
+.audio-loading-text {
+    color: #00ff88;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.audio-progress-track {
+    width: 70%;
+    height: 6px;
+    background: #111;
+    border-radius: 3px;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.audio-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: #00ff88;
+    transition: width 0.1s;
+}
+
+.audio-panel-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.audio-panel-row.secondary {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.speed-control-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
+}
+
+/* ===== 串口区 ===== */
+.serial-card {
+    border-top: 3px solid var(--ch7-color);
+}
+
+.serial-status {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-dim);
+    font-family: monospace;
+}
+
+#serial-status-dot {
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.status-active {
+    color: var(--color-green) !important;
+    text-shadow: 0 0 8px var(--color-green);
+}
+
+/* ===== XYZ 拖影 ===== */
+.trail-panel {
+    border-top: 3px solid var(--math-color);
+}
+
+/* ===== Bytebeat 字节节拍（独立多声道信号源） ===== */
+.bytebeat-card {
+    border-top: 3px solid var(--color-purple);
+}
+
+.bytebeat-play-btn {
+    width: auto;
+    min-width: 40px;
+    font-size: 13px;
+}
+
+.bytebeat-code {
+    width: 100%;
+    min-height: 160px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-main);
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 10px;
+    resize: vertical;
+    outline: none;
+}
+
+.bytebeat-code:focus {
+    border-color: var(--color-blue);
+}
+
+.bytebeat-error {
+    font-size: 10px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    padding: 4px 6px;
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 4px;
+}
+
+.bytebeat-rate-input {
+    width: 70px;
+    flex-shrink: 0;
+    text-align: right;
+}
+
+/* ===== 系统模态框 ===== */
+.sys-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.sys-modal-overlay.show {
+    display: flex;
+}
+
+.sys-modal-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    width: 90%;
+    max-width: 420px;
+    box-shadow: 0 10px 40px var(--shadow-color);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sys-modal-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+}
+
+.sys-modal-text {
+    color: var(--text-dim);
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.sys-modal-btn {
+    background: var(--color-blue);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+/* ===== 折叠面板兼容 ===== */
+.hw-group {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+}
+
+.group-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    border-left: 3px solid var(--text-dim);
+    padding-left: 8px;
+}
+
+.group-title::after {
+    content: "▲";
+    font-size: 8px;
+    color: var(--text-dim);
+    margin-left: auto;
+    padding-right: 4px;
+    transition: transform 0.2s;
+}
+
+.hw-group.collapsed > *:not(.group-title) {
+    display: none;
+}
+
+.hw-group.collapsed .group-title::after {
+    transform: rotate(180deg);
+}
+
+/* ===== 文件输入隐藏 ===== */
+.file-input-hidden {
+    display: none;
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 1280px) {
+    .ch-toggle-grid { grid-template-columns: repeat(4, 1fr); }
+    .gen-row { flex-direction: column; align-items: stretch; }
+    .gen-param-row { flex-direction: column; }
+    .btn-grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .btn-grid-2 { grid-template-columns: 1fr; }
+    .stereo-row { flex-wrap: wrap; }
+}

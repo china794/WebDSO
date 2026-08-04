@@ -1,0 +1,24 @@
+# WebDSO .gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Editor
+.idea/
+.vscode/
+*.sublime-*
+
+# Claude
+.claude/
+
+# Backups
+WebDSO_backup_*/
+WebDSO_final_*/
+.backup-*/
+
+# Python
+__pycache__/
+*.pyc

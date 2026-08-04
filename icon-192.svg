@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" rx="24" fill="#09090b"/>
+  <!-- 示波器网格 -->
+  <g stroke="rgba(59,130,246,0.3)" stroke-width="0.5">
+    <line x1="24" y1="96" x2="168" y2="96"/>
+    <line x1="96" y1="24" x2="96" y2="168"/>
+  </g>
+  <!-- 波形 -->
+  <polyline points="24,120 36,96 48,110 60,80 72,100 84,60 96,90 108,50 120,85 132,70 144,90 156,100 168,96"
+    fill="none" stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- 第二道波形 (浅色) -->
+  <polyline points="24,80 36,100 48,70 60,90 72,60 84,80 96,50 108,75 120,65 132,85 144,75 156,95 168,85"
+    fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+  <text x="96" y="180" text-anchor="middle" fill="#a1a1aa" font-family="monospace" font-size="10">WebDSO</text>
+</svg>
