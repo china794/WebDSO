@@ -280,7 +280,8 @@ export function draw({ processPausedData = false } = {}) {
 
     // ==== Canvas 2D 层（即时模式——每帧清�?全量重绘�?===
     ctx2d.clearRect(0, 0, w, h);
-    if (STATE.mode === 'XY') {
+    const renderGridOn = !STATE.render || STATE.render.grid !== false;
+    if (renderGridOn && STATE.mode === 'XY') {
         let ac = 0;
         for (let i = 1; i <= 8; i++) if (STATE['ch' + i]?.on) ac++;
         if (ac >= 3) {
@@ -289,7 +290,7 @@ export function draw({ processPausedData = false } = {}) {
         } else {
             renderGrid(w, h, stepX, stepY, theme);
         }
-    } else {
+    } else if (renderGridOn) {
         renderGrid(w, h, stepX, stepY, theme);
     }
 
@@ -312,19 +313,28 @@ export function draw({ processPausedData = false } = {}) {
 
     // ==== Canvas 2D 叠加层（每帧重绘�?===
     updateTriggerOSD(viewCtx.triggerIndexFloat);
-    renderTriggerLine(w, h, theme, viewCtx);
+    const overlaysOn = !STATE.render || STATE.render.overlays !== false;
+    if (overlaysOn) {
+        renderTriggerLine(w, h, theme, viewCtx);
+        renderHover(w, h, stepX, theme, viewCtx);
+    }
     renderCursors(w, h, theme);
-    renderHover(w, h, stepX, theme, viewCtx);
     if (STATE.mode !== 'XY') renderMathWaveform(w, h, theme, viewCtx);
     renderRefWaveform(w, h, theme, viewCtx);
     markPhase('canvas2d');
 
     // ==== WebGL 波形（每帧重绘——内部自�?gl.clear�?===
     renderWaveforms(theme, isLight, viewCtx);
+    // 辉光叠加 (可选)
+    if (STATE.render && STATE.render.glow) {
+        applyBloom();
+    }
     markPhase('webgl');
 
     // ==== 小地�?====
-    renderMinimap(theme, viewCtx);
+    if (!STATE.render || STATE.render.minimap !== false) {
+        renderMinimap(theme, viewCtx);
+    }
 
     // ==== DOM 更新 ====
     updateChannelOSD();

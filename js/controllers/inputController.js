@@ -133,6 +133,20 @@ export function initInputController() {
             if (DOM.lblPhosphorGain) DOM.lblPhosphorGain.innerText = 'x' + v;
         });
     }
+    // 渲染层开关: 网格 / 小地图 / 叠加层 / 辉光
+    const bindRenderToggle = (btnId, stateKey, labelOn, labelOff) => {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        btn.addEventListener('click', function () {
+            STATE.render[stateKey] = !STATE.render[stateKey];
+            this.innerText = STATE.render[stateKey] ? labelOn : labelOff;
+            this.classList.toggle('active', STATE.render[stateKey]);
+        });
+    };
+    bindRenderToggle('btn-render-grid', 'grid', '网格: 开', '网格: 关');
+    bindRenderToggle('btn-render-minimap', 'minimap', '小地图: 开', '小地图: 关');
+    bindRenderToggle('btn-render-overlays', 'overlays', '叠加层: 开', '叠加层: 关');
+    bindRenderToggle('btn-render-glow', 'glow', '辉光: 开', '辉光: 关');
     // trail 滑块
     if (DOM.knobTrail) {
         DOM.knobTrail.addEventListener('input', (e) => {

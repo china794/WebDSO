@@ -81,6 +81,13 @@ const uiState = {
         decay: RENDER.PHOSPHOR_DECAY,
         gain: RENDER.PHOSPHOR_GAIN,   // 合成亮度增益 (<1 压低亮度防饱和)
     },
+    // 渲染层显隐开关
+    render: {
+        grid: true,      // 网格
+        minimap: true,   // 小地图
+        overlays: true,  // 触发线/悬停十字线等叠加层
+        glow: false,     // 辉光
+    },
     trigger: {
         src: 'CH1',
         edge: 1,
