@@ -198,10 +198,14 @@ function initWebGLResources() {
         tonemapUniComposite = gl.getUniformLocation(compositeProgram, 'u_tonemap');
     }
 
-    // HDR 能力检测：half-float 纹理可作渲染目标才启用
+    // HDR 能力检测：half-float 纹理可作渲染目标才启用。
+    // 实测 EXT_color_buffer_half_float 虽被 Chrome 报告支持，但作为
+    // 离屏渲染目标时 composite 采样结果全黑（驱动兼容问题），
+    // 因此统一用 RGBA8。余辉的衰减残影/累积变亮效果不受影响，
+    // 仅牺牲"重叠超亮"(HDR 亮度累积)。若未来需要 HDR，需逐设备验证。
     const hfColor = gl.getExtension('EXT_color_buffer_half_float');
     const hfTex = gl.getExtension('OES_texture_half_float');
-    fboHDR = !!(hfColor && hfTex);
+    fboHDR = false; // 临时禁用 half-float（见上方注释）
 
     gl.enable(gl.BLEND);
 }
