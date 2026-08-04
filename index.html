@@ -349,6 +349,14 @@
                 <!-- ===== FFT 频谱卡 ===== -->
                 <section class="ctrl-card">
                     <button id="btn-fft-toggle" class="hw-btn btn-fft-toggle">📊 频谱模式 (OFF)</button>
+                    <div class="ctrl-row" style="margin-top:8px;">
+                        <span class="ctrl-label">余辉</span>
+                        <button id="btn-phosphor" class="hw-btn small-inline-btn">余辉: 开</button>
+                        <span class="ctrl-value" id="lbl-phosphor-decay" style="margin-left:auto;">衰减 x6</span>
+                    </div>
+                    <div class="ctrl-stack">
+                        <input type="range" id="knob-phosphor-decay" min="1" max="40" step="1" value="6">
+                    </div>
                     <div id="fft-controls" class="hw-group fft-group" style="display:none;">
                         <div class="ctrl-row">
                             <span class="ctrl-label">X轴刻度</span>

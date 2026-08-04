@@ -75,6 +75,11 @@ const ioState = {
 const uiState = {
     measure: false,
     awgMonitor: false,
+    // 波形余辉 (phosphor persistence)：FBO 帧间累积，老帧缓慢衰减
+    phosphor: {
+        on: RENDER.PHOSPHOR_DEFAULT_ON,
+        decay: RENDER.PHOSPHOR_DECAY,
+    },
     trigger: {
         src: 'CH1',
         edge: 1,

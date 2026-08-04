@@ -132,3 +132,41 @@ export const fsBloom = `
         gl_FragColor = baseColor + bloom * 0.6 + wideBloom;
     }
 `;
+
+/**
+ * 5. 余辉合成 - 顶点着色器 (Composite Vertex Shader)
+ * 全屏 quad, 同 vsBloom
+ */
+export const vsComposite = `
+    attribute vec2 a_pos;
+    varying vec2 v_texCoord;
+
+    void main() {
+        gl_Position = vec4(a_pos, 0.0, 1.0);
+        v_texCoord = a_pos * 0.5 + 0.5;
+    }
+`;
+
+/**
+ * 6. 余辉合成 - 片段着色器 (Composite Fragment Shader)
+ * 采样累积 FBO, 做 HDR 色调映射 (Reinhard) 后输出到屏幕。
+ * HDR 模式下重叠扫描的信号累积可超过 1.0, 用 Reinhard 压缩防止纯白,
+ * 同时保留"越重叠越亮"的荧光层次。
+ */
+export const fsComposite = `
+    precision highp float;
+
+    varying vec2 v_texCoord;
+    uniform sampler2D u_texture;
+    uniform float u_tonemap;   // 色调映射强度: 0 = 直通 (普通余辉), >0 = HDR 压缩
+
+    void main() {
+        vec4 c = texture2D(u_texture, v_texCoord);
+        // HDR 色调映射: Reinhard 压缩, 让重叠累积的超亮处渐变而非纯白
+        float lum = dot(c.rgb, vec3(0.299, 0.587, 0.114));
+        float scale = 1.0 / (1.0 + u_tonemap * lum);
+        vec3 mapped = c.rgb * scale;
+        // 钳到有效范围 (防浮点误差)
+        gl_FragColor = vec4(clamp(mapped, 0.0, 1.0), 1.0);
+    }
+`;

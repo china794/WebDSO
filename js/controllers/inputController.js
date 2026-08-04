@@ -109,6 +109,22 @@ export function initInputController() {
     }
     if(DOM.btnXy) DOM.btnXy.addEventListener('click', function () { STATE.mode = 'XY'; this.classList.add('active'); DOM.btnDisplay.classList.remove('active'); updateTrailControl(); });
     if(DOM.btnDisplay) DOM.btnDisplay.addEventListener('click', function () { STATE.mode = 'YT'; this.classList.add('active'); DOM.btnXy.classList.remove('active'); updateTrailControl(); });
+    // 波形余辉开关 + 衰减滑块
+    if (DOM.btnPhosphor) {
+        DOM.btnPhosphor.addEventListener('click', function () {
+            STATE.phosphor.on = !STATE.phosphor.on;
+            this.innerText = STATE.phosphor.on ? '余辉: 开' : '余辉: 关';
+            this.classList.toggle('active', STATE.phosphor.on);
+        });
+    }
+    if (DOM.knobPhosphorDecay) {
+        DOM.knobPhosphorDecay.addEventListener('input', (e) => {
+            // 滑块 1-40 映射到衰减 0.01-0.4 (对数感觉)
+            const v = parseInt(e.target.value);
+            STATE.phosphor.decay = 0.01 * Math.pow(40, (v - 1) / 39);
+            if (DOM.lblPhosphorDecay) DOM.lblPhosphorDecay.innerText = '衰减 x' + v;
+        });
+    }
     // trail 滑块
     if (DOM.knobTrail) {
         DOM.knobTrail.addEventListener('input', (e) => {

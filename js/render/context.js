@@ -27,6 +27,16 @@ export let fboTexture = null;
 export let currentFboWidth = 0;
 export let currentFboHeight = 0;
 
+// 余辉合成 (composite) 资源
+export let compositeProgram = null;
+export let posAttrComposite = null;
+export let texUniComposite = null;
+export let tonemapUniComposite = null;
+// HDR 半浮点纹理支持（运行时检测）
+export let fboHDR = false;
+// 每帧余辉衰减量（由 webglRenderer 设置）
+let _phosphorDecay = 0.06;
+
 /** 是否已初始化 */
 let _initialized = false;
 
@@ -164,7 +174,46 @@ function initWebGLResources() {
     fbo = gl.createFramebuffer();
     fboTexture = gl.createTexture();
 
+    // 余辉合成着色器：采样累积 FBO → HDR 色调映射 → 屏幕
+    const { vsComposite, fsComposite } = window.__WEBDSO_SHADERS || {};
+    compositeProgram = gl.createProgram();
+    if (vsComposite && fsComposite) {
+        const vsCShader = createShader(gl, gl.VERTEX_SHADER, vsComposite);
+        const fsCShader = createShader(gl, gl.FRAGMENT_SHADER, fsComposite);
+        if (vsCShader && fsCShader) {
+            gl.attachShader(compositeProgram, vsCShader);
+            gl.attachShader(compositeProgram, fsCShader);
+            gl.linkProgram(compositeProgram);
+            if (!gl.getProgramParameter(compositeProgram, gl.LINK_STATUS)) {
+                console.error('Composite program link error:', gl.getProgramInfoLog(compositeProgram));
+                compositeProgram = null;
+            }
+        }
+    } else {
+        compositeProgram = null;
+    }
+    if (compositeProgram) {
+        posAttrComposite = gl.getAttribLocation(compositeProgram, 'a_pos');
+        texUniComposite = gl.getUniformLocation(compositeProgram, 'u_texture');
+        tonemapUniComposite = gl.getUniformLocation(compositeProgram, 'u_tonemap');
+    }
+
+    // HDR 能力检测：half-float 纹理可作渲染目标才启用
+    const hfColor = gl.getExtension('EXT_color_buffer_half_float');
+    const hfTex = gl.getExtension('OES_texture_half_float');
+    fboHDR = !!(hfColor && hfTex);
+
     gl.enable(gl.BLEND);
+}
+
+/** 设置余辉衰减量（供 webglRenderer 每帧调用） */
+export function setPhosphorDecay(decay) {
+    _phosphorDecay = decay;
+}
+
+/** 读取当前余辉衰减量 */
+export function getPhosphorDecay() {
+    return _phosphorDecay;
 }
 
 /**
@@ -179,7 +228,14 @@ export function checkResizeFBO(w, h) {
     currentFboWidth = w;
     currentFboHeight = h;
     gl.bindTexture(gl.TEXTURE_2D, fboTexture);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    if (fboHDR) {
+        // half-float 纹理：HDR 累积，重叠处可超亮
+        const hfExt = gl.getExtension('OES_texture_half_float');
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, hfExt.HALF_FLOAT_OES, null);
+    } else {
+        // 降级 RGBA8：普通余辉（无法超亮）
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    }
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);

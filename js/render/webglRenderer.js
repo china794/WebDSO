@@ -11,13 +11,20 @@ import {
     gl,
     shaderProgram,
     bloomProgram,
+    fbo,
     fboTexture,
     currentFboWidth,
     currentFboHeight,
     quadVBO,
     posAttrBloom,
     texUniBloom,
-    texSizeUniBloom
+    texSizeUniBloom,
+    compositeProgram,
+    posAttrComposite,
+    texUniComposite,
+    tonemapUniComposite,
+    fboHDR,
+    getPhosphorDecay
 } from './context.js';
 import { projectXYZ } from './xyzRenderer.js';
 
@@ -226,15 +233,62 @@ export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLi
 
 /**
  * 遍历并渲染所有开启通道的波形
+ *
+ * 余辉(phosphor persistence)实现:
+ * 波形画进累积 FBO(优先 half-float HDR),每帧先用半透明背景色清屏(等效乘法衰减),
+ * 新波形加法混合叠加其上,最后用 composite shader 把 FBO 内容合成到屏幕。
  */
 export function renderWaveforms(theme, isLight, viewCtx) {
     if (!gl) return;
     initWebGLVars();
 
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.viewport(0, 0, currentFboWidth, currentFboHeight);
-    gl.clearColor(theme.bg[0], theme.bg[1], theme.bg[2], theme.bg[3]);
-    gl.clear(gl.COLOR_BUFFER_BIT);
+    const phosphorOn = STATE.phosphor && STATE.phosphor.on;
+    const decay = phosphorOn ? (STATE.phosphor.decay ?? getPhosphorDecay()) : 1;
+
+    if (phosphorOn && fbo && fboTexture && compositeProgram) {
+        // ==== 余辉模式: 画进累积 FBO ====
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+        gl.viewport(0, 0, currentFboWidth, currentFboHeight);
+        // 半透明清屏 = 乘法衰减老帧: 背景色 * (1-decay) + 老帧 * decay
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        gl.clearColor(theme.bg[0], theme.bg[1], theme.bg[2], 1 - decay);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+        // 新波形加法叠加 (恢复原混合)
+        gl.blendFunc(gl.ONE, isLight ? gl.ONE_MINUS_SRC_ALPHA : gl.ONE);
+
+        drawAllChannels(theme, isLight, viewCtx);
+
+        // ==== 合成到屏幕 ====
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, currentFboWidth, currentFboHeight);
+        gl.disable(gl.BLEND);
+        gl.useProgram(compositeProgram);
+        gl.bindBuffer(gl.ARRAY_BUFFER, quadVBO);
+        gl.enableVertexAttribArray(posAttrComposite);
+        gl.vertexAttribPointer(posAttrComposite, 2, gl.FLOAT, false, 0, 0);
+        // HDR 时开启色调映射(压缩超亮), 否则直通
+        gl.uniform1f(tonemapUniComposite, fboHDR ? 1.0 : 0.0);
+        gl.activeTexture(gl.TEXTURE0);
+        gl.bindTexture(gl.TEXTURE_2D, fboTexture);
+        gl.uniform1i(texUniComposite, 0);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        gl.enable(gl.BLEND);
+    } else {
+        // ==== 无余辉: 直画屏幕 (原逻辑) ====
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.viewport(0, 0, currentFboWidth, currentFboHeight);
+        gl.clearColor(theme.bg[0], theme.bg[1], theme.bg[2], theme.bg[3]);
+        gl.clear(gl.COLOR_BUFFER_BIT);
+
+        drawAllChannels(theme, isLight, viewCtx);
+    }
+}
+
+/** 绘制所有开启通道 (YT / XY / XYZ), 供余辉与直画两种模式共用 */
+function drawAllChannels(theme, isLight, viewCtx) {
+    // 确保主波形着色器被选中 (上一帧 composite 可能改过 useProgram)
+    gl.useProgram(shaderProgram);
 
     if (STATE.mode === 'YT') {
         for (let i = 1; i <= CHANNEL_COUNT; i++) {
@@ -262,10 +316,6 @@ export function renderWaveforms(theme, isLight, viewCtx) {
                 for (let k = 0; k < tailSamples; k++) {
                     xData[k] = proj.xArr[srcOff + k];
                     yData[k] = proj.yArr[srcOff + k];
-                }
-                const alphas = new Float32Array(tailSamples);
-                for (let k = 0; k < tailSamples; k++) {
-                    alphas[k] = Math.pow(k / tailSamples, 4);
                 }
                 renderGLTrace(xData, theme.cM || theme.cXY, true, yData, theme, isLight, null, tailSamples);
             }

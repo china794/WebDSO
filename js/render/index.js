@@ -10,7 +10,7 @@
 // js/render/index.js
 import { STATE, CONFIG, DOM, CACHE, CHANNEL_COUNT, Buffers } from '../core.js';
 import { BUFFER, RENDER, UI, WEBGL } from '../constants.js';
-import { vsSource, fsSource, vsBloom, fsBloom } from '../shaders.js';
+import { vsSource, fsSource, vsBloom, fsBloom, vsComposite, fsComposite } from '../shaders.js';
 import { AudioState, getCurrentTime } from '../audio.js';
 import { processData, updateMeasurements, updateMathData } from '../signal.js';
 import { SerialEngine } from '../serial.js';
@@ -43,7 +43,7 @@ import { calculateTimebaseAndTrigger } from './canvasRenderer.js';
  */
 
 // 在渲染上下文初始化前加载着色器到全局�?context.js 使用
-window.__WEBDSO_SHADERS = { vsSource, fsSource, vsBloom, fsBloom };
+window.__WEBDSO_SHADERS = { vsSource, fsSource, vsBloom, fsBloom, vsComposite, fsComposite };
 
 // 缓存上次的尺�?& 主题，用于检测变�?
 let _lastGridConfig = { w: 0, h: 0, isLight: false };

@@ -315,6 +315,14 @@ export const RENDER = {
     FFT_DEFAULT_PEAKS: true,
     /** FFT 窗函数类型 - 默认 Hann 抑制频谱泄漏 */
     FFT_WINDOW: 'hann',
+    /** 余辉默认开启 */
+    PHOSPHOR_DEFAULT_ON: true,
+    /** 余辉默认每帧衰减量 (0.06 ≈ 17帧余辉) */
+    PHOSPHOR_DECAY: 0.06,
+    /** 余辉衰减滑块最小值 (长余辉) */
+    PHOSPHOR_MIN_DECAY: 0.01,
+    /** 余辉衰减滑块最大值 (短余辉) */
+    PHOSPHOR_MAX_DECAY: 0.4,
 };
 
 // ==================== 颜色配置 ====================
