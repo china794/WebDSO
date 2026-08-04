@@ -70,10 +70,10 @@ export function initSerialController() {
             SerialEngine.toggleSpeaker(STATE.serial.speaker);
 
             if (STATE.serial.speaker) {
-                btnSerialSpk.innerText = 'Monitor On';
+                btnSerialSpk.innerText = '♪ 监听: 开';
                 btnSerialSpk.classList.add('active');
             } else {
-                btnSerialSpk.innerText = 'Monitor';
+                btnSerialSpk.innerText = '♪ 监听';
                 btnSerialSpk.classList.remove('active');
             }
         });

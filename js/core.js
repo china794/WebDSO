@@ -136,7 +136,8 @@ const uiState = {
     bytebeat: {
         on: false,
         L: 1,
-        R: 2
+        R: 2,
+        monitor: false,   // 扬声器监听
     }
 };
 

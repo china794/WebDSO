@@ -95,8 +95,8 @@ export function initAudioController() {
         // 注意: 绝不能碰 panMaster —— 麦克风经 splitter→chMixer→panMaster 进扬声器,
         // 开启 panMaster 会导致声卡输入(麦克风)被放出来造成回声。
         // AWG 发生器的监听走 merger→awgSplitter→awgSpeakerGain, 与 panMaster 无关。
-        if (STATE.awgMonitor) { this.innerText = '🔊 扬声器: 开'; this.classList.add('active'); AudioState.awgSpeakerGain.gain.value = 1.0; }
-        else { this.innerText = '♪ 扬声器'; this.classList.remove('active'); AudioState.awgSpeakerGain.gain.value = 0; }
+        if (STATE.awgMonitor) { this.innerText = '♪ 监听: 开'; this.classList.add('active'); AudioState.awgSpeakerGain.gain.value = 1.0; }
+        else { this.innerText = '♪ 监听'; this.classList.remove('active'); AudioState.awgSpeakerGain.gain.value = 0; }
     });
 
     // 音频文件解析与播放控制
