@@ -6,7 +6,7 @@
  */
 
 import {
-    SYSTEM, BUFFER, GRID, TRIGGER, TIMEBASE, GENERATOR, CURSOR, SERIAL, RENDER, COLOR
+    SYSTEM, BUFFER, GRID, TRIGGER, TIMEBASE, GENERATOR, CURSOR, SERIAL, RENDER, COLOR, MIC
 } from './constants.js';
 
 /** 通道数量 */
@@ -138,6 +138,11 @@ const uiState = {
         L: 1,
         R: 2,
         monitor: false,   // 扬声器监听
+    },
+    // 声卡输入智能降噪
+    mic: {
+        denoise: MIC.DENOISE_DEFAULT,
+        strength: MIC.DENOISE_STRENGTH,
     }
 };
 

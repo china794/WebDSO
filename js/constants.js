@@ -152,6 +152,23 @@ export const GENERATOR = {
     },
 };
 
+// ==================== 麦克风降噪 ====================
+export const MIC = {
+    /** 默认降噪开关 */
+    DENOISE_DEFAULT: true,
+    /** 默认降噪强度 (0-1, 过减因子 α) */
+    DENOISE_STRENGTH: 0.6,
+    /** 谱减法 FFT 帧长 */
+    FFT_SIZE: 1024,
+    /** 噪声门阈值 (dB) */
+    GATE_THRESHOLD: -40,
+    /** 学习噪声时长 (ms) */
+    NOISE_LEARN_MS: 1000,
+    /** 降噪 worklet 路径 */
+    WORKLET_URL: './js/mic/noise-suppressor.js',
+    PROCESSOR_NAME: 'noise-suppressor'
+};
+
 // ==================== Bytebeat 字节节拍 ====================
 export const BYTEBEAT = {
     /** 默认公式（经典交响曲） */

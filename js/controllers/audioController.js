@@ -7,9 +7,39 @@
 
 // TODO: 实现音频控制逻辑
 import { STATE, DOM, CONFIG, showSysModal, CHANNEL_COUNT } from '../core.js';
-import { GENERATOR, MATH } from '../constants.js';
+import { GENERATOR, MATH, MIC } from '../constants.js';
 import { AudioState, initAudio, rebuildChannel, updateAWG, rebuildStereoRouting, playBuffer, getLogSpeed, getCurrentTime } from '../audio.js';
 import { refreshInputCard, getInputCh } from './inputController.js';
+
+// 降噪 worklet 节点 (懒加载)
+let _noiseSuppressorNode = null;
+let _noiseSuppressorLoaded = false;
+
+/** 懒加载降噪 worklet 并创建节点 */
+async function ensureNoiseSuppressor() {
+    if (!AudioState.audioCtx) return null;
+    if (_noiseSuppressorNode) return _noiseSuppressorNode;
+    if (!_noiseSuppressorLoaded) {
+        try {
+            await AudioState.audioCtx.audioWorklet.addModule(MIC.WORKLET_URL);
+            _noiseSuppressorLoaded = true;
+        } catch (e) {
+            console.warn('降噪 worklet 加载失败:', e.message);
+            return null;
+        }
+    }
+    const node = new AudioWorkletNode(AudioState.audioCtx, MIC.PROCESSOR_NAME);
+    node.port.postMessage({ type: 'enable', value: STATE.mic?.denoise !== false });
+    node.port.postMessage({ type: 'strength', value: STATE.mic?.strength ?? MIC.DENOISE_STRENGTH });
+    node.port.postMessage({ type: 'gate', value: MIC.GATE_THRESHOLD });
+    _noiseSuppressorNode = node;
+    return node;
+}
+
+/** 向降噪 worklet 发消息 */
+function postToNoiseSuppressor(msg) {
+    if (_noiseSuppressorNode) _noiseSuppressorNode.port.postMessage(msg);
+}
 
 /**
  * 更新信号发生器专属参数区（gen-params-extra）的显隐。
@@ -33,23 +63,57 @@ export function initAudioController() {
     if (DOM.btnMic) DOM.btnMic.addEventListener('click', async function () {
         await initAudio();
         if (AudioState.audioCtx.state === 'suspended') await AudioState.audioCtx.resume();
-        
-        if (AudioState.micSource) { 
-            AudioState.micSource.disconnect(); 
-            if (AudioState.micStream) AudioState.micStream.getTracks().forEach(t => t.stop()); 
-            AudioState.micSource = null; AudioState.micStream = null; 
-            this.classList.remove('active'); this.innerText = '声卡输入'; 
-            return; 
+
+        if (AudioState.micSource) {
+            AudioState.micSource.disconnect();
+            if (AudioState.micStream) AudioState.micStream.getTracks().forEach(t => t.stop());
+            AudioState.micSource = null; AudioState.micStream = null;
+            _noiseSuppressorNode = null;
+            this.classList.remove('active'); this.innerText = '声卡输入';
+            return;
         }
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return showSysModal('环境不支持', '当前浏览器禁止在非 HTTPS 下获取物理音频。'); 
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return showSysModal('环境不支持', '当前浏览器禁止在非 HTTPS 下获取物理音频。');
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: { ideal: 2 }, echoCancellation: false, noiseSuppression: false, autoGainControl: false, latency: 0 } });
-            AudioState.micStream = stream; 
-            AudioState.micSource = AudioState.audioCtx.createMediaStreamSource(stream); 
-            AudioState.micSource.channelCount = 2; AudioState.micSource.channelCountMode = 'explicit'; 
-            AudioState.micSource.connect(AudioState.splitter); 
+            AudioState.micStream = stream;
+            AudioState.micSource = AudioState.audioCtx.createMediaStreamSource(stream);
+            AudioState.micSource.channelCount = 2; AudioState.micSource.channelCountMode = 'explicit';
+            // 智能降噪: micSource → noiseSuppressor → splitter
+            const suppressor = await ensureNoiseSuppressor();
+            if (suppressor) {
+                AudioState.micSource.connect(suppressor);
+                suppressor.connect(AudioState.splitter);
+            } else {
+                AudioState.micSource.connect(AudioState.splitter);
+            }
             this.classList.add('active'); this.innerText = '已连接';
         } catch (e) { showSysModal('设备连接失败', e.message); }
+    });
+
+    // 降噪开关
+    if (DOM.btnMicDenoise) DOM.btnMicDenoise.addEventListener('click', function () {
+        STATE.mic.denoise = !STATE.mic.denoise;
+        this.innerText = STATE.mic.denoise ? '降噪: 开' : '降噪: 关';
+        this.classList.toggle('active', STATE.mic.denoise);
+        postToNoiseSuppressor({ type: 'enable', value: STATE.mic.denoise });
+    });
+
+    // 降噪强度滑块
+    if (DOM.knobMicStrength) DOM.knobMicStrength.addEventListener('input', function (e) {
+        STATE.mic.strength = parseInt(e.target.value) / 100;
+        if (DOM.lblMicStrength) DOM.lblMicStrength.innerText = 'x' + e.target.value;
+        postToNoiseSuppressor({ type: 'strength', value: STATE.mic.strength });
+    });
+
+    // 学习噪声 (静默采样)
+    if (DOM.btnMicLearn) DOM.btnMicLearn.addEventListener('click', async function () {
+        const suppressor = await ensureNoiseSuppressor();
+        if (!suppressor) { showSysModal('降噪不可用', '降噪 worklet 未加载'); return; }
+        this.innerText = '🎤 学习中...';
+        postToNoiseSuppressor({ type: 'learnNoise', ms: MIC.NOISE_LEARN_MS });
+        setTimeout(() => {
+            if (DOM.btnMicLearn) { DOM.btnMicLearn.innerText = '🎤 学习噪声'; this.classList.add('active'); }
+        }, MIC.NOISE_LEARN_MS + 200);
     });
 
     // AWG 内置发生器

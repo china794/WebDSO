@@ -537,6 +537,18 @@
                     <div class="btn-grid-2">
                         <button id="btn-mic" class="hw-btn">声卡输入</button>
                     </div>
+                    <div class="ctrl-row">
+                        <span class="ctrl-label">智能降噪</span>
+                        <button id="btn-mic-denoise" class="hw-btn small-inline-btn active">降噪: 开</button>
+                        <button id="btn-mic-learn" class="hw-btn small-inline-btn" style="margin-left:auto;">🎤 学习噪声</button>
+                    </div>
+                    <div class="ctrl-row">
+                        <span class="ctrl-label">降噪强度</span>
+                        <span class="ctrl-value" id="lbl-mic-strength" style="margin-left:auto;">x60</span>
+                    </div>
+                    <div class="ctrl-stack">
+                        <input type="range" id="knob-mic-strength" min="0" max="100" step="1" value="60">
+                    </div>
                 </section>
 
                 <!-- ===== 音频卡 ===== -->
