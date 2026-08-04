@@ -124,6 +124,21 @@
                         <button id="btn-display" class="hw-btn active">Y-T 模式</button>
                         <button id="btn-xy" class="hw-btn">X-Y 模式</button>
                     </div>
+                    <div class="ctrl-row" style="margin-top:8px;">
+                        <span class="ctrl-label">余辉</span>
+                        <button id="btn-phosphor" class="hw-btn small-inline-btn">余辉: 开</button>
+                        <span class="ctrl-value" id="lbl-phosphor-decay" style="margin-left:auto;">衰减 x30</span>
+                    </div>
+                    <div class="ctrl-stack">
+                        <input type="range" id="knob-phosphor-decay" min="1" max="40" step="1" value="30">
+                    </div>
+                    <div class="ctrl-row">
+                        <span class="ctrl-label">波形亮度</span>
+                        <span class="ctrl-value" id="lbl-phosphor-gain">x30</span>
+                    </div>
+                    <div class="ctrl-stack">
+                        <input type="range" id="knob-phosphor-gain" min="10" max="200" step="1" value="30">
+                    </div>
                     <button id="btn-math" class="hw-btn math-full-row">🧮 数学运算: 关</button>
                     <div id="math-controls" class="hw-group math-group" style="display:none;">
                         <div class="ctrl-row">
@@ -349,21 +364,6 @@
                 <!-- ===== FFT 频谱卡 ===== -->
                 <section class="ctrl-card">
                     <button id="btn-fft-toggle" class="hw-btn btn-fft-toggle">📊 频谱模式 (OFF)</button>
-                    <div class="ctrl-row" style="margin-top:8px;">
-                        <span class="ctrl-label">余辉</span>
-                        <button id="btn-phosphor" class="hw-btn small-inline-btn">余辉: 开</button>
-                        <span class="ctrl-value" id="lbl-phosphor-decay" style="margin-left:auto;">衰减 x30</span>
-                    </div>
-                    <div class="ctrl-stack">
-                        <input type="range" id="knob-phosphor-decay" min="1" max="40" step="1" value="30">
-                    </div>
-                    <div class="ctrl-row">
-                        <span class="ctrl-label">波形亮度</span>
-                        <span class="ctrl-value" id="lbl-phosphor-gain">x30</span>
-                    </div>
-                    <div class="ctrl-stack">
-                        <input type="range" id="knob-phosphor-gain" min="10" max="200" step="1" value="30">
-                    </div>
                     <div id="fft-controls" class="hw-group fft-group" style="display:none;">
                         <div class="ctrl-row">
                             <span class="ctrl-label">X轴刻度</span>
