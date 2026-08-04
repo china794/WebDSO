@@ -27,16 +27,17 @@ export const vsSource = `
  */
 export const fsSource = `
     precision highp float;
-    
+
     varying vec3 v_data;
     uniform vec3 u_color;
     uniform float u_size;
     uniform float u_intensity;
     uniform float u_densityAlpha;
-    
+    uniform float u_gain;      // 波形亮度增益: <1 压低发光强度, 1 直通, >1 增强
+
     #define EPS 1E-6
     #define SQRT2 1.4142135623730951
-    
+
     // 误差函数 (Error Function) 近似实现，用于完美平滑线段边缘
     float erf(float x) {
         float s = sign(x);
@@ -45,15 +46,15 @@ export const fsSource = `
         x *= x;
         return s - s / (x * x);
     }
-    
+
     void main() {
         float len = v_data.z;
         vec2 xy = v_data.xy;
         float alpha;
-        
+
         // 计算线段发散标准差
         float sigma = u_size / (2.0 + 2.0 * 1000.0 * u_size / 50.0);
-        
+
         // 区分孤立点与连续线段的渲染逻辑
         if (len < EPS) {
             // 渲染圆点
@@ -63,15 +64,17 @@ export const fsSource = `
             alpha = erf(xy.x / SQRT2 / sigma) - erf((xy.x - len) / SQRT2 / sigma);
             alpha *= exp(-xy.y * xy.y / (2.0 * sigma * sigma)) / 2.0 / len * u_size;
         }
-        
+
         // 计算光晕强度与最终透明度
         float intens = max(0.0, u_intensity - 0.4) * 0.7 - 1000.0 * u_size / 500.0;
         alpha = pow(alpha, 1.0 - intens) * (0.01 + min(0.99, u_intensity * 3.0));
-        
+
         // 应用亮度密度补偿：解决大 sec/div 慢扫描模式下波形堆叠过深变白的问题
         alpha *= u_densityAlpha;
-        
-        gl_FragColor = vec4(u_color * alpha, alpha);
+
+        // 波形亮度增益: 在写入前缩放颜色, 只影响波形本身, 不改变背景。
+        // 这样余辉累积时不会因颜色过强而饱和成白色。
+        gl_FragColor = vec4(u_color * alpha * u_gain, alpha);
     }
 `;
 
@@ -187,9 +190,10 @@ export const fsComposite = `
 
     void main() {
         vec4 c = texture2D(u_texture, v_texCoord);
-        // 亮度增益: 直接缩放 RGB, 防止累积后波形饱和成白色
+        // 波形亮度已由 fsSource 的 u_gain 在写入 FBO 前控制,
+        // 合成阶段不再缩放, 仅做 HDR 色调映射(压缩超亮防纯白)。
+        // u_gain 保留 uniform 以兼容, 值为 1.0 直通。
         vec3 g = c.rgb * u_gain;
-        // HDR 色调映射: Reinhard 压缩, 让重叠累积的超亮处渐变而非纯白
         float lum = dot(g, vec3(0.299, 0.587, 0.114));
         float scale = 1.0 / (1.0 + u_tonemap * lum);
         vec3 mapped = g * scale;

@@ -32,7 +32,7 @@ import {
 } from './context.js';
 import { projectXYZ } from './xyzRenderer.js';
 
-let posAttr, dataAttr, colorUni, sizeUni, intensityUni, densityAlphaUni;
+let posAttr, dataAttr, colorUni, sizeUni, intensityUni, densityAlphaUni, gainUni;
 let vbo;
 let glDataArray;
 // 余辉 FBO 是否已初始化 (首帧清一次基线)
@@ -52,6 +52,7 @@ function initWebGLVars() {
     sizeUni = gl.getUniformLocation(shaderProgram, 'u_size');
     intensityUni = gl.getUniformLocation(shaderProgram, 'u_intensity');
     densityAlphaUni = gl.getUniformLocation(shaderProgram, 'u_densityAlpha');
+    gainUni = gl.getUniformLocation(shaderProgram, 'u_gain');
 
     vbo = gl.createBuffer();
     glDataArray = new Float32Array(CONFIG.fftSize * BUFFER.VERTEX_MULTIPLIER);
@@ -233,6 +234,7 @@ export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLi
         gl.uniform1f(sizeUni, uSize);
         gl.uniform1f(intensityUni, uIntensity);
         gl.uniform1f(densityAlphaUni, densityAlpha);
+        gl.uniform1f(gainUni, STATE.phosphor?.gain ?? 1.0);
         gl.uniform3fv(colorUni, colorArr);
         gl.drawArrays(gl.TRIANGLES, 0, pointCount);
     }
@@ -299,8 +301,8 @@ export function renderWaveforms(theme, isLight, viewCtx) {
         gl.vertexAttribPointer(posAttrComposite, 2, gl.FLOAT, false, 0, 0);
         // HDR 时开启色调映射(压缩超亮), 否则直通
         gl.uniform1f(tonemapUniComposite, fboHDR ? 1.0 : 0.0);
-        // 亮度增益: 用户可调, 防止累积后波形饱和成白色
-        gl.uniform1f(gainUniComposite, STATE.phosphor?.gain ?? 1.0);
+        // 合成阶段亮度直通 (波形亮度已在 fsSource u_gain 控制)
+        gl.uniform1f(gainUniComposite, 1.0);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, fboTexture);
         gl.uniform1i(texUniComposite, 0);
