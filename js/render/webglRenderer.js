@@ -31,7 +31,7 @@ import {
     fboHDR,
     getPhosphorDecay
 } from './context.js';
-import { projectXYZ } from './xyzRenderer.js';
+import { projectXYZ, computeViewTransform, applyViewTransform } from './xyzRenderer.js';
 
 let posAttr, dataAttr, depthAttr, colorUni, sizeUni, intensityUni, densityAlphaUni, gainUni, depthFadeUni;
 let vbo;
@@ -395,23 +395,12 @@ function drawAllChannels(theme, isLight, viewCtx) {
             // XYZ 3D
             const proj = projectXYZ(Buffers.pData1, Buffers.pData2, Buffers.pData3);
             if (proj && proj.length >= 20) {
-                // 自动适配边界: 计算有效点范围, 缩放+居中让波形填满屏幕 ~78%
-                // (避免超出边界或缩成一团)
-                let xmin = 2, xmax = -2, ymin = 2, ymax = -2;
-                for (let i = 0; i < proj.length; i++) {
-                    if (proj.xArr[i] === 0 && proj.yArr[i] === 0 && proj.depthArr[i] === 1) continue; // 裁剪点
-                    const x = proj.xArr[i], y = proj.yArr[i];
-                    if (x < xmin) xmin = x; if (x > xmax) xmax = x;
-                    if (y < ymin) ymin = y; if (y > ymax) ymax = y;
-                }
-                if (xmax <= xmin || ymax <= ymin) return;
-                // 缩放到 [−0.78, 0.78] 范围 (留边)
-                const targetHalf = 0.78;
-                const sx = 2 * targetHalf / (xmax - xmin);
-                const sy = 2 * targetHalf / (ymax - ymin);
-                const scale = Math.min(sx, sy); // 等比缩放保持 3D 形状
-                const cx = (xmin + xmax) / 2;
-                const cy = (ymin + ymax) / 2;
+                // 统一视口变换: 波形和线框共享同一 scale/offset, 保证对齐
+                const transform = computeViewTransform(proj, STATE.view3d?.zoom);
+                if (!transform.valid) return;
+                // 存到 view3d 供 renderXYZAxes 读取 (Canvas 层画线框用同一变换)
+                if (STATE.view3d) STATE.view3d._lastTransform = transform;
+
                 const cycles = STATE.view3d?.trailLen || 3;
                 // 轨迹窗口: 只画最近几个周期的点 (闭合 Lissajous 的尾段)
                 const tailSamples = Math.max(4, Math.min(proj.length, Math.floor(proj.length * cycles / 4)));
@@ -420,9 +409,10 @@ function drawAllChannels(theme, isLight, viewCtx) {
                 const yData = new Float32Array(tailSamples);
                 const depthData = new Float32Array(tailSamples);
                 for (let k = 0; k < tailSamples; k++) {
-                    // 应用自动缩放 + 居中
-                    xData[k] = (proj.xArr[srcOff + k] - cx) * scale;
-                    yData[k] = (proj.yArr[srcOff + k] - cy) * scale;
+                    // 统一视口变换: (proj - offset) * scale
+                    const [x, y] = applyViewTransform(proj.xArr[srcOff + k], proj.yArr[srcOff + k], transform);
+                    xData[k] = x;
+                    yData[k] = y;
                     depthData[k] = proj.depthArr[srcOff + k];
                 }
                 renderGLTrace(xData, theme.cM || theme.cXY, true, yData, theme, isLight, null, tailSamples, null, depthData);

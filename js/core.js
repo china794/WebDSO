@@ -126,7 +126,7 @@ const uiState = {
         zoom: 1.0,
         perspective: 3.0,
         trailLen: 3,
-        cageX: 0.5, cageY: 0.5, cageZ: 0.5
+        cageX: 1.0, cageY: 1.0, cageZ: 1.0
     },
     bytebeat: {
         on: false,

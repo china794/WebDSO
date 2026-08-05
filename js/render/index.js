@@ -352,10 +352,14 @@ export function draw({ processPausedData = false } = {}) {
     }
 
     // XYZ 3D 坐标轴（仅在 XY 模式�?3 频道激活时�?
+    // 用 webglRenderer 存的统一视口变换, 保证线框和波形对齐
     if (STATE.mode === 'XY') {
         let activeCnt = 0;
         for (let i = 1; i <= 8; i++) if (STATE['ch' + i]?.on) activeCnt++;
-        if (activeCnt >= 3) renderXYZAxes(w, h, theme);
+        if (activeCnt >= 3) {
+            const t = STATE.view3d?._lastTransform;
+            renderXYZAxes(w, h, theme, t || { scale: 1, offsetX: 0, offsetY: 0, valid: true });
+        }
     }
 
     endFrame();
