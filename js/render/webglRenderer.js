@@ -271,7 +271,7 @@ export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLi
         // 深度衰减: XYZ 模式启用 (customDepth 存在时), 柔和衰减 (近处清晰, 远处可见)
         // 用较小的 fade 值避免远处全暗; 同时降 gain 防叠加饱和
         if (customDepth) {
-            gl.uniform1f(depthFadeUni, 1.2);
+            gl.uniform1f(depthFadeUni, 0.5);
             gl.uniform1f(gainUni, 1.0);
         } else {
             gl.uniform1f(depthFadeUni, 0.0);
@@ -409,8 +409,25 @@ function drawAllChannels(theme, isLight, viewCtx) {
             const proj = projectXYZ(p1c, p2c, p3c);
             if (proj && proj.length >= 20) {
                 // 统一视口变换: 波形和线框共享同一 scale/offset, 保证对齐
-                const transform = computeViewTransform(proj, STATE.view3d?.zoom);
-                if (!transform.valid) return;
+                const target = computeViewTransform(proj, STATE.view3d?.zoom);
+                if (!target.valid) return;
+                // 平滑 transform: 视角不每帧跳变 (波形数据滚动时 offset/scale 抖动
+                // 会导致视角抽搐)。用指数平滑缓慢过渡到目标值。
+                const prev = STATE.view3d?._lastTransform;
+                let transform;
+                if (prev && prev.valid) {
+                    // 平滑系数: 新值占比。0.3 较快 (抑制跳变但不产生明显拖影),
+                    // 避免视角抽搐, 同时减少"余晖/拖影"感。
+                    const S = 0.3;
+                    transform = {
+                        scale: prev.scale + (target.scale - prev.scale) * S,
+                        offsetX: prev.offsetX + (target.offsetX - prev.offsetX) * S,
+                        offsetY: prev.offsetY + (target.offsetY - prev.offsetY) * S,
+                        valid: true
+                    };
+                } else {
+                    transform = target;
+                }
                 // 存到 view3d 供 renderXYZAxes 读取 (Canvas 层画线框用同一变换)
                 if (STATE.view3d) STATE.view3d._lastTransform = transform;
 

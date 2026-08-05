@@ -95,27 +95,16 @@ export function projectXYZ(xData, yData, zData) {
 export function computeViewTransform(proj, zoom) {
     if (!proj || proj.length < 4) return { scale: 1, offsetX: 0, offsetY: 0, valid: false };
 
-    // 计算有效投影点范围 (跳过被裁剪点)
-    let xmin = Infinity, xmax = -Infinity, ymin = Infinity, ymax = -Infinity;
-    for (let i = 0; i < proj.length; i++) {
-        if (proj.depthArr[i] === 1 && proj.xArr[i] === 0 && proj.yArr[i] === 0) continue;
-        const x = proj.xArr[i], y = proj.yArr[i];
-        if (x < xmin) xmin = x; if (x > xmax) xmax = x;
-        if (y < ymin) ymin = y; if (y > ymax) ymax = y;
-    }
-    if (!isFinite(xmin) || xmax <= xmin || ymax <= ymin) return { scale: 1, offsetX: 0, offsetY: 0, valid: false };
+    // 固定视口变换: offset 始终居中到屏幕中心 (0), 不跟随波形极值。
+    // 波形数据已在渲染层去均值 (AC 耦合), 自然居中。
+    // 这保证视角稳定, 不随波形数据滚动而抖动/漂移 (抽搐根因)。
+    //
+    // scale 用固定基准 (基于典型 NDC 投影范围 ±1.5 填屏 ~85%):
+    // 避免自动适配导致 scale 每帧跟随波形范围变化。
+    const baseScale = 0.85 / 1.5;
+    const scale = baseScale * (zoom || 1);
 
-    // 填屏目标半宽 (留边 10%)
-    const targetHalf = 0.85;
-    const sx = 2 * targetHalf / (xmax - xmin);
-    const sy = 2 * targetHalf / (ymax - ymin);
-    // 等比缩放 (保持 3D 形状), 叠加用户 zoom
-    const scale = Math.min(sx, sy) * (zoom || 1);
-    // 居中偏移 (使波形中心在原点)
-    const offsetX = (xmin + xmax) / 2;
-    const offsetY = (ymin + ymax) / 2;
-
-    return { scale, offsetX, offsetY, valid: true };
+    return { scale, offsetX: 0, offsetY: 0, valid: true };
 }
 
 /**
