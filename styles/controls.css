@@ -1125,3 +1125,14 @@ input[type=range]:focus {
     .btn-grid-2 { grid-template-columns: 1fr; }
     .stereo-row { flex-wrap: wrap; }
 }
+
+/* 小屏手机 (<480px): 更紧凑控件布局 */
+@media (max-width: 480px) {
+    .btn-grid-4 { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+    .ch-toggle-grid { gap: 6px; }
+    .ctrl-row { flex-wrap: wrap; gap: 6px; }
+    .hw-btn { font-size: 11px; padding: 6px 8px; }
+    .hw-select, .hw-input { font-size: 12px; }
+    /* 自定义曲库下拉在小屏上更紧凑 */
+    .bytebeat-search { font-size: 12px; }
+}

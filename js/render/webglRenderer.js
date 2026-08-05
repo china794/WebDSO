@@ -7,6 +7,7 @@
 
 import { STATE, CONFIG, XY_PTS, ALPHA_LUT, GL_CONST, DOM, CHANNEL_COUNT, Buffers } from '../core.js';
 import { BUFFER, WEBGL, COLOR } from '../constants.js';
+import { getQuality } from './quality.js';
 import {
     gl,
     shaderProgram,
@@ -120,7 +121,9 @@ export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLi
         let loopEnd = Math.min(viewCtx.endIdxInt - 1, bufferSize - 1);
 
         const canvasWidth = gl.canvas.width / (window.devicePixelRatio || 1);
-        const maxRenderPoints = Math.min(Math.ceil(canvasWidth * 2), 4000);
+        // 自适应: 低档位减少渲染点数
+        const q = getQuality();
+        const maxRenderPoints = Math.min(Math.ceil(canvasWidth * 2), q.maxRenderPoints);
         const totalPoints = loopEnd - loopStart;
         let step = 1;
         if (totalPoints > maxRenderPoints) step = Math.ceil(totalPoints / maxRenderPoints);

@@ -14,6 +14,7 @@ import { vsSource, fsSource, vsBloom, fsBloom, vsComposite, fsComposite, vsFade,
 import { AudioState, getCurrentTime } from '../audio.js';
 import { processData, updateMeasurements } from '../signal.js';
 import { SerialEngine } from '../serial.js';
+import { detectQuality, getQuality } from './quality.js';
 
 // 渲染上下�?�?从独�?context 模块导入，消除循环依�?
 import {
@@ -51,17 +52,21 @@ let _lastGridConfig = { w: 0, h: 0, isLight: false };
  * 初始化渲染上下文 - 应在DOM准备好后调用
  */
 export function initRenderContexts() {
+    // 首次初始化时检测设备性能 (自适应降级)
+    detectQuality();
     return initRenderContext(DOM.oscilloscope, DOM.glCanvas);
 }
 
 /**
  * 响应窗口尺寸变化，更�?Canvas 分辨率与 DPR
+ * 使用质量档位的 DPR 上限 (移动端高 DPR 手机限制像素量)
  */
 export function resize() {
-    const dpr = window.devicePixelRatio || 1;
+    const q = getQuality();
+    const dpr = Math.min(window.devicePixelRatio || 1, q.maxDpr);
     const wrapper = document.querySelector('.screen-wrapper');
     if (!wrapper) return;
-    
+
     // 确保渲染上下文已初始�?
     if (!gl || !ctx2d) {
         if (!initRenderContexts()) return;
@@ -77,6 +82,12 @@ export function resize() {
     ctx2d.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     if (!STATE.run) renderSingleFrame();
+}
+
+/** 防抖版 resize (移动端地址栏折叠连续触发时合并) */
+export function resizeDebounced() {
+    clearTimeout(resizeDebounced._timer);
+    resizeDebounced._timer = setTimeout(resize, 200);
 }
 
 let renderLoopRunning = false;
@@ -319,8 +330,9 @@ export function draw({ processPausedData = false } = {}) {
 
     // ==== WebGL 波形（每帧重绘——内部自�?gl.clear�?===
     renderWaveforms(theme, isLight, viewCtx);
-    // 辉光叠加 (可选)
-    if (STATE.render && STATE.render.glow) {
+    // 辉光叠加 (可选, 低档位自动关闭)
+    const q = getQuality();
+    if (STATE.render && STATE.render.glow && q.glow) {
         applyBloom();
     }
     markPhase('webgl');

@@ -111,6 +111,20 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 移动端触控优化:
+   - 可点击元素 touch-action: manipulation (消除双击缩放延迟)
+   - 防 iOS 长按系统 Callout (与 800ms 长按冻结功能冲突) */
+button, select, input, textarea, [role="button"], .hw-btn, .hw-select, .hw-group, .bb-picker-item, .bb-picker-trigger {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+}
+
+/* 触屏设备: 禁用悬停效果 (触屏无 hover 概念, 避免粘连) */
+@media (hover: none), (pointer: coarse) {
+    *:hover { transition: none; }
 }
 
 /* 根容器：除了移动端外，禁止 body 滚动 */
@@ -124,7 +138,9 @@ body {
     line-height: 1.4;
     user-select: none;
     width: 100vw;
+    /* 移动端地址栏折叠时 100vh > 可见区域, 用 dvh (动态视口) 自适应 */
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
 }
 
@@ -147,6 +163,7 @@ body {
     display: flex;
     width: 100vw;
     height: 100vh;
+    height: 100dvh;
     padding: 0; /* 无外边距 */
     gap: 0;     /* 无间隙 */
     background: var(--bg-body);
@@ -246,4 +263,24 @@ canvas { display: block; width: 100%; height: 100%; }
         padding: 16px;
         gap: 16px; /* 移动端间距稍微小一点 */
     }
+}
+
+/* 小屏手机 (<480px): 更紧凑布局, 波形区更高 (适应竖屏) */
+@media (max-width: 480px) {
+    .left-panel { aspect-ratio: 4 / 3; }
+
+    .panel-content {
+        padding: 12px;
+        gap: 12px;
+        max-height: 55vh;
+    }
+
+    /* OSD 侧栏在竖屏小屏限制高度, 防止挤压波形 */
+    .osd-side-8ch { max-height: 40vh; }
+
+    /* 按钮触控尺寸 (最小 40px 触控目标) */
+    .hw-btn { min-height: 36px; }
+
+    /* 测量面板长单行允许换行, 防止横向溢出 */
+    .measure-row, .measure-line { white-space: normal; word-break: break-all; }
 }

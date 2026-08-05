@@ -10,8 +10,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>WebDSO - 纯原生网页示波器</title>
-    <link rel="icon" type="image/svg+xml" href="./icon-192.svg">
-    <link rel="apple-touch-icon" href="./icon-512.svg">
+    <link rel="icon" type="image/png" href="./icon-192.png">
+    <link rel="apple-touch-icon" href="./icon-192.png">
     <!-- 样式表：布局 / OSD 叠加层 / 控件 -->
     <link rel="stylesheet" href="./styles/layout.css">
     <link rel="stylesheet" href="./styles/osd.css">
@@ -21,6 +21,19 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="WebDSO">
+    <!-- 内容安全策略: 允许自身脚本/样式 + blob (AudioWorklet) + 远程音频。
+         'unsafe-eval' 为 bytebeat 的 new Function 编译用户公式所需 (核心特性)。 -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:;
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: blob:;
+        media-src 'self' blob: https://wanghaohan.com;
+        connect-src 'self' blob: https://wanghaohan.com;
+        worker-src 'self' blob:;
+        child-src 'self' blob:;
+    ">
 </head>
 <body>
     <!-- ========== 系统模态框：提示、错误、确认 ========== -->
@@ -685,15 +698,6 @@
 
 </main>
     <!-- 主入口：ES Module 加载 -->
-    <script>
-        // 强制清除所有 Service Worker + 缓存，避免旧版缓存
-        if (navigator.serviceWorker) {
-            navigator.serviceWorker.getRegistrations().then(function(r) { r.forEach(function(s) { s.unregister(); }); });
-        }
-        if (window.caches) {
-            caches.keys().then(function(k) { k.forEach(function(n) { caches.delete(n); }); });
-        }
-    </script>
     <script type="module" src="./js/main.js?v=20260801-1"></script>
 </body>
 </html>

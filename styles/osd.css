@@ -119,3 +119,17 @@
 .font-mono {
     font-family: 'Courier New', monospace;
 }
+
+/* 小屏手机: OSD/测量面板自适应, 防止横向溢出 */
+@media (max-width: 480px) {
+    .osd-side { right: 8px; top: 36px; }
+    .osd-side-8ch { max-height: 38vh; }
+    .measure-panel {
+        left: 8px; right: 8px; bottom: 8px;
+        max-width: 96%;
+        flex-wrap: wrap;
+        gap: 4px 10px;
+        font-size: 11px;
+    }
+    .measure-panel-8ch { max-width: 100%; }
+}

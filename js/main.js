@@ -1,5 +1,6 @@
 import { DOM, Buffers, updateTriggerUI, CONFIG, STATE, initDOM } from './core.js';
-import { resize, startRenderLoop, initRenderContexts } from './render/index.js';
+import { resize, resizeDebounced, startRenderLoop, initRenderContexts } from './render/index.js';
+import { detectQuality, getQuality } from './render/quality.js';
 import { channelManager } from './channel.js';
 
 // 导入所有拆分出来的 Controller
@@ -11,12 +12,11 @@ import { initFftController } from './controllers/fftController.js';
 import { initConfigController } from './controllers/configController.js';
 import { initBytebeatController } from './controllers/bytebeatController.js';
 
-// 清除所最Service Worker 缓存（开发调试用＀
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.getRegistrations().then(regs => {
-        regs.forEach(r => r.unregister());
+// 注册 Service Worker (PWA 离线支持)
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    navigator.serviceWorker.register('./sw.js').catch(err => {
+        console.warn('Service Worker 注册失败:', err);
     });
-    caches.keys().then(names => names.forEach(n => caches.delete(n)));
 }
 
 // 初始化DOM引用 - 确保DOM已加载完戀
@@ -47,8 +47,10 @@ initBytebeatController();
 // 初始化自动声僀
 if (window.__updateAutoPan) window.__updateAutoPan();
 
-// 视口监听
-window.addEventListener('resize', resize);
+// 视口监听 (防抖, 移动端地址栏折叠连续触发时合并)
+window.addEventListener('resize', resizeDebounced);
+// 设备性能检测
+detectQuality();
 resize();
 
 // 恢复初始 UI 状怀

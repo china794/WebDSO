@@ -486,27 +486,47 @@ export function initInputController() {
     };
     const endCursorDrag = () => { STATE.cursor.dragging = null; };
 
-    // 3D XYZ 视角拖拽旋转（仅在 XY 模式 3CH+ 时）
+    // 双指 pinch 标志 (提升到作用域, 供 3D/光标拖拽/长按共享, 避免冲突)
+    let _isPinching = false;
+
+    // 3D XYZ 视角拖拽旋转（仅在 XY 模式 3CH+ 时）— 鼠标 + 触摸统一
     let _3dDragging = false, _3dLastX = 0, _3dLastY = 0;
-    DOM.glCanvas.addEventListener('mousedown', (e) => {
+    const start3DDrag = (cx, cy) => {
         if (STATE.mode !== 'XY') return;
         let cnt = 0;
         for (let i = 1; i <= 8; i++) if (STATE['ch' + i]?.on) cnt++;
         if (cnt < 3) return;
         _3dDragging = true;
-        _3dLastX = e.clientX;
-        _3dLastY = e.clientY;
-    });
-    window.addEventListener('mousemove', (e) => {
+        _3dLastX = cx;
+        _3dLastY = cy;
+    };
+    const move3DDrag = (cx, cy) => {
         if (!_3dDragging) return;
-        const dx = e.clientX - _3dLastX;
-        const dy = e.clientY - _3dLastY;
+        const dx = cx - _3dLastX;
+        const dy = cy - _3dLastY;
         STATE.view3d.yaw -= dx * 0.01;
         STATE.view3d.pitch = Math.max(-1.2, Math.min(1.2, STATE.view3d.pitch - dy * 0.01));
-        _3dLastX = e.clientX;
-        _3dLastY = e.clientY;
-    });
+        _3dLastX = cx;
+        _3dLastY = cy;
+    };
+    DOM.glCanvas.addEventListener('mousedown', (e) => start3DDrag(e.clientX, e.clientY));
+    window.addEventListener('mousemove', (e) => move3DDrag(e.clientX, e.clientY));
     window.addEventListener('mouseup', () => { _3dDragging = false; });
+    // 触摸旋转 3D (单指, 挂在 window 上与鼠标一致)
+    DOM.glCanvas.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1 && !_isPinching) {
+            const t = e.touches[0];
+            start3DDrag(t.clientX, t.clientY);
+        }
+    }, { passive: true });
+    window.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1 && _3dDragging && !_isPinching) {
+            e.preventDefault();
+            const t = e.touches[0];
+            move3DDrag(t.clientX, t.clientY);
+        }
+    }, { passive: false });
+    window.addEventListener('touchend', () => { _3dDragging = false; });
 
     if (DOM.glCanvas) {
         DOM.glCanvas.addEventListener('mousemove', (e) => {
@@ -515,8 +535,26 @@ export function initInputController() {
             STATE.hover.x = e.clientX - rect.left; STATE.hover.y = e.clientY - rect.top; STATE.hover.active = true;
         });
         DOM.glCanvas.addEventListener('mouseleave', () => { STATE.hover.active = false; });
-        DOM.glCanvas.addEventListener('mousedown', startCursorDrag); 
-        DOM.glCanvas.addEventListener('touchstart', startCursorDrag, { passive: true }); 
+        DOM.glCanvas.addEventListener('mousedown', startCursorDrag);
+        // 触摸: passive:false 允许 preventDefault (防止 iOS 滚动/双击缩放干扰拖拽)
+        // 触摸也更新悬停位置 (触屏无 hover, 触摸即定位)
+        DOM.glCanvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1 && !_isPinching) {
+                const rect = DOM.glCanvas.getBoundingClientRect();
+                STATE.hover.x = e.touches[0].clientX - rect.left;
+                STATE.hover.y = e.touches[0].clientY - rect.top;
+                STATE.hover.active = true;
+                startCursorDrag(e);
+            }
+        }, { passive: false });
+        DOM.glCanvas.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 1 && !_isPinching && !STATE.cursor.dragging) {
+                const rect = DOM.glCanvas.getBoundingClientRect();
+                STATE.hover.x = e.touches[0].clientX - rect.left;
+                STATE.hover.y = e.touches[0].clientY - rect.top;
+                STATE.hover.active = true;
+            }
+        }, { passive: true });
 
         // 双指手势：缩放时基 + 水平平移
         let lastPinchDist = 0;
@@ -524,6 +562,10 @@ export function initInputController() {
         DOM.glCanvas.addEventListener('touchstart', (e) => {
             if (e.touches.length === 2) {
                 e.preventDefault();
+                // 标记双指手势, 屏蔽单指拖拽/3D旋转, 避免冲突
+                _isPinching = true;
+                _3dDragging = false;
+                STATE.cursor.dragging = null;
                 const dx = e.touches[0].clientX - e.touches[1].clientX;
                 const dy = e.touches[0].clientY - e.touches[1].clientY;
                 lastPinchDist = Math.sqrt(dx * dx + dy * dy);
@@ -561,6 +603,8 @@ export function initInputController() {
                 lastPinchDist = 0;
                 lastPanX = 0;
             }
+            // 手指全部离开时复位 pinch 标志
+            if (e.touches.length === 0) _isPinching = false;
         });
 
         // 长按冻结/恢复波形（触摸版本）
