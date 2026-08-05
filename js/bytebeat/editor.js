@@ -143,10 +143,9 @@ export function tokenizeToHtml(code) {
  * @param {HTMLElement} nums        行号栏
  * @param {HTMLElement} hl          高亮 pre
  * @param {number} [minHeight]      最小高度 px
- * @param {number} [maxHeight]      最大高度 px
  * @returns {{ refresh: () => void }}
  */
-export function initBytebeatEditor(ta, nums, hl, minHeight = 160, maxHeight = 400) {
+export function initBytebeatEditor(ta, nums, hl, minHeight = 160) {
     const LINE_H = 19.5; // 13px 字体 × 1.5 行高
     // 等宽字体 Courier New 13px 实测字符宽 7.801px。
     // 折行实际字符数比 宽/字宽 略少 (break-word 在符号处提前折行), 用安全系数收紧。
@@ -171,10 +170,12 @@ export function initBytebeatEditor(ta, nums, hl, minHeight = 160, maxHeight = 40
         return count;
     }
 
-    /** 重新计算高度: 视觉行数 × 行高 + padding(上下各 10px) */
+    /** 重新计算高度: 视觉行数 × 行高 + padding(上下各 10px)
+     * 高度完全跟随内容增长 (不设上限), 容器随 textarea 撑高,
+     * 行号栏/高亮层 absolute 跟随容器, 三层始终对齐无裁剪。 */
     function autoHeight() {
         const lineCount = visualLineCount(ta.value);
-        const h = Math.max(minHeight, Math.min(maxHeight, lineCount * LINE_H + 20));
+        const h = Math.max(minHeight, lineCount * LINE_H + 20);
         ta.style.height = h + 'px';
     }
 
@@ -199,21 +200,15 @@ export function initBytebeatEditor(ta, nums, hl, minHeight = 160, maxHeight = 40
         return ta.value.slice(0, start).split('\n').length - 1;
     }
 
-    /** 同步行号栏滚动: textarea scrollTop → 行号栏 translateY */
-    function syncScroll() {
-        nums.style.transform = 'translateY(' + (-ta.scrollTop) + 'px)';
-    }
-
     // 事件绑定
-    ta.addEventListener('input', () => { autoHeight(); render(); syncScroll(); });
+    ta.addEventListener('input', () => { autoHeight(); render(); });
     // 粘贴后强制刷新: Chrome 的 input 事件在粘贴大段代码时可能滞后/分批触发,
     // 直接监听 paste 在内容写入后立即重算高度 + 渲染, 确保输入框一定加长。
     ta.addEventListener('paste', () => {
         // 让出事件循环让浏览器完成粘贴写入, 再重算
-        requestAnimationFrame(() => { autoHeight(); render(); syncScroll(); });
-        setTimeout(() => { autoHeight(); render(); syncScroll(); }, 50);
+        requestAnimationFrame(() => { autoHeight(); render(); });
+        setTimeout(() => { autoHeight(); render(); }, 50);
     });
-    ta.addEventListener('scroll', syncScroll);
     ta.addEventListener('keyup', render);          // 光标移动时更新当前行高亮
     ta.addEventListener('click', render);
     ta.addEventListener('select', render);
@@ -227,7 +222,6 @@ export function initBytebeatEditor(ta, nums, hl, minHeight = 160, maxHeight = 40
         refresh() {
             autoHeight();
             render();
-            syncScroll();
         }
     };
 }

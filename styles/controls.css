@@ -709,20 +709,20 @@ input[type=range]:focus {
     background: var(--bg-panel);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
-    overflow: hidden;
+    /* 高度完全由内容(textarea 静态流)撑起, 不裁剪内容。
+       行号栏/高亮层 absolute 跟随容器高度, 三层始终对齐, 无滚动错乱。 */
 }
 .bytebeat-editor:focus-within {
     border-color: var(--color-blue);
 }
 
-/* 行号栏: 左侧, 与 textarea 独立滚动 */
+/* 行号栏: 左侧, 高度自适应内容, 与 textarea 对齐 */
 .bb-line-nums {
     position: absolute;
-    top: 0; left: 0; bottom: 0;
+    top: 0; left: 0;
     width: 36px;
     padding: 10px 6px 10px 0;
     box-sizing: border-box;
-    overflow: hidden;
     text-align: right;
     font-family: 'Courier New', monospace;
     font-size: 13px;
@@ -750,7 +750,7 @@ input[type=range]:focus {
     top: 0; left: 36px; right: 0; bottom: 0;
     padding: 10px;
     box-sizing: border-box;
-    overflow: auto;
+    overflow: hidden;
     white-space: pre-wrap;
     word-wrap: break-word;
     font-family: 'Courier New', monospace;
