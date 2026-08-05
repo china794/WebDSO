@@ -580,19 +580,27 @@ export function initInputController() {
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 if (lastPinchDist > 0) {
                     const ratio = lastPinchDist / dist;
-                    let currentVal = STATE.secPerDiv || 1.0;
-                    currentVal *= ratio;
-                    currentVal = Math.min(5000, Math.max(0.01, currentVal));
-                    STATE.secPerDiv = currentVal;
-                    let displayVal = currentVal >= 1000 ? (currentVal / 1000).toFixed(2) + "s" : currentVal.toFixed(2) + "ms";
-                    if (DOM.lblTimebase) DOM.lblTimebase.innerText = displayVal;
+                    if (STATE.mode === 'XY') {
+                        // XYZ 模式: pinch 缩放 3D 视图 zoom
+                        STATE.view3d.zoom = Math.max(0.3, Math.min(5.0, (STATE.view3d.zoom || 1.0) * ratio));
+                    } else {
+                        // YT 模式: pinch 缩放时基
+                        let currentVal = STATE.secPerDiv || 1.0;
+                        currentVal *= ratio;
+                        currentVal = Math.min(5000, Math.max(0.01, currentVal));
+                        STATE.secPerDiv = currentVal;
+                        let displayVal = currentVal >= 1000 ? (currentVal / 1000).toFixed(2) + "s" : currentVal.toFixed(2) + "ms";
+                        if (DOM.lblTimebase) DOM.lblTimebase.innerText = displayVal;
+                    }
                 }
-                // 双指平移
-                const avgX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-                if (lastPanX > 0) {
-                    const deltaPan = (avgX - lastPanX) / DOM.glCanvas.getBoundingClientRect().width * 10;
-                    STATE.hpos = Math.max(0, Math.min(100, STATE.hpos + deltaPan));
-                    if (DOM.lblHpos) DOM.lblHpos.innerText = STATE.hpos.toFixed(1) + '%';
+                // 双指平移 (仅 YT 模式水平平移)
+                if (STATE.mode !== 'XY') {
+                    const avgX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                    if (lastPanX > 0) {
+                        const deltaPan = (avgX - lastPanX) / DOM.glCanvas.getBoundingClientRect().width * 10;
+                        STATE.hpos = Math.max(0, Math.min(100, STATE.hpos + deltaPan));
+                        if (DOM.lblHpos) DOM.lblHpos.innerText = STATE.hpos.toFixed(1) + '%';
+                    }
                 }
                 lastPinchDist = dist;
                 lastPanX = avgX;
@@ -657,18 +665,8 @@ export function initInputController() {
                     let xyzCnt = 0;
                     for (let ci = 1; ci <= 8; ci++) if (STATE['ch' + ci]?.on) xyzCnt++;
                     if (xyzCnt >= 3) {
-                        STATE.view3d.cageX *= delta;
-                        STATE.view3d.cageY *= delta;
-                        STATE.view3d.cageZ *= delta;
-                        STATE.view3d.cageX = Math.max(0.05, Math.min(3.0, STATE.view3d.cageX));
-                        STATE.view3d.cageY = Math.max(0.05, Math.min(3.0, STATE.view3d.cageY));
-                        STATE.view3d.cageZ = Math.max(0.05, Math.min(3.0, STATE.view3d.cageZ));
-                        if (DOM.lblCagex) DOM.lblCagex.innerText = STATE.view3d.cageX.toFixed(2);
-                        if (DOM.lblCagey) DOM.lblCagey.innerText = STATE.view3d.cageY.toFixed(2);
-                        if (DOM.lblCagez) DOM.lblCagez.innerText = STATE.view3d.cageZ.toFixed(2);
-                        if (DOM.knobCagex) DOM.knobCagex.value = STATE.view3d.cageX;
-                        if (DOM.knobCagey) DOM.knobCagey.value = STATE.view3d.cageY;
-                        if (DOM.knobCagez) DOM.knobCagez.value = STATE.view3d.cageZ;
+                        // XYZ 3D: 普通滚轮缩放 3D 视图 zoom (透视距离)
+                        STATE.view3d.zoom = Math.max(0.3, Math.min(5.0, (STATE.view3d.zoom || 1.0) * delta));
                     } else {
                         let currentVal = STATE.secPerDiv || 1.0;
                         currentVal *= delta;

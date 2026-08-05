@@ -12,11 +12,14 @@
 export const vsSource = `
     attribute vec2 a_position;
     attribute vec3 a_data;
+    attribute float a_depth;
     varying vec3 v_data;
+    varying float v_depth;
 
     void main() {
         gl_Position = vec4(a_position, 0.0, 1.0);
         v_data = a_data;
+        v_depth = a_depth;
     }
 `;
 
@@ -29,11 +32,13 @@ export const fsSource = `
     precision highp float;
 
     varying vec3 v_data;
+    varying float v_depth;
     uniform vec3 u_color;
     uniform float u_size;
     uniform float u_intensity;
     uniform float u_densityAlpha;
     uniform float u_gain;      // 波形亮度增益: <1 压低发光强度, 1 直通, >1 增强
+    uniform float u_depthFade; // 深度衰减强度 (XYZ 模式 >0): 远处线条变淡
 
     #define EPS 1E-6
     #define SQRT2 1.4142135623730951
@@ -71,6 +76,13 @@ export const fsSource = `
 
         // 应用亮度密度补偿：解决大 sec/div 慢扫描模式下波形堆叠过深变白的问题
         alpha *= u_densityAlpha;
+
+        // 深度感知衰减 (XYZ 3D): 远处 (depth 大) 的线段变淡, 产生空间层次感
+        // v_depth 归一化到 [0,1], 近处 0 远处 1; u_depthFade 控制衰减强度
+        if (u_depthFade > 0.001) {
+            float depthAtten = exp(-v_depth * v_depth * u_depthFade);
+            alpha *= depthAtten;
+        }
 
         // 波形亮度增益: 在写入前缩放颜色, 只影响波形本身, 不改变背景。
         // 这样余辉累积时不会因颜色过强而饱和成白色。

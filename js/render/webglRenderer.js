@@ -33,9 +33,11 @@ import {
 } from './context.js';
 import { projectXYZ } from './xyzRenderer.js';
 
-let posAttr, dataAttr, colorUni, sizeUni, intensityUni, densityAlphaUni, gainUni;
+let posAttr, dataAttr, depthAttr, colorUni, sizeUni, intensityUni, densityAlphaUni, gainUni, depthFadeUni;
 let vbo;
+let glDepthVBO;
 let glDataArray;
+let glDepthArray;
 // 余辉 FBO 是否已初始化 (首帧清一次基线)
 let _fboInitialized = false;
 
@@ -49,14 +51,18 @@ function initWebGLVars() {
 
     posAttr = gl.getAttribLocation(shaderProgram, 'a_position');
     dataAttr = gl.getAttribLocation(shaderProgram, 'a_data');
+    depthAttr = gl.getAttribLocation(shaderProgram, 'a_depth');
     colorUni = gl.getUniformLocation(shaderProgram, 'u_color');
     sizeUni = gl.getUniformLocation(shaderProgram, 'u_size');
     intensityUni = gl.getUniformLocation(shaderProgram, 'u_intensity');
     densityAlphaUni = gl.getUniformLocation(shaderProgram, 'u_densityAlpha');
     gainUni = gl.getUniformLocation(shaderProgram, 'u_gain');
+    depthFadeUni = gl.getUniformLocation(shaderProgram, 'u_depthFade');
 
     vbo = gl.createBuffer();
     glDataArray = new Float32Array(CONFIG.fftSize * BUFFER.VERTEX_MULTIPLIER);
+    // 深度缓冲与顶点一一对应 (每个顶点 1 个 float)
+    glDepthArray = new Float32Array(CONFIG.fftSize * BUFFER.VERTEX_MULTIPLIER);
 }
 
 /**
@@ -65,9 +71,11 @@ function initWebGLVars() {
  * 必须清空守卫让 initWebGLVars 重新绑定。
  */
 export function resetWebGLVars() {
-    posAttr = dataAttr = colorUni = sizeUni = intensityUni = densityAlphaUni = undefined;
+    posAttr = dataAttr = depthAttr = colorUni = sizeUni = intensityUni = densityAlphaUni = gainUni = depthFadeUni = undefined;
     vbo = undefined;
+    glDepthVBO = undefined;
     glDataArray = undefined;
+    glDepthArray = undefined;
     _fboInitialized = false;
 }
 
@@ -82,7 +90,7 @@ export function resetWebGLVars() {
  * @param {Object|null} viewCtx - Y-T 模式下的视角上下文
  * @param {number|null} customLength - 3D XYZ 模式：自定义数据长度（从索引 0 开始）
  *  */
-export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLight, viewCtx, customLength, customAlphas) {
+export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLight, viewCtx, customLength, customAlphas, customDepth) {
     if (!gl) return;
     // 着色器/VBO 未就绪时跳过，避免对未定义 glDataArray 写入崩溃
     if (!shaderProgram || posAttr === undefined || !glDataArray) return;
@@ -96,22 +104,25 @@ export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLi
     let uIntensity = isXY ? 1.0 : 2.0;
     const densityAlpha = 1.0;
 
-    const pushV = (vx, vy, lx, ly, len) => {
+    const pushV = (vx, vy, lx, ly, len, depth) => {
         glDataArray[vIdx++] = vx; glDataArray[vIdx++] = vy;
         glDataArray[vIdx++] = lx; glDataArray[vIdx++] = ly;
-        glDataArray[vIdx++] = len; pointCount++;
+        glDataArray[vIdx++] = len;
+        // 深度: 每个顶点对应一个深度值 (default 0 = 不衰减)
+        glDepthArray[vIdx - 5] = depth || 0;
+        pointCount++;
     };
 
-    const addPt = (p0x, p0y, p1x, p1y) => {
+    const addPt = (p0x, p0y, p1x, p1y, depth) => {
         let dx = p1x - p0x, dy = p1y - p0y, z = Math.sqrt(dx * dx + dy * dy);
         let dX = (z > 1E-6 ? dx / z : 1.0) * uSize, dY = (z > 1E-6 ? dy / z : 0.0) * uSize;
         let nX = -dY, nY = dX;
-        pushV(p0x - dX - nX, p0y - dY - nY, -uSize, -uSize, z);
-        pushV(p0x - dX + nX, p0y - dY + nY, -uSize, uSize, z);
-        pushV(p1x + dX - nX, p1y + dY - nY, z + uSize, -uSize, z);
-        pushV(p0x - dX + nX, p0y - dY + nY, -uSize, uSize, z);
-        pushV(p1x + dX - nX, p1y + dY - nY, z + uSize, -uSize, z);
-        pushV(p1x + dX + nX, p1y + dY + nY, z + uSize, uSize, z);
+        pushV(p0x - dX - nX, p0y - dY - nY, -uSize, -uSize, z, depth);
+        pushV(p0x - dX + nX, p0y - dY + nY, -uSize, uSize, z, depth);
+        pushV(p1x + dX - nX, p1y + dY - nY, z + uSize, -uSize, z, depth);
+        pushV(p0x - dX + nX, p0y - dY + nY, -uSize, uSize, z, depth);
+        pushV(p1x + dX - nX, p1y + dY - nY, z + uSize, -uSize, z, depth);
+        pushV(p1x + dX + nX, p1y + dY + nY, z + uSize, uSize, z, depth);
     };
 
     if (!isXY) {
@@ -160,8 +171,12 @@ export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLi
         for (let i = 1; i < len - 1; i++) {
             const a = Math.pow(i / len, 26);
             if (a < COLOR.MIN_ALPHA) continue;
+            // 深度感知: 传 customDepth 数组 (投影深度), 由 shader 做远近衰减
+            const d0 = customDepth ? customDepth[i] : 0;
+            const d1 = customDepth ? customDepth[i + 1] : 0;
+            const depth = Math.max(d0, d1);
             addPt(dataBuffer[i] * aspect, yData ? yData[i] : 0,
-                  dataBuffer[i + 1] * aspect, yData ? yData[i + 1] : 0);
+                  dataBuffer[i + 1] * aspect, yData ? yData[i + 1] : 0, depth);
         }
     } else {
         // ==== 标准 2D XY 模式（去重 + Catmull-Rom 样条插值） ====
@@ -234,11 +249,23 @@ export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLi
         gl.enableVertexAttribArray(posAttr);
         gl.vertexAttribPointer(dataAttr, 3, gl.FLOAT, false, GL_CONST.BYTES_PER_VERTEX, GL_CONST.DATA_OFFSET);
         gl.enableVertexAttribArray(dataAttr);
+        // 深度属性: 上传深度缓冲 (每个顶点 1 个 float, 与 vbo 顶点一一对应)
+        if (depthAttr !== -1) {
+            gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+            // 用单独的深度 VBO 存储 (避免与主数据交错)
+            if (!glDepthVBO) glDepthVBO = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, glDepthVBO);
+            gl.bufferData(gl.ARRAY_BUFFER, glDepthArray.subarray(0, pointCount), gl.STREAM_DRAW);
+            gl.vertexAttribPointer(depthAttr, 1, gl.FLOAT, false, 0, 0);
+            gl.enableVertexAttribArray(depthAttr);
+        }
         gl.uniform1f(sizeUni, uSize);
         gl.uniform1f(intensityUni, uIntensity);
         gl.uniform1f(densityAlphaUni, densityAlpha);
         gl.uniform1f(gainUni, STATE.phosphor?.gain ?? 1.0);
         gl.uniform3fv(colorUni, colorArr);
+        // 深度衰减: XYZ 模式启用 (customDepth 存在时), 否则 0 (不衰减)
+        gl.uniform1f(depthFadeUni, customDepth ? 6.0 : 0.0);
         gl.drawArrays(gl.TRIANGLES, 0, pointCount);
     }
 }
@@ -344,17 +371,20 @@ function drawAllChannels(theme, isLight, viewCtx) {
             const proj = projectXYZ(Buffers.pData1, Buffers.pData2, Buffers.pData3);
             if (proj && proj.length >= 20) {
                 const cycles = STATE.view3d?.trailLen || 3;
-                const estPeriod = Math.max(50, Math.floor(proj.length / 20));
-                const tailSamples = Math.min(proj.length, cycles * estPeriod);
+                // 优化轨迹窗口: 用固定比例采样尾部 (基于视角空间轨迹长度, 而非假设周期)
+                // tailSamples = 投影点数的 cycles/4 (每周期约 len/4 点, 由 trailLen 控制)
+                const tailSamples = Math.max(4, Math.min(proj.length, Math.floor(proj.length * cycles / 4)));
                 const srcOff = proj.length - tailSamples;
                 if (tailSamples < 4) return;
                 const xData = new Float32Array(tailSamples);
                 const yData = new Float32Array(tailSamples);
+                const depthData = new Float32Array(tailSamples);
                 for (let k = 0; k < tailSamples; k++) {
                     xData[k] = proj.xArr[srcOff + k];
                     yData[k] = proj.yArr[srcOff + k];
+                    depthData[k] = proj.depthArr[srcOff + k];
                 }
-                renderGLTrace(xData, theme.cM || theme.cXY, true, yData, theme, isLight, null, tailSamples);
+                renderGLTrace(xData, theme.cM || theme.cXY, true, yData, theme, isLight, null, tailSamples, null, depthData);
             }
         } else if (activeCount >= 2) {
             // 标准 2D XY 李萨如图
