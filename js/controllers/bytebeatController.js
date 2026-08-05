@@ -283,33 +283,10 @@ export function initBytebeatController() {
         });
     }
 
-    // 曲库选择
+    // 曲库选择 (change 事件来自隐藏 select 或自定义下拉, 统一走 applySong)
     if (DOM.bytebeatSong) {
-        DOM.bytebeatSong.addEventListener('change', async (e) => {
-            const idx = parseInt(e.target.value);
-            const song = BYTEBEAT_LIBRARY[idx];
-            if (!song) return;
-            setBytebeatMode(song.mode);
-            setBytebeatSampleRate(song.sampleRate);
-            if (DOM.bytebeatMode) DOM.bytebeatMode.value = song.mode;
-            if (DOM.bytebeatRate) DOM.bytebeatRate.value = song.sampleRate;
-            showSongInfo();
-
-            let code = song.code;
-            // 大曲目: 按需动态加载单独文件
-            if (song.file && !code) {
-                try {
-                    const mod = await import('../bytebeat/songs/' + song.file + '.js');
-                    code = mod.code;
-                } catch (err) {
-                    console.warn('加载大曲目失败:', song.name, err);
-                    return;
-                }
-            }
-            if (!code) return;
-            setBytebeatCode(code);
-            if (DOM.bytebeatCode) DOM.bytebeatCode.value = code;
-            if (window.__bytebeatEditorRefresh) window.__bytebeatEditorRefresh();
+        DOM.bytebeatSong.addEventListener('change', (e) => {
+            applySong(parseInt(e.target.value));
         });
     }
 
@@ -321,6 +298,20 @@ export function initBytebeatController() {
             debounceTimer = setTimeout(() => filterLibrary(e.target.value), 150);
         });
     }
+
+    // 自定义下拉交互
+    if (DOM.bbPickerTrigger) {
+        DOM.bbPickerTrigger.addEventListener('click', togglePicker);
+    }
+    if (DOM.bbPickerTrigger && DOM.bbPickerDropdown) {
+        DOM.bbPickerDropdown.addEventListener('click', (e) => e.stopPropagation());
+    }
+    document.addEventListener('click', (e) => {
+        const picker = DOM.bbPicker;
+        if (picker && !picker.contains(e.target)) {
+            closePicker();
+        }
+    });
 
     // 播放/暂停
     if (DOM.bytebeatPlay) {
@@ -349,72 +340,228 @@ export function initBytebeatController() {
     populateBytebeatLibrary();
 }
 
-/** 填充 bytebeat 曲库下拉框 (按作者 optgroup 分组) */
-function populateBytebeatLibrary() {
-    const sel = DOM.bytebeatSong;
-    if (!sel) return;
-    sel.innerHTML = '<option value="-1" disabled selected>选择曲目 (' + BYTEBEAT_LIBRARY.length + ' 首)</option>';
-
-    // 按作者分组
+/**
+ * 把曲目按作者分组, 返回排序后的 [author, items][] 数组。
+ * @param {Array} songs - {song, i}[] 格式
+ */
+function groupByAuthor(songs) {
     const byAuthor = new Map();
-    BYTEBEAT_LIBRARY.forEach((song, i) => {
-        const a = song.author || '未知作者';
+    songs.forEach(item => {
+        const a = item.song.author || '未知作者';
         if (!byAuthor.has(a)) byAuthor.set(a, []);
-        byAuthor.get(a).push({ song, i });
+        byAuthor.get(a).push(item);
     });
+    // 作者按曲目数降序
+    return [...byAuthor.entries()].sort((a, b) => b[1].length - a[1].length);
+}
 
-    // 作者按曲目数降序, 保证重要作者靠前
-    const authors = [...byAuthor.entries()].sort((a, b) => b[1].length - a[1].length);
+/** 曲目彩色标签 HTML: 立体声(紫) / 经典(金) / 采样率 */
+function songTagsHTML(song) {
+    let html = '';
+    if (song.stereo) html += '<span class="bb-tag bb-tag-stereo">立体声</span>';
+    if (song.tags && song.tags.includes('c')) html += '<span class="bb-tag bb-tag-classic">经典</span>';
+    if (song.sampleRate) html += '<span class="bb-tag-sr">' + song.sampleRate + 'Hz</span>';
+    return html;
+}
 
-    for (const [author, items] of authors) {
-        const group = document.createElement('optgroup');
-        group.label = author + ' (' + items.length + ')';
-        for (const { song, i } of items) {
-            const opt = document.createElement('option');
-            opt.value = String(i);
-            // 曲名 + 模式标记
-            const modeTag = song.mode ? ' [' + song.mode + ']' : '';
-            const srTag = song.sampleRate ? ' @' + song.sampleRate + 'Hz' : '';
-            opt.textContent = song.name + modeTag + srTag;
-            group.appendChild(opt);
+/**
+ * 把 {song, i}[] 渲染成自定义下拉的作者分组 DOM, 追加到容器。
+ * 懒渲染: 每组默认只渲染前 SHOW_FIRST 首, 展开按钮显示剩余。
+ * @param {HTMLElement} container - .bb-picker-dropdown
+ * @param {Array} groups - groupByAuthor 的返回值
+ * @param {string} cls - 组样式 ('' 或 'mono')
+ */
+function appendPickerGroups(container, groups, cls) {
+    const SHOW_FIRST = 8;
+    for (const [author, items] of groups) {
+        const group = document.createElement('div');
+        group.className = 'bb-picker-group';
+
+        const label = document.createElement('div');
+        label.className = 'bb-picker-label' + (cls ? ' ' + cls : '');
+        label.innerHTML = escapeHtml(author) + '<span class="bb-picker-cnt">(' + items.length + ')</span>';
+        group.appendChild(label);
+
+        // 前 SHOW_FIRST 首
+        const visible = items.slice(0, SHOW_FIRST);
+        for (const { song, i } of visible) {
+            group.appendChild(makePickerItem(song, i));
         }
-        sel.appendChild(group);
+        // 剩余曲目: 展开按钮
+        const hidden = items.slice(SHOW_FIRST);
+        if (hidden.length) {
+            const more = document.createElement('div');
+            more.className = 'bb-picker-more';
+            more.textContent = '展开全部 ' + hidden.length + ' 首 ▾';
+            more.addEventListener('click', () => {
+                for (const { song, i } of hidden) {
+                    group.insertBefore(makePickerItem(song, i), more);
+                }
+                more.remove();
+            });
+            group.appendChild(more);
+        }
+        container.appendChild(group);
     }
 }
 
-/** 按搜索词过滤曲库: 只保留匹配的 option 分组 */
-function filterLibrary(query) {
-    const sel = DOM.bytebeatSong;
-    if (!sel) return;
-    const q = query.trim().toLowerCase();
-    // 保存当前选中值
-    const prevVal = sel.value;
+/** 创建单个曲目条目 DOM */
+function makePickerItem(song, i) {
+    const item = document.createElement('div');
+    item.className = 'bb-picker-item';
+    item.dataset.idx = String(i);
+    const name = document.createElement('span');
+    name.className = 'bb-picker-item-name';
+    name.textContent = song.name;
+    name.title = song.name + (song.author ? ' — ' + song.author : '');
+    item.appendChild(name);
+    item.insertAdjacentHTML('beforeend', songTagsHTML(song));
+    item.addEventListener('click', () => selectSong(i));
+    return item;
+}
 
-    // 重建 (简单方式: 重新 populate 后过滤)
-    sel.innerHTML = '<option value="-1" disabled selected>' + (q ? '搜索 "' + query + '" 无结果' : '选择曲目 (' + BYTEBEAT_LIBRARY.length + ' 首)') + '</option>';
-    const byAuthor = new Map();
+/**
+ * 填充 bytebeat 曲库自定义下拉。
+ * 立体声组在前(🎧), 单声道在后; 各自按作者分组; 彩色标签 + 懒渲染。
+ */
+function populateBytebeatLibrary() {
+    const picker = DOM.bbPickerDropdown;
+    const valueEl = DOM.bbPickerValue;
+    if (!picker) return;
+    if (valueEl) valueEl.textContent = '选择曲目 (' + BYTEBEAT_LIBRARY.length + ' 首)';
+
+    // 同步隐藏 select (保留选中值机制): 填充所有 option 供 selectSong 设置 value
+    const sel = DOM.bytebeatSong;
+    if (sel) {
+        let optHtml = '<option value="-1" disabled selected>选择曲目</option>';
+        BYTEBEAT_LIBRARY.forEach((song, i) => {
+            optHtml += '<option value="' + i + '">' + escapeHtml(song.name) + '</option>';
+        });
+        sel.innerHTML = optHtml;
+    }
+
+    renderPicker(BYTEBEAT_LIBRARY.map((song, i) => ({ song, i })));
+}
+
+/** 渲染 picker: 立体声在前 */
+function renderPicker(items) {
+    const picker = DOM.bbPickerDropdown;
+    if (!picker) return;
+    picker.innerHTML = '';
+
+    const stereoItems = items.filter(it => it.song.stereo);
+    const monoItems = items.filter(it => !it.song.stereo);
+
+    if (stereoItems.length) appendPickerGroups(picker, groupByAuthor(stereoItems), '');
+    if (monoItems.length) appendPickerGroups(picker, groupByAuthor(monoItems), 'mono');
+    if (!items.length) {
+        const empty = document.createElement('div');
+        empty.className = 'bb-picker-empty';
+        empty.textContent = '无匹配曲目';
+        picker.appendChild(empty);
+    }
+}
+
+/** 按搜索词过滤曲库: 只渲染匹配项, 立体声仍在前 */
+function filterLibrary(query) {
+    const q = query.trim().toLowerCase();
+    const items = [];
     BYTEBEAT_LIBRARY.forEach((song, i) => {
         const hay = (song.name + ' ' + (song.author || '') + ' ' + (song.tags || []).join(' ')).toLowerCase();
-        if (!q || hay.includes(q)) {
-            const a = song.author || '未知作者';
-            if (!byAuthor.has(a)) byAuthor.set(a, []);
-            byAuthor.get(a).push({ song, i });
-        }
+        if (!q || hay.includes(q)) items.push({ song, i });
     });
-    const authors = [...byAuthor.entries()].sort((a, b) => b[1].length - a[1].length);
-    for (const [author, items] of authors) {
-        const group = document.createElement('optgroup');
-        group.label = author + ' (' + items.length + ')';
-        for (const { song, i } of items) {
-            const opt = document.createElement('option');
-            opt.value = String(i);
-            const modeTag = song.mode ? ' [' + song.mode + ']' : '';
-            opt.textContent = song.name + modeTag;
-            group.appendChild(opt);
+    renderPicker(items);
+    // 更新 trigger 显示
+    const valueEl = DOM.bbPickerValue;
+    if (valueEl && q) valueEl.textContent = '搜索到 ' + items.length + ' 首';
+    else if (valueEl) valueEl.textContent = '选择曲目 (' + BYTEBEAT_LIBRARY.length + ' 首)';
+}
+
+/** 选中曲目: 更新 trigger + 同步 select + 触发现有选曲逻辑 */
+/** 应用选中的曲目: 设置 mode/rate/加载代码 (change 事件与自定义下拉共用) */
+async function applySong(idx) {
+    const song = BYTEBEAT_LIBRARY[idx];
+    if (!song) return;
+    setBytebeatMode(song.mode);
+    setBytebeatSampleRate(song.sampleRate);
+    if (DOM.bytebeatMode) DOM.bytebeatMode.value = song.mode;
+    if (DOM.bytebeatRate) DOM.bytebeatRate.value = song.sampleRate;
+    showSongInfo();
+
+    let code = song.code;
+    // 大曲目: 按需动态加载单独文件
+    if (song.file && !code) {
+        try {
+            const mod = await import('../bytebeat/songs/' + song.file + '.js');
+            code = mod.code;
+        } catch (err) {
+            console.warn('加载大曲目失败:', song.name, err);
+            return;
         }
-        sel.appendChild(group);
     }
-    if (prevVal && sel.querySelector('option[value="' + prevVal + '"]')) sel.value = prevVal;
+    if (!code) return;
+    setBytebeatCode(code);
+    if (DOM.bytebeatCode) DOM.bytebeatCode.value = code;
+    if (window.__bytebeatEditorRefresh) window.__bytebeatEditorRefresh();
+}
+
+function selectSong(idx) {
+    const song = BYTEBEAT_LIBRARY[idx];
+    if (!song) return;
+
+    // 更新 trigger 显示
+    const valueEl = DOM.bbPickerValue;
+    if (valueEl) {
+        valueEl.textContent = song.name;
+        // 在 trigger 里也显示彩色标签
+        const trigger = DOM.bbPickerTrigger;
+        if (trigger) {
+            const oldTags = trigger.querySelector('.bb-picker-trigger-tags');
+            if (oldTags) oldTags.remove();
+            const tags = document.createElement('span');
+            tags.className = 'bb-picker-trigger-tags';
+            tags.innerHTML = songTagsHTML(song);
+            valueEl.insertAdjacentElement('afterend', tags);
+        }
+    }
+
+    // 同步隐藏 select 并触发 change (复用现有选曲逻辑)
+    const sel = DOM.bytebeatSong;
+    if (sel) {
+        sel.value = String(idx);
+        sel.dispatchEvent(new Event('change'));
+    }
+
+    // 收起下拉
+    closePicker();
+    // 标记选中项
+    const dropdown = DOM.bbPickerDropdown;
+    if (dropdown) {
+        dropdown.querySelectorAll('.bb-picker-item').forEach(el => {
+            el.classList.toggle('selected', el.dataset.idx === String(idx));
+        });
+    }
+}
+
+/** 展开/收起自定义下拉 */
+function togglePicker() {
+    const dropdown = DOM.bbPickerDropdown;
+    const trigger = DOM.bbPickerTrigger;
+    if (!dropdown) return;
+    const isOpen = dropdown.style.display !== 'none';
+    if (isOpen) {
+        closePicker();
+    } else {
+        dropdown.style.display = 'block';
+        if (trigger) trigger.classList.add('open');
+    }
+}
+
+function closePicker() {
+    const dropdown = DOM.bbPickerDropdown;
+    const trigger = DOM.bbPickerTrigger;
+    if (dropdown) dropdown.style.display = 'none';
+    if (trigger) trigger.classList.remove('open');
 }
 
 /** 显示当前选中曲目的元信息 */

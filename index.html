@@ -630,9 +630,18 @@
                         <input type="text" id="bytebeat-search" class="hw-select bytebeat-search" placeholder="搜索曲目/作者/标签..." />
                     </div>
                     <div class="ctrl-row">
-                        <select id="bytebeat-song" class="hw-select" size="1">
-                            <option value="-1" disabled selected>选择曲目 (1869 首)</option>
+                        <!-- 原生 select 保留但隐藏: 承载选中值, 供现有事件逻辑复用 -->
+                        <select id="bytebeat-song" class="hw-select bytebeat-song-hidden" size="1" tabindex="-1">
+                            <option value="-1" disabled selected>选择曲目</option>
                         </select>
+                        <!-- 自定义下拉视觉层 -->
+                        <div class="bytebeat-picker" id="bytebeat-picker">
+                            <div class="bb-picker-trigger" id="bb-picker-trigger">
+                                <span class="bb-picker-value" id="bb-picker-value">选择曲目</span>
+                                <span class="bb-picker-arrow">▾</span>
+                            </div>
+                            <div class="bb-picker-dropdown" id="bb-picker-dropdown" style="display:none;"></div>
+                        </div>
                     </div>
                     <div id="bytebeat-song-info" class="bytebeat-song-info" style="display:none;"></div>
                     <div class="ctrl-row">
