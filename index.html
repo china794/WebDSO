@@ -627,10 +627,14 @@
                     </div>
                     <div class="ctrl-row">
                         <span class="ctrl-label">曲库</span>
-                        <select id="bytebeat-song" class="hw-select">
-                            <option value="-1" disabled selected>选择预设曲目</option>
+                        <input type="text" id="bytebeat-search" class="hw-select bytebeat-search" placeholder="搜索曲目/作者/标签..." />
+                    </div>
+                    <div class="ctrl-row">
+                        <select id="bytebeat-song" class="hw-select" size="1">
+                            <option value="-1" disabled selected>选择曲目 (1869 首)</option>
                         </select>
                     </div>
+                    <div id="bytebeat-song-info" class="bytebeat-song-info" style="display:none;"></div>
                     <div class="ctrl-row">
                         <span class="ctrl-label">模式</span>
                         <select id="bytebeat-mode" class="hw-select">

@@ -285,17 +285,40 @@ export function initBytebeatController() {
 
     // 曲库选择
     if (DOM.bytebeatSong) {
-        DOM.bytebeatSong.addEventListener('change', (e) => {
+        DOM.bytebeatSong.addEventListener('change', async (e) => {
             const idx = parseInt(e.target.value);
             const song = BYTEBEAT_LIBRARY[idx];
             if (!song) return;
             setBytebeatMode(song.mode);
             setBytebeatSampleRate(song.sampleRate);
-            setBytebeatCode(song.code);
-            if (DOM.bytebeatCode) DOM.bytebeatCode.value = song.code;
-            if (window.__bytebeatEditorRefresh) window.__bytebeatEditorRefresh();
             if (DOM.bytebeatMode) DOM.bytebeatMode.value = song.mode;
             if (DOM.bytebeatRate) DOM.bytebeatRate.value = song.sampleRate;
+            showSongInfo();
+
+            let code = song.code;
+            // 大曲目: 按需动态加载单独文件
+            if (song.file && !code) {
+                try {
+                    const mod = await import('../bytebeat/songs/' + song.file + '.js');
+                    code = mod.code;
+                } catch (err) {
+                    console.warn('加载大曲目失败:', song.name, err);
+                    return;
+                }
+            }
+            if (!code) return;
+            setBytebeatCode(code);
+            if (DOM.bytebeatCode) DOM.bytebeatCode.value = code;
+            if (window.__bytebeatEditorRefresh) window.__bytebeatEditorRefresh();
+        });
+    }
+
+    // 曲库搜索过滤
+    if (DOM.bytebeatSearch) {
+        let debounceTimer = null;
+        DOM.bytebeatSearch.addEventListener('input', (e) => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => filterLibrary(e.target.value), 150);
         });
     }
 
@@ -326,15 +349,99 @@ export function initBytebeatController() {
     populateBytebeatLibrary();
 }
 
-/** 填充 bytebeat 曲库下拉框 */
+/** 填充 bytebeat 曲库下拉框 (按作者 optgroup 分组) */
 function populateBytebeatLibrary() {
     const sel = DOM.bytebeatSong;
     if (!sel) return;
-    sel.innerHTML = '<option value="-1" disabled selected>选择预设曲目</option>';
+    sel.innerHTML = '<option value="-1" disabled selected>选择曲目 (' + BYTEBEAT_LIBRARY.length + ' 首)</option>';
+
+    // 按作者分组
+    const byAuthor = new Map();
     BYTEBEAT_LIBRARY.forEach((song, i) => {
-        const opt = document.createElement('option');
-        opt.value = String(i);
-        opt.textContent = song.name;
-        sel.appendChild(opt);
+        const a = song.author || '未知作者';
+        if (!byAuthor.has(a)) byAuthor.set(a, []);
+        byAuthor.get(a).push({ song, i });
     });
+
+    // 作者按曲目数降序, 保证重要作者靠前
+    const authors = [...byAuthor.entries()].sort((a, b) => b[1].length - a[1].length);
+
+    for (const [author, items] of authors) {
+        const group = document.createElement('optgroup');
+        group.label = author + ' (' + items.length + ')';
+        for (const { song, i } of items) {
+            const opt = document.createElement('option');
+            opt.value = String(i);
+            // 曲名 + 模式标记
+            const modeTag = song.mode ? ' [' + song.mode + ']' : '';
+            const srTag = song.sampleRate ? ' @' + song.sampleRate + 'Hz' : '';
+            opt.textContent = song.name + modeTag + srTag;
+            group.appendChild(opt);
+        }
+        sel.appendChild(group);
+    }
+}
+
+/** 按搜索词过滤曲库: 只保留匹配的 option 分组 */
+function filterLibrary(query) {
+    const sel = DOM.bytebeatSong;
+    if (!sel) return;
+    const q = query.trim().toLowerCase();
+    // 保存当前选中值
+    const prevVal = sel.value;
+
+    // 重建 (简单方式: 重新 populate 后过滤)
+    sel.innerHTML = '<option value="-1" disabled selected>' + (q ? '搜索 "' + query + '" 无结果' : '选择曲目 (' + BYTEBEAT_LIBRARY.length + ' 首)') + '</option>';
+    const byAuthor = new Map();
+    BYTEBEAT_LIBRARY.forEach((song, i) => {
+        const hay = (song.name + ' ' + (song.author || '') + ' ' + (song.tags || []).join(' ')).toLowerCase();
+        if (!q || hay.includes(q)) {
+            const a = song.author || '未知作者';
+            if (!byAuthor.has(a)) byAuthor.set(a, []);
+            byAuthor.get(a).push({ song, i });
+        }
+    });
+    const authors = [...byAuthor.entries()].sort((a, b) => b[1].length - a[1].length);
+    for (const [author, items] of authors) {
+        const group = document.createElement('optgroup');
+        group.label = author + ' (' + items.length + ')';
+        for (const { song, i } of items) {
+            const opt = document.createElement('option');
+            opt.value = String(i);
+            const modeTag = song.mode ? ' [' + song.mode + ']' : '';
+            opt.textContent = song.name + modeTag;
+            group.appendChild(opt);
+        }
+        sel.appendChild(group);
+    }
+    if (prevVal && sel.querySelector('option[value="' + prevVal + '"]')) sel.value = prevVal;
+}
+
+/** 显示当前选中曲目的元信息 */
+function showSongInfo() {
+    const infoEl = DOM.bytebeatSongInfo;
+    if (!infoEl) return;
+    const idx = parseInt(DOM.bytebeatSong.value);
+    const song = BYTEBEAT_LIBRARY[idx];
+    if (!song) {
+        infoEl.style.display = 'none';
+        return;
+    }
+    const tags = (song.tags || []).join(', ');
+    infoEl.innerHTML = '<div class="bb-song-meta">'
+        + '<b>' + escapeHtml(song.name || '') + '</b>'
+        + (song.author ? ' <span>by ' + escapeHtml(song.author) + '</span>' : '')
+        + '<div class="bb-song-detail">'
+        + (song.mode ? '模式: ' + escapeHtml(song.mode) : '')
+        + (song.sampleRate ? ' | 采样率: ' + song.sampleRate + 'Hz' : '')
+        + (song.stereo ? ' | 立体声' : '')
+        + (tags ? ' | 标签: ' + escapeHtml(tags) : '')
+        + '</div>'
+        + (song.description ? '<div class="bb-song-desc">' + escapeHtml(song.description) + '</div>' : '')
+        + '</div>';
+    infoEl.style.display = 'block';
+}
+
+function escapeHtml(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
