@@ -80,6 +80,10 @@ export function ensureBytebeatNode() {
         if (data && data.error) {
             BytebeatEngine.error = data.error.message || '';
             updateErrorUI();
+            // 关键: worklet 的 errorDisplayed 防刷屏机制——错误上报后置 false,
+            // 必须由主线程显式回发 errorDisplayed:true 才能继续上报下一条。
+            // 否则错误信息只显示第一帧就冻结, bytebeat 用错误信息做的动画不会动。
+            node.port.postMessage({ errorDisplayed: true });
         }
     });
     node.port.start();
