@@ -107,3 +107,12 @@ export function detectQuality() {
 export function getQuality() {
     return quality;
 }
+
+/**
+ * 获取生效的 DPR (封顶后) — 必须与 resize() 一致。
+ * resize 设置 canvas 物理尺寸用 maxDpr 封顶, 绘制反推 CSS 尺寸
+ * 也必须用同一 DPR, 否则坐标系错位变形。
+ */
+export function getEffectiveDpr() {
+    return Math.min(window.devicePixelRatio || 1, quality.maxDpr);
+}

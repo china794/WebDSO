@@ -14,7 +14,7 @@ import { vsSource, fsSource, vsBloom, fsBloom, vsComposite, fsComposite, vsFade,
 import { AudioState, getCurrentTime } from '../audio.js';
 import { processData, updateMeasurements } from '../signal.js';
 import { SerialEngine } from '../serial.js';
-import { detectQuality, getQuality } from './quality.js';
+import { detectQuality, getQuality, getEffectiveDpr } from './quality.js';
 
 // 渲染上下�?�?从独�?context 模块导入，消除循环依�?
 import {
@@ -62,8 +62,7 @@ export function initRenderContexts() {
  * 使用质量档位的 DPR 上限 (移动端高 DPR 手机限制像素量)
  */
 export function resize() {
-    const q = getQuality();
-    const dpr = Math.min(window.devicePixelRatio || 1, q.maxDpr);
+    const dpr = getEffectiveDpr();
     const wrapper = document.querySelector('.screen-wrapper');
     if (!wrapper) return;
 
@@ -277,7 +276,8 @@ export function draw({ processPausedData = false } = {}) {
     gl.blendFunc(gl.ONE, isLight ? gl.ONE_MINUS_SRC_ALPHA : gl.ONE);
     gl.useProgram(shaderProgram);
 
-    const dpr = window.devicePixelRatio || WEBGL.DEFAULT_DPR;
+    // 必须与 resize() 用同一 DPR (封顶后), 否则高 DPR 设备网格/波形错位
+    const dpr = getEffectiveDpr();
     const w = DOM.oscilloscope.width / dpr;
     const h = DOM.oscilloscope.height / dpr;
     const stepY = h / CONFIG.gridY;
