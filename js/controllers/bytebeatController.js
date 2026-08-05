@@ -16,6 +16,7 @@ import { AudioState } from '../audio.js';
 import { DOM, STATE, showSysModal } from '../core.js';
 import { BYTEBEAT } from '../constants.js';
 import { BYTEBEAT_LIBRARY, DEFAULT_BYTEBEAT_CODE, DEFAULT_BYTEBEAT_MODE, DEFAULT_BYTEBEAT_SAMPLE_RATE } from '../bytebeat/library.js';
+import { initBytebeatEditor } from '../bytebeat/editor.js';
 
 // Worklet 模块路径（相对 index.html）
 const WORKLET_URL = BYTEBEAT.WORKLET_URL;
@@ -253,8 +254,15 @@ export function updateBytebeatPlayUI() {
 
 /** 初始化 UI 事件绑定 */
 export function initBytebeatController() {
-    // 公式输入
-    if (DOM.bytebeatCode) {
+    // 公式输入 (简易 IDE 编辑器: 行号 + 语法高亮 + 自动增高)
+    if (DOM.bytebeatCode && DOM.bbLineNums && DOM.bbHighlight) {
+        const editor = initBytebeatEditor(DOM.bytebeatCode, DOM.bbLineNums, DOM.bbHighlight);
+        DOM.bytebeatCode.addEventListener('input', (e) => {
+            setBytebeatCode(e.target.value);
+        });
+        // 暴露给曲库选择等外部改值时刷新编辑器视觉
+        window.__bytebeatEditorRefresh = editor.refresh;
+    } else if (DOM.bytebeatCode) {
         DOM.bytebeatCode.addEventListener('input', (e) => {
             setBytebeatCode(e.target.value);
         });
@@ -285,6 +293,7 @@ export function initBytebeatController() {
             setBytebeatSampleRate(song.sampleRate);
             setBytebeatCode(song.code);
             if (DOM.bytebeatCode) DOM.bytebeatCode.value = song.code;
+            if (window.__bytebeatEditorRefresh) window.__bytebeatEditorRefresh();
             if (DOM.bytebeatMode) DOM.bytebeatMode.value = song.mode;
             if (DOM.bytebeatRate) DOM.bytebeatRate.value = song.sampleRate;
         });

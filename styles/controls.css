@@ -701,24 +701,101 @@ input[type=range]:focus {
     font-size: 13px;
 }
 
-.bytebeat-code {
+/* ===== Bytebeat 简易 IDE 编辑器 (overlay 三层) ===== */
+.bytebeat-editor {
+    position: relative;
     width: 100%;
     min-height: 160px;
     background: var(--bg-panel);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
-    color: var(--text-main);
+    overflow: hidden;
+}
+.bytebeat-editor:focus-within {
+    border-color: var(--color-blue);
+}
+
+/* 行号栏: 左侧, 与 textarea 独立滚动 */
+.bb-line-nums {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 36px;
+    padding: 10px 6px 10px 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-align: right;
     font-family: 'Courier New', monospace;
     font-size: 13px;
     line-height: 1.5;
-    padding: 10px;
-    resize: vertical;
-    outline: none;
+    color: var(--text-dim);
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border-color);
+    user-select: none;
+    pointer-events: none;
+    z-index: 1;
+}
+.bb-line-nums .bb-ln {
+    display: block;
+    padding-right: 6px;
+}
+.bb-line-nums .bb-ln.current {
+    color: var(--color-blue);
+    background: rgba(59, 130, 246, 0.08);
 }
 
-.bytebeat-code:focus {
-    border-color: var(--color-blue);
+/* 高亮层: 铺满容器, 与 textarea 同字体排版 */
+.bb-highlight {
+    margin: 0;
+    position: absolute;
+    top: 0; left: 36px; right: 0; bottom: 0;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-main);
+    pointer-events: none;
+    z-index: 0;
 }
+
+/* 顶层 textarea: 透明文字, 光标可见, 接收输入 */
+.bytebeat-code {
+    width: 100%;
+    min-height: 160px;
+    margin: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    color: transparent;
+    caret-color: var(--text-main);
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 10px 10px 10px 46px;
+    box-sizing: border-box;
+    resize: none;
+    outline: none;
+    overflow: hidden;
+    z-index: 2;
+}
+.bytebeat-code::placeholder {
+    color: transparent;
+}
+.bytebeat-code:focus {
+    border: none;
+}
+
+/* 高亮 token 配色 (主题变量, 深浅主题自适应) */
+.bb-hl-num    { color: var(--color-green); }
+.bb-hl-op     { color: var(--color-purple); }
+.bb-hl-comment{ color: var(--text-dim); font-style: italic; }
+.bb-hl-func   { color: var(--color-blue); }
+.bb-hl-keyword{ color: var(--color-run); }
+.bb-hl-paren  { color: var(--color-stop); }
+.bb-hl-string { color: var(--color-blue); }
 
 .bytebeat-error {
     font-size: 10px;

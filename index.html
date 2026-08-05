@@ -669,8 +669,12 @@
                         <span class="ctrl-label">采样率</span>
                         <input type="number" id="bytebeat-rate" value="8000" min="1000" max="48000" class="hw-select bytebeat-rate-input">
                     </div>
-                    <textarea id="bytebeat-code" class="bytebeat-code" spellcheck="false"
-                        placeholder="t*((t>>12|t>>8)&63&t>>4)">t*((t>>12|t>>8)&63&t>>4)</textarea>
+                    <div class="bytebeat-editor" id="bytebeat-editor">
+                        <div class="bb-line-nums" id="bb-line-nums"></div>
+                        <pre class="bb-highlight" id="bb-highlight" aria-hidden="true"></pre>
+                        <textarea id="bytebeat-code" class="bytebeat-code" spellcheck="false"
+                            placeholder="t*((t>>12|t>>8)&63&t>>4)">t*((t>>12|t>>8)&63&t>>4)</textarea>
+                    </div>
                     <div id="bytebeat-error" class="bytebeat-error" style="display:none;"></div>
                     <!-- 双声道输出：L/R 各选通道 -->
                     <div class="stereo-out">
