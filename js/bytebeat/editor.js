@@ -148,10 +148,32 @@ export function tokenizeToHtml(code) {
  */
 export function initBytebeatEditor(ta, nums, hl, minHeight = 160, maxHeight = 400) {
     const LINE_H = 19.5; // 13px 字体 × 1.5 行高
+    // 等宽字体 Courier New 13px 实测字符宽 7.801px。
+    // 折行实际字符数比 宽/字宽 略少 (break-word 在符号处提前折行), 用安全系数收紧。
+    const CHAR_W = 7.801;
+    const WRAP_SAFETY = 0.92; // 实测 848px 宽实际每行 ~100 字符, 理论 108.7, 系数 ~0.92
 
-    /** 重新计算高度: 行数 × 行高 + padding(上下各 10px) */
+    /**
+     * 估算每行的视觉折行数: 长行会 wrap 成多行, 光数 \n 不够。
+     * 基于容器实际宽度 + 等宽字符宽 + 安全系数, 保证长行粘贴后输入框撑够高度。
+     */
+    function visualLineCount(text) {
+        // 容器内容宽度: textarea clientWidth - padding 左右 (46 + 10)
+        const availW = Math.max(80, (ta.clientWidth || 280) - 56);
+        const charsPerLine = Math.max(10, Math.floor(availW / CHAR_W * WRAP_SAFETY));
+        let count = 0;
+        const lines = text.split('\n');
+        for (const line of lines) {
+            // 按字符数估算折行 (tab 按 4 字符算, 中文等宽字符忽略)
+            const eff = line.length + (line.match(/\t/g) || []).length * 3;
+            count += Math.max(1, Math.ceil(eff / charsPerLine));
+        }
+        return count;
+    }
+
+    /** 重新计算高度: 视觉行数 × 行高 + padding(上下各 10px) */
     function autoHeight() {
-        const lineCount = ta.value.split('\n').length;
+        const lineCount = visualLineCount(ta.value);
         const h = Math.max(minHeight, Math.min(maxHeight, lineCount * LINE_H + 20));
         ta.style.height = h + 'px';
     }
@@ -184,6 +206,13 @@ export function initBytebeatEditor(ta, nums, hl, minHeight = 160, maxHeight = 40
 
     // 事件绑定
     ta.addEventListener('input', () => { autoHeight(); render(); syncScroll(); });
+    // 粘贴后强制刷新: Chrome 的 input 事件在粘贴大段代码时可能滞后/分批触发,
+    // 直接监听 paste 在内容写入后立即重算高度 + 渲染, 确保输入框一定加长。
+    ta.addEventListener('paste', () => {
+        // 让出事件循环让浏览器完成粘贴写入, 再重算
+        requestAnimationFrame(() => { autoHeight(); render(); syncScroll(); });
+        setTimeout(() => { autoHeight(); render(); syncScroll(); }, 50);
+    });
     ta.addEventListener('scroll', syncScroll);
     ta.addEventListener('keyup', render);          // 光标移动时更新当前行高亮
     ta.addEventListener('click', render);
