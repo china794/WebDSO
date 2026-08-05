@@ -8,7 +8,7 @@
 // TODO: 实现音频控制逻辑
 import { STATE, DOM, CONFIG, showSysModal, CHANNEL_COUNT } from '../core.js';
 import { GENERATOR, MATH, MIC } from '../constants.js';
-import { AudioState, initAudio, rebuildChannel, updateAWG, rebuildStereoRouting, playBuffer, getLogSpeed, getCurrentTime } from '../audio.js';
+import { AudioState, initAudio, rebuildChannel, updateAWG, rebuildStereoRouting, playBuffer, getLogSpeed, getCurrentTime, setMicMonitor } from '../audio.js';
 import { refreshInputCard, getInputCh } from './inputController.js';
 
 // 降噪 worklet 节点 (懒加载)
@@ -84,16 +84,28 @@ export function initAudioController() {
             AudioState.micStream = stream;
             AudioState.micSource = AudioState.audioCtx.createMediaStreamSource(stream);
             AudioState.micSource.channelCount = 2; AudioState.micSource.channelCountMode = 'explicit';
-            // 智能降噪: micSource → noiseSuppressor → splitter
+            // 智能降噪: micSource → noiseSuppressor → splitter (采集)
+            // 监听 tap: 降噪后信号同时送 micMonitorGain (默认静音, ♪ 按钮控制)
             const suppressor = await ensureNoiseSuppressor();
             if (suppressor) {
                 AudioState.micSource.connect(suppressor);
                 suppressor.connect(AudioState.splitter);
+                if (AudioState.micMonitorGain) suppressor.connect(AudioState.micMonitorGain);
             } else {
                 AudioState.micSource.connect(AudioState.splitter);
+                if (AudioState.micMonitorGain) AudioState.micSource.connect(AudioState.micMonitorGain);
             }
             this.classList.add('active'); this.innerText = '已连接';
         } catch (e) { showSysModal('设备连接失败', e.message); }
+    });
+
+    // 麦克风监听开关 (独立 tap 路径, 默认静音防啸叫)
+    if (DOM.btnMicMonitor) DOM.btnMicMonitor.addEventListener('click', function () {
+        STATE.mic.monitor = !STATE.mic.monitor;
+        initAudio();
+        setMicMonitor(STATE.mic.monitor);
+        if (STATE.mic.monitor) { this.innerText = '♪ 监听: 开'; this.classList.add('active'); }
+        else { this.innerText = '♪ 监听'; this.classList.remove('active'); }
     });
 
     // 降噪开关
@@ -104,10 +116,11 @@ export function initAudioController() {
         postToNoiseSuppressor({ type: 'enable', value: STATE.mic.denoise });
     });
 
-    // 降噪强度滑块
+    // 降噪强度滑块 (0-150 → α 0~1.5, 超 100 为激进过减)
     if (DOM.knobMicStrength) DOM.knobMicStrength.addEventListener('input', function (e) {
-        STATE.mic.strength = parseInt(e.target.value) / 100;
-        if (DOM.lblMicStrength) DOM.lblMicStrength.innerText = 'x' + e.target.value;
+        const raw = parseInt(e.target.value);
+        STATE.mic.strength = raw / 100;
+        if (DOM.lblMicStrength) DOM.lblMicStrength.innerText = 'x' + raw;
         postToNoiseSuppressor({ type: 'strength', value: STATE.mic.strength });
     });
 

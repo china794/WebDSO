@@ -9,7 +9,7 @@ import { SYSTEM, AUDIO, GENERATOR } from './constants.js';
 export const AudioState = {
     audioCtx: null, splitter: null, merger: null,
     awgSplitter: null, stereoMerger: null,
-    micSource: null, micStream: null,
+    micSource: null, micStream: null, micMonitorGain: null,
     fileSourceNode: null, musicGainNode: null,
     awgSpeakerGain: null,
     audioBuffer: null, bufferSource: null, startTime: 0, startOffset: 0,
@@ -89,6 +89,14 @@ export function initAudio() {
         rebuildStereoRouting();
         AudioState.stereoMerger.connect(AudioState.awgSpeakerGain);
         AudioState.awgSpeakerGain.connect(AudioState.audioCtx.destination);
+
+        // 麦克风监听路径: micSource(降噪后) → micMonitorGain → destination
+        // 独立于 panMaster/AWG 监听, 默认静音; 由 MIC 卡 ♪ 监听按钮控制。
+        // 监听音量保持较低(0.5)防啸叫——麦克风靠近扬声器时开监听必产生声反馈,
+        // 这是物理现象, 只能靠戴耳机或降音量规避。
+        AudioState.micMonitorGain = AudioState.audioCtx.createGain();
+        AudioState.micMonitorGain.gain.value = 0;
+        AudioState.micMonitorGain.connect(AudioState.audioCtx.destination);
         
         AudioState.musicGainNode = AudioState.audioCtx.createGain();
         AudioState.musicGainNode.gain.value = 1;
@@ -130,6 +138,13 @@ export function rebuildStereoRouting() {
     try { AudioState.awgSplitter.disconnect(); } catch (_) {}
     AudioState.awgSplitter.connect(AudioState.stereoMerger, L, 0);
     AudioState.awgSplitter.connect(AudioState.stereoMerger, R, 1);
+}
+
+/** 切换麦克风监听 (独立路径 micMonitorGain → destination, 默认静音) */
+export function setMicMonitor(on) {
+    if (!AudioState.micMonitorGain) return;
+    const t = AudioState.audioCtx.currentTime;
+    AudioState.micMonitorGain.gain.setTargetAtTime(on ? 0.5 : 0, t, 0.02);
 }
 
 /**

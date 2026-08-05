@@ -156,8 +156,8 @@ export const GENERATOR = {
 export const MIC = {
     /** 默认降噪开关 */
     DENOISE_DEFAULT: true,
-    /** 默认降噪强度 (0-1, 过减因子 α) */
-    DENOISE_STRENGTH: 0.6,
+    /** 默认降噪强度 (0-1.5, 过减因子 α; 默认 0.9 较强, 可拉到 1.5 激进过减) */
+    DENOISE_STRENGTH: 0.9,
     /** 谱减法 FFT 帧长 */
     FFT_SIZE: 1024,
     /** 噪声门阈值 (dB) */

@@ -137,12 +137,15 @@ class NoiseSuppressorProcessor extends AudioWorkletProcessor {
         this.enabled = true;               // 降噪开关
         this.strength = 0.6;               // 过减因子 α
         this.beta = 0.02;                  // 谱下限 (防音乐噪声)
-        this.gateThreshold = 0.01;         // 噪声门能量阈值
-        this.gateRatio = 0.15;             // 门关闭时的残留
+        this.gateThreshold = 0.01;         // 噪声门能量阈值 (RMS; 学习完成后自动对齐噪声底)
+        this.gateRatio = 0.05;             // 门关闭时的残留 (越低静音越彻底)
         this.learnSamples = 0;             // 学习计数
         this.noiseLearning = false;        // 是否在学习
         this.learnLength = 0;              // 学习所需帧数
         this.smoothCoef = 0.7;             // 时间平滑系数
+        this.noiseFloorRms = 0;            // 学习期测得的噪声 RMS 底 (用于门阈值自适应)
+        this.noiseRmsAcc = 0;              // 学习期 RMS 累积
+        this.noiseRmsCount = 0;
 
         // FFT 状态
         this.fft = makeFFT(this.fftSize);
@@ -179,6 +182,14 @@ class NoiseSuppressorProcessor extends AudioWorkletProcessor {
         // 学习模式消息
         this.port.addEventListener('message', (e) => this.onMessage(e.data));
         this.port.start();
+
+        // 启动即自动采样环境噪声谱: 否则 noiseMag 全 0, 谱减法无料可用,
+        // 降噪只能靠噪声门。节点创建后立刻学习前 ~0.8s 安静底噪。
+        this.noiseLearning = true;
+        this.learnSamples = 0;
+        this.learnLength = Math.max(1, Math.floor(0.8 * sampleRate / this.fftSize));
+        this.noiseAcc.fill(0);
+        this.noiseCount = 0;
     }
 
     onMessage(msg) {
@@ -188,7 +199,7 @@ class NoiseSuppressorProcessor extends AudioWorkletProcessor {
                 this.enabled = !!msg.value;
                 break;
             case 'strength':
-                this.strength = Math.max(0, Math.min(1, msg.value));
+                this.strength = Math.max(0, Math.min(1.5, msg.value));
                 break;
             case 'gate':
                 this.gateThreshold = Math.pow(10, msg.value / 20); // dB → 线性
@@ -299,9 +310,14 @@ class NoiseSuppressorProcessor extends AudioWorkletProcessor {
         if (this.noiseLearning) {
             for (let i = 0; i < half; i++) this.noiseAcc[i] += this.magIn[i];
             this.noiseCount++;
+            this.noiseRmsAcc += frameEnergy;
+            this.noiseRmsCount++;
             this.learnSamples++;
             if (this.learnSamples >= this.learnLength) {
                 for (let i = 0; i < half; i++) this.noiseMag[i] = this.noiseAcc[i] / this.noiseCount;
+                this.noiseFloorRms = this.noiseRmsAcc / this.noiseRmsCount;
+                // 门阈值对齐到噪声底上方 ~2.5 倍, 让底噪帧被门压住, 语音帧(RMS 数倍于底噪)通过
+                this.gateThreshold = Math.max(this.gateThreshold, this.noiseFloorRms * 2.5);
                 this.noiseLearning = false;
             }
         }

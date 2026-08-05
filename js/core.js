@@ -139,10 +139,11 @@ const uiState = {
         R: 2,
         monitor: false,   // 扬声器监听
     },
-    // 声卡输入智能降噪
+    // 声卡输入智能降噪 + 监听
     mic: {
         denoise: MIC.DENOISE_DEFAULT,
         strength: MIC.DENOISE_STRENGTH,
+        monitor: false,   // 扬声器监听 (默认关, 防啸叫)
     }
 };
 
