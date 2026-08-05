@@ -88,9 +88,10 @@ export function ensureBytebeatNode() {
     const splitter = audioCtx.createChannelSplitter(2);
     node.connect(splitter);
 
-    // 扬声器监听路径：splitter → monitorGain → destination (默认静音)
+    // 扬声器监听路径：splitter → monitorGain → destination (永远默认开启)
+    // bytebeat 本身就是可听音乐, 监听常开无需开关。
     const monitorGain = audioCtx.createGain();
-    monitorGain.gain.value = 0;
+    monitorGain.gain.value = 1.0;
     splitter.connect(monitorGain);
     monitorGain.connect(audioCtx.destination);
 
@@ -292,24 +293,6 @@ export function initBytebeatController() {
     if (DOM.bytebeatOutRight) {
         DOM.bytebeatOutRight.addEventListener('change', (e) => {
             setBytebeatRChannel(parseInt(e.target.value) || 2);
-        });
-    }
-
-    // 扬声器监听开关
-    if (DOM.btnBytebeatMonitor) {
-        DOM.btnBytebeatMonitor.addEventListener('click', async () => {
-            STATE.bytebeat.monitor = !STATE.bytebeat.monitor;
-            // 确保节点存在(触发懒创建 monitorGain)
-            if (!BytebeatEngine.node) {
-                await ensureWorkletLoaded().catch(() => {});
-                ensureBytebeatNode();
-            }
-            if (BytebeatEngine.monitorGain && AudioState.audioCtx) {
-                const t = AudioState.audioCtx.currentTime;
-                BytebeatEngine.monitorGain.gain.setValueAtTime(STATE.bytebeat.monitor ? 1.0 : 0, t);
-            }
-            DOM.btnBytebeatMonitor.innerText = STATE.bytebeat.monitor ? '♪ 监听: 开' : '♪ 监听';
-            DOM.btnBytebeatMonitor.classList.toggle('active', STATE.bytebeat.monitor);
         });
     }
 

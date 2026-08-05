@@ -137,7 +137,6 @@ const uiState = {
         on: false,
         L: 1,
         R: 2,
-        monitor: false,   // 扬声器监听
     },
     // 声卡输入智能降噪 + 监听
     mic: {
