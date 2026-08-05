@@ -107,13 +107,19 @@ export function updateBytebeatRouting() {
     const L = STATE.bytebeat.L || BYTEBEAT.DEFAULT_L_CH;
     const R = STATE.bytebeat.R || BYTEBEAT.DEFAULT_R_CH;
 
-    // 断开旧的 L/R 连接
+    // 断开旧的 L/R 到 mixer 的连接。
+    // ⚠️ 绝不能用 splitter.disconnect() 全断 —— 那会把 splitter→monitorGain 的
+    // 监听路径(永久开启)一起断开, 导致 bytebeat 无声。
+    // 这里只断开到目标 mixer 的输出, 用 disconnect(dest) 精确断开。
     const splitter = BytebeatEngine.splitter;
-    try { splitter.disconnect(); } catch (e) {}
-
-    // 连接 L → chL Mixer, R → chR Mixer（若相同通道则合并）
     const targetL = AudioState['ch' + L + 'Mixer'];
     const targetR = AudioState['ch' + R + 'Mixer'];
+    try { splitter.disconnect(targetL); } catch (e) {}
+    try { splitter.disconnect(targetR); } catch (e) {}
+    // 若 L===R 合并路径, 上一轮可能建过临时 merger, 一并断开
+    if (targetL === targetR && targetL) { try { splitter.disconnect(targetL); } catch (e) {} }
+
+    // 连接 L → chL Mixer, R → chR Mixer（若相同通道则合并）
     if (L === R && targetL) {
         // 双声道混合到同一通道（简单求和）
         const merger = AudioState.audioCtx.createChannelMerger(1);
@@ -126,16 +132,23 @@ export function updateBytebeatRouting() {
     }
 }
 
-/** 同步当前状态到 worklet（公式/模式/采样率） */
+/**
+ * 同步当前状态到 worklet（公式/模式/采样率）。
+ * 必须分批发送: worklet 的 receiveData 在同一消息里处理 mode + setFunction 时,
+ * setFunction 内的 deleteGlobals() 会破坏全局, 导致编译后的 this.func 丢失,
+ * 运行时报 "this.func is not a function" 静音。分开消息则正常。
+ */
 export function syncToWorklet() {
     if (!BytebeatEngine.node) return;
     const audioCtx = AudioState.audioCtx;
     const node = BytebeatEngine.node;
+    const sampleRatio = BytebeatEngine.sampleRate / (audioCtx.sampleRate || 96000);
+    // 先设模式(决定 getValues), 再独立编译公式, 最后补采样率/播放状态
+    node.port.postMessage({ mode: BytebeatEngine.mode });
+    node.port.postMessage({ setFunction: BytebeatEngine.code });
     node.port.postMessage({
-        mode: BytebeatEngine.mode,
         sampleRate: BytebeatEngine.sampleRate,
-        sampleRatio: BytebeatEngine.sampleRate / (audioCtx.sampleRate || 96000),
-        setFunction: BytebeatEngine.code,
+        sampleRatio,
         isPlaying: BytebeatEngine.active,
         resetTime: true
     });
