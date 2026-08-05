@@ -103,10 +103,11 @@ export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLi
     let uSize = isLight ? 0.002 : ((STATE.current && STATE.current.lineSize) ? STATE.current.lineSize : 0.002);
     let uIntensity = isXY ? 1.0 : 2.0;
     const densityAlpha = 1.0;
-    // XYZ 3D: 用更细的线 (避免粗线叠加过曝成白)
+    // XYZ 3D: 直画无余辉, 正常线宽 + 较高强度保证可见
+    // (之前用 0.6x 细线 + 0.7 强度, 波形几乎看不清)
     if (customLength !== undefined && customLength > 0) {
-        uSize = uSize * 0.6;
-        uIntensity = 0.7;
+        uSize = uSize * 1.2;
+        uIntensity = 1.4;
     }
 
     const pushV = (vx, vy, lx, ly, len, depth) => {
@@ -392,8 +393,20 @@ function drawAllChannels(theme, isLight, viewCtx) {
         }
 
         if (activeCount >= 3 && STATE['ch1']?.on && STATE['ch2']?.on && STATE['ch3']?.on) {
-            // XYZ 3D
-            const proj = projectXYZ(Buffers.pData1, Buffers.pData2, Buffers.pData3);
+            // XYZ 3D: 先对三通道去均值 (AC 耦合), 消除 DC 偏置导致的波形中心偏移
+            const _centerCh = (buf) => {
+                let sum = 0, n = 0;
+                for (let i = 0; i < buf.length; i++) { if (buf[i] !== 0) { sum += buf[i]; n++; } }
+                if (n < 2) return buf;
+                const mean = sum / n;
+                const out = new Float32Array(buf.length);
+                for (let i = 0; i < buf.length; i++) out[i] = buf[i] - mean;
+                return out;
+            };
+            const p1c = _centerCh(Buffers.pData1);
+            const p2c = _centerCh(Buffers.pData2);
+            const p3c = _centerCh(Buffers.pData3);
+            const proj = projectXYZ(p1c, p2c, p3c);
             if (proj && proj.length >= 20) {
                 // 统一视口变换: 波形和线框共享同一 scale/offset, 保证对齐
                 const transform = computeViewTransform(proj, STATE.view3d?.zoom);
@@ -401,21 +414,19 @@ function drawAllChannels(theme, isLight, viewCtx) {
                 // 存到 view3d 供 renderXYZAxes 读取 (Canvas 层画线框用同一变换)
                 if (STATE.view3d) STATE.view3d._lastTransform = transform;
 
-                const cycles = STATE.view3d?.trailLen || 3;
-                // 轨迹窗口: 只画最近几个周期的点 (闭合 Lissajous 的尾段)
-                const tailSamples = Math.max(4, Math.min(proj.length, Math.floor(proj.length * cycles / 4)));
-                const srcOff = proj.length - tailSamples;
-                const xData = new Float32Array(tailSamples);
-                const yData = new Float32Array(tailSamples);
-                const depthData = new Float32Array(tailSamples);
-                for (let k = 0; k < tailSamples; k++) {
+                // 画完整闭合波形 (不截断 —— 截断 tailSamples 会导致闭合 Lissajous
+                // 的尾段起点每帧跳动, 波形抽搐闪烁)
+                const xData = new Float32Array(proj.length);
+                const yData = new Float32Array(proj.length);
+                const depthData = new Float32Array(proj.length);
+                for (let k = 0; k < proj.length; k++) {
                     // 统一视口变换: (proj - offset) * scale
-                    const [x, y] = applyViewTransform(proj.xArr[srcOff + k], proj.yArr[srcOff + k], transform);
+                    const [x, y] = applyViewTransform(proj.xArr[k], proj.yArr[k], transform);
                     xData[k] = x;
                     yData[k] = y;
-                    depthData[k] = proj.depthArr[srcOff + k];
+                    depthData[k] = proj.depthArr[k];
                 }
-                renderGLTrace(xData, theme.cM || theme.cXY, true, yData, theme, isLight, null, tailSamples, null, depthData);
+                renderGLTrace(xData, theme.cM || theme.cXY, true, yData, theme, isLight, null, proj.length, null, depthData);
             }
         } else if (activeCount >= 2) {
             // 标准 2D XY 李萨如图
