@@ -42,7 +42,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "the 42 melody but array and with a different waveform",
         author: "_elevate__",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -52,7 +52,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "squsinsaw music",
         author: "_elevate__",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["1k"],
@@ -62,7 +62,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "128 Voices Generator",
         author: "0b5vr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["256", "slow"],
@@ -82,7 +82,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "cool js thing",
         author: "0naCB0_1488",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -112,7 +112,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Cool waveform i guess (first one)",
         author: 1583736,
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -122,7 +122,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Cool waveform i guess (second one)",
         author: 1583736,
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -172,7 +172,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "algorithmic music in a \"constructivist\" way",
         author: "a1k0n",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -212,7 +212,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "better vibrato",
         author: "absolute197",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -222,7 +222,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Powerful Death",
         author: "absolute197",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 40000,
         stereo: 0,
         tags: ["1k"],
@@ -242,7 +242,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Sawtooth Dreams",
         author: "absolute197",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 60000,
         stereo: 0,
         tags: ["256"],
@@ -262,7 +262,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "e",
         author: "absolute197",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 46000,
         stereo: 0,
         tags: ["256"],
@@ -272,7 +272,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Night Vision",
         author: "absolute197",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 36000,
         stereo: 0,
         tags: ["1k"],
@@ -282,7 +282,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Square Techonology",
         author: "absolute197",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -352,7 +352,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Patrick The Android's Vocals with melody",
         author: "Admirable-Dot-5854",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44000,
         stereo: 0,
         tags: ["1k"],
@@ -382,7 +382,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Phantasie für drei Blockflöten, Op. 256",
         author: "Algorias",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -392,7 +392,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "chilly cyberstorm",
         author: "algoziptunes",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["1k"],
@@ -402,7 +402,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Tetris Music Theme",
         author: "ameen272",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 33000,
         stereo: 0,
         tags: ["big"],
@@ -423,7 +423,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Nuclearoids Remake",
         author: "aniruF",
         mode: "Funcbeat",
-        sampleRate: 38775.465,
+        sampleRate: 38775,
         stereo: 0,
         tags: ["big"],
         description: "",
@@ -472,7 +472,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "I have made a thing#1",
         author: "Anonymous",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -662,7 +662,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "My Own Sierpinski harmony with kick and hihat",
         author: "ANoUserXD",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -752,7 +752,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "very cool remix of lhphr's pyramid dungeon",
         author: "ANoUserXD",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -772,7 +772,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "First remix of l(ast)",
         author: "ANoUserXD",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -882,7 +882,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Another remix for this thread",
         author: "ANoUserXD",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 38000,
         stereo: 0,
         tags: ["1k"],
@@ -892,7 +892,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "remix of SWAG-75's ambience",
         author: "ANoUserXD",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -972,7 +972,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "anxious",
         author: "ANoUserXD",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["256"],
@@ -992,7 +992,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "notitle No.2",
         author: "ANoUserXD",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -1002,7 +1002,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "THEY ARE RISING!",
         author: "ANoUserXD",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -1012,7 +1012,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "relief",
         author: "ANoUserXD",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -1022,7 +1022,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Pleasure to Paso",
         author: "ANoUserXD",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["1k"],
@@ -1052,7 +1052,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "phase byte [++t]",
         author: "argarak",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
@@ -1062,7 +1062,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "fm blippy",
         author: "argarak",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["256"],
@@ -1072,7 +1072,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "neeeiiiuummm filter",
         author: "argarak",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -1082,7 +1082,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "pcm.modshape.wv",
         author: "argarak",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -1092,7 +1092,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "tridecagon sequence",
         author: "argarak",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -1142,7 +1142,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "the audio effect on those meme content-aware scaling videos",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -1152,7 +1152,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bitcrushed amen break",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["big", "sample"],
@@ -1172,7 +1172,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "funky minimal sierpinski harmony remix",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -1182,7 +1182,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "the midi to bytebeat tool",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -1192,7 +1192,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "adventurous song",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["big", "sample"],
@@ -1202,7 +1202,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "morse code encoder",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -1242,7 +1242,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "rendition of sparta remix or smth",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -1262,7 +1262,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Oh No. The Scary Is Coming. Run.",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -1272,7 +1272,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "test.mid",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -1292,7 +1292,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "moving square",
         author: "awogler9124812041",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -1302,7 +1302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "spinning line",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -1312,7 +1312,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "pseudo 3d cube",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -1322,7 +1322,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "the mandelbrot set",
         author: "awogler9124812041",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -1342,7 +1342,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "42 hell",
         author: "awogler9124812041",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -1352,7 +1352,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ryg remix",
         author: "awogler9124812041",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -1432,7 +1432,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "glitchy side-kicking",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 17333,
         stereo: 1,
         tags: ["1k"],
@@ -1452,7 +1452,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "graphics in bytebeat: text",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -1462,7 +1462,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "clock (digital and analog)",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -1472,7 +1472,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Unsaved Progress Is Lost",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -1532,7 +1532,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "chomik",
         author: "BaenHoHoHo",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -1542,7 +1542,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "fijsdfrdifjfred",
         author: "BaenHoHoHo",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -1552,7 +1552,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "how to do echo without using array(number).fill(0)",
         author: "BaenHoHoHo",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -1562,7 +1562,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "what",
         author: "BaenHoHoHo",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -1582,7 +1582,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "isislovecruft remis",
         author: "BaenHoHoHo",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 36000,
         stereo: 0,
         tags: ["256"],
@@ -1592,7 +1592,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "goose melody but atari square",
         author: "BaenHoHoHo",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -1612,7 +1612,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Ryg remised",
         author: "BaenHoHoHo",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -1622,7 +1622,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "getdolphinedlol type beat",
         author: "BaenHoHoHo",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -1642,7 +1642,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "echo_testing",
         author: "BaenHoHoHo",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -1652,7 +1652,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "remix of \"please remix this\"",
         author: "BaenHoHoHo",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -1682,7 +1682,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "government funding",
         author: "BaenHoHoHo",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -1702,7 +1702,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "impossible level",
         author: "BaenHoHoHo",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["1k"],
@@ -1802,7 +1802,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "getting better at this stuff",
         author: "Baron Knoxburry",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -1812,7 +1812,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "inside the cornputer",
         author: "Baron Knoxburry",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -1832,7 +1832,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "__ws2.model",
         author: "beep-eep",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -1852,7 +1852,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Sepulchre",
         author: "Blast Brothers",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -1862,7 +1862,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Slouch",
         author: "Blast Brothers",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -1872,7 +1872,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Piece Stacker",
         author: "Blast Brothers",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -1882,7 +1882,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "as esport",
         author: "blower5",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["big"],
@@ -1912,7 +1912,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "a sequencer type thing",
         author: "Bp103",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -1932,7 +1932,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "now its FM synth",
         author: "Bp103",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -1942,7 +1942,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "triangle kick drum and snare",
         author: "Bp103",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -1952,7 +1952,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "random bytebeat thing with delay effect",
         author: "Bp103",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -1962,7 +1962,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bytebeat song 06-15-2021",
         author: "Bp103",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -1982,7 +1982,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "chip box",
         author: "Bp103",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -2002,7 +2002,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Testing stereo",
         author: "Bp103",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["big"],
@@ -2012,7 +2012,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "guitarbeatbyte",
         author: "Bp103",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["big"],
@@ -2062,7 +2062,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "A NΞW DIMΞNSION",
         author: "burlynn n01se",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["1k"],
@@ -2072,7 +2072,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "SΔPPHIRΞ ΞYΞS",
         author: "burlynn n01se",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["1k"],
@@ -2132,7 +2132,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "twenty six",
         author: "cabbage drop",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -2142,7 +2142,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "$ine $tabilizer Ꜧardcore",
         author: "Cattoadishere",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -2172,7 +2172,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "baseline, melody, snare, volume control",
         author: "CC123",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["256"],
@@ -2202,7 +2202,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Warping timeline",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["1k"],
@@ -2212,7 +2212,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Drifting electricity",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -2222,7 +2222,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Game (C R O S S)",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 12288,
         stereo: 0,
         tags: ["1k"],
@@ -2262,7 +2262,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sus4 (Spaaaace!)",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -2272,7 +2272,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Major 7th (even more explorative!)",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -2282,7 +2282,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "destabilizer",
         author: "Chasyxx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 1,
         tags: ["1k"],
@@ -2292,7 +2292,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Game Boy's noise channel emulation",
         author: "Chasyxx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["1k"],
@@ -2302,7 +2302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "nɔmba wan we dɛn rimiks",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["256"],
@@ -2322,7 +2322,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ibniz-like interpreter",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
@@ -2342,7 +2342,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Drum Pattern",
         author: "Chasyxx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -2352,7 +2352,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "( ͡° ͜ʖ ͡°) alternate engine",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -2372,7 +2372,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Government Funding cover",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -2382,7 +2382,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "THE [] BOX",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 1,
         tags: ["big"],
@@ -2392,7 +2392,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "gTrackerNSST+V",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big", "console"],
@@ -2402,7 +2402,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "\"somebody please remix this\" gTracker",
         author: "Chasyxx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big", "console"],
@@ -2412,7 +2412,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Complex number idea",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 1,
         tags: ["big"],
@@ -2422,7 +2422,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "trip to otherworld stereo mix",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 1,
         tags: ["big"],
@@ -2432,7 +2432,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "And the Sun Rose Again",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -2442,7 +2442,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sid function",
         author: "Chasyxx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -2452,7 +2452,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Rhythm Hell",
         author: "Chasyxx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -2462,7 +2462,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "cave_7",
         author: "Chasyxx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 31000,
         stereo: 0,
         tags: ["256"],
@@ -2472,7 +2472,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Cover of \"OMORI OST - Acrophobia\"",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -2482,7 +2482,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ヾ(⌐■_■)ノ400",
         author: "Chasyxx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 40000,
         stereo: 0,
         tags: ["256"],
@@ -2492,7 +2492,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "mandelbrot",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
@@ -2512,7 +2512,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "CRZStepD",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 31000,
         stereo: 0,
         tags: ["256"],
@@ -2522,7 +2522,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "please some remix this out of strings",
         author: "Chasyxx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -2532,7 +2532,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Final Run",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -2542,7 +2542,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Cave_8",
         author: "Chasyxx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 29000,
         stereo: 0,
         tags: ["1k"],
@@ -2582,7 +2582,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bach but with an array",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 38000,
         stereo: 0,
         tags: ["1k"],
@@ -2612,7 +2612,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Galaxies Yet to be Forged",
         author: "Chasyxx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -2712,7 +2712,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "BЯΣΛKXӨЯᄃӨЯΣ and SWAG-75 melody combined",
         author: "ChrisRM380",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -2722,7 +2722,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Kernkraft 400 XOR + Drums Detail",
         author: "ChrisRM380",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -2742,7 +2742,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "\"credits song for my death\" remake",
         author: "ChrisRM380",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 72000,
         stereo: 0,
         tags: ["256"],
@@ -2752,7 +2752,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "attempt to recreate \"boots in bed\"",
         author: "ChrisRM380",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 42500,
         stereo: 0,
         tags: ["1k"],
@@ -2762,7 +2762,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "a really long polyrythm in g major",
         author: "ChrisRM380",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 65536,
         stereo: 0,
         tags: ["1k"],
@@ -2772,7 +2772,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bad apple recreation",
         author: "ChrisRM380",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -2782,7 +2782,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Cover of DEAF KEV - Invincible",
         author: "ChrisRM380",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -2792,7 +2792,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "the remix has been uno reversed",
         author: "ChrisRM380",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 43225,
         stereo: 0,
         tags: ["1k"],
@@ -2802,7 +2802,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "tin tin tin",
         author: "ChrisRM380",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -2812,7 +2812,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "P Synth",
         author: "ciferidn",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -2822,7 +2822,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Remix Of No. 4",
         author: "ciferidn",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["256"],
@@ -2832,7 +2832,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Final Remix Of \"The Time Is Running Out!\"",
         author: "ciferidn",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -2842,7 +2842,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "difficult level",
         author: "computerman113",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -2872,7 +2872,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "NoisecanMinor",
         author: "D3nschøt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -2902,7 +2902,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "empty - 4mat",
         author: "D3nschøt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -2952,7 +2952,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "an update from a post that sounds like dubstep but really isn't supposed to",
         author: "D3nschøt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k", "console"],
@@ -2962,7 +2962,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "update",
         author: "D3nschøt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big", "console"],
@@ -2972,7 +2972,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bright DX",
         author: "D3nschøt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big", "console"],
@@ -3022,7 +3022,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Slant",
         author: "D3nschøt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "console"],
@@ -3032,7 +3032,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "am blue",
         author: "D3nschøt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -3042,7 +3042,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Volume meter",
         author: "D3nschøt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "console"],
@@ -3052,7 +3052,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "something cool i made when i was bored",
         author: "D3nschøt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -3062,7 +3062,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Changsha wip",
         author: "D3nschøt",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -3082,7 +3082,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Changsha Acid Inferno by FΛDE",
         author: "D3nschøt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -3142,7 +3142,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "keyboard",
         author: "D3nschøt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big", "console"],
@@ -3152,7 +3152,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "more keyboard stuff",
         author: "D3nschøt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big", "console"],
@@ -3162,7 +3162,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Kilobyte Khorale",
         author: "damifortune",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["1k"],
@@ -3172,7 +3172,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ByteSongg",
         author: "Danidanijr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "slow"],
@@ -3182,7 +3182,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Red Green Blue 4",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -3202,7 +3202,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Weird Thingy Music 2",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -3232,7 +3232,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Stimmer (Sine Edition)",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -3272,7 +3272,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Sine Music Test 1",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -3282,7 +3282,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "An Escaped War Or Something",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -3302,7 +3302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Melody Of Im Blue (with drums)",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -3322,7 +3322,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Sine Melody",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -3362,7 +3362,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "something music",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -3372,7 +3372,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Still Don't Know The Name",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -3422,7 +3422,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Trash Remix of Cant Help Falling in Love",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -3452,7 +3452,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Air Island",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -3462,7 +3462,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Cocktail Hour Preview",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -3472,7 +3472,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Weebls Stockmarket/Maxwell the Cat Theme",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -3493,7 +3493,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "cyriak's shepard tone",
         author: "Decent-Manager-6169",
         mode: "Bytebeat",
-        sampleRate: 128000,
+        sampleRate: 8000,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3512,7 +3512,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Unfinished Casin",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 58000,
         stereo: 0,
         tags: ["big"],
@@ -3533,7 +3533,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Eerie",
         author: "Decent-Manager-6169",
         mode: "Floatbeat",
-        sampleRate: 128000,
+        sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
         description: "",
@@ -3542,7 +3542,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Trash Remix of Small Mouse",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -3562,7 +3562,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bad minibake recreation using triangle",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -3622,7 +3622,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Unfinished Cocktail Hour",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 64000,
         stereo: 0,
         tags: ["big"],
@@ -3642,7 +3642,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "what the hell did i made",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 70997,
         stereo: 0,
         tags: ["1k"],
@@ -3652,7 +3652,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "what the hell did i just made again?",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 70997,
         stereo: 0,
         tags: ["1k"],
@@ -3662,7 +3662,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "why do i keep making this",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 70997,
         stereo: 0,
         tags: ["256"],
@@ -3682,7 +3682,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Ataritin",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -3702,7 +3702,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "atari thingy v2 (with kicks and hihat)",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -3722,7 +3722,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "why am i still making this?",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 70997,
         stereo: 0,
         tags: ["1k"],
@@ -3732,8 +3732,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Gold-Island Style",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
-        sampleRate: 76458.667,
+        mode: "Bytebeat",
+        sampleRate: 76458,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3742,8 +3742,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "We're Finally Landing Preview",
         author: "Decent-Manager-6169",
-        mode: "Funcbeat",
-        sampleRate: 98304,
+        mode: "Bytebeat",
+        sampleRate: 8000,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3753,7 +3753,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Half Life 2 - Triage at Dawn",
         author: "Decent-Manager-6169",
         mode: "Bytebeat",
-        sampleRate: 29218.133,
+        sampleRate: 29218,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3762,7 +3762,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Adornee - Find the Chomiks OST",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 40000,
         stereo: 0,
         tags: ["big"],
@@ -3772,7 +3772,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Don't know what to name",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 40000,
         stereo: 0,
         tags: ["1k"],
@@ -3803,7 +3803,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Unfinished Accurate Super Mario Bros Underground Theme",
         author: "Decent-Manager-6169",
         mode: "Bytebeat",
-        sampleRate: 54067.2,
+        sampleRate: 54067,
         stereo: 0,
         tags: ["256"],
         description: "",
@@ -3813,7 +3813,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Accurate Super Mario Bros Underground Theme",
         author: "Decent-Manager-6169",
         mode: "Bytebeat",
-        sampleRate: 54067.2,
+        sampleRate: 54067,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3822,7 +3822,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Dear Vienna Instrumental",
         author: "Decent-Manager-6169",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 33000,
         stereo: 0,
         tags: ["1k"],
@@ -3832,7 +3832,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Useless7",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -3853,7 +3853,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Useless1 Sequel",
         author: "Decent-Manager-6169",
         mode: "Bytebeat",
-        sampleRate: 31402.667,
+        sampleRate: 31402,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3863,7 +3863,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Running out of Memory",
         author: "Decent-Manager-6169",
         mode: "Floatbeat",
-        sampleRate: 35498.66666,
+        sampleRate: 35498,
         stereo: 0,
         tags: ["big"],
         description: "",
@@ -3873,7 +3873,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "4",
         author: "Decent-Manager-6169",
         mode: "Bytebeat",
-        sampleRate: 38229.33333,
+        sampleRate: 38229,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3883,7 +3883,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Brazilian Type Melody 4",
         author: "Decent-Manager-6169",
         mode: "Bytebeat",
-        sampleRate: 35498.667,
+        sampleRate: 35498,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3892,8 +3892,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Less than 10 second of a Frozy - Kompa",
         author: "Decent-Manager-6169",
-        mode: "Funcbeat",
-        sampleRate: 26760.5333333333,
+        mode: "Bytebeat",
+        sampleRate: 26760,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3903,7 +3903,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Brazilian Type Beat 9",
         author: "Decent-Manager-6169",
         mode: "Floatbeat",
-        sampleRate: 35498.6666666667,
+        sampleRate: 35498,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3913,7 +3913,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Brazilian Type Beat 11",
         author: "Decent-Manager-6169",
         mode: "Bytebeat",
-        sampleRate: 35498.66666,
+        sampleRate: 35498,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3922,8 +3922,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Brazilian Type Beat 12",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
-        sampleRate: 35498.66666,
+        mode: "Bytebeat",
+        sampleRate: 35498,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3932,8 +3932,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Brazilian Type Beat 13",
         author: "Decent-Manager-6169",
-        mode: "Funcbeat",
-        sampleRate: 35498.66666,
+        mode: "Bytebeat",
+        sampleRate: 35498,
         stereo: 0,
         tags: ["256"],
         description: "",
@@ -3942,8 +3942,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Automotivo 157",
         author: "Decent-Manager-6169",
-        mode: "Funcbeat",
-        sampleRate: 35498.66666,
+        mode: "Bytebeat",
+        sampleRate: 35498,
         stereo: 0,
         tags: ["256"],
         description: "",
@@ -3952,8 +3952,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Less than 4 second of You're Mine",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
-        sampleRate: 35498.66666,
+        mode: "Bytebeat",
+        sampleRate: 35498,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3962,8 +3962,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bee Patrol",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
-        sampleRate: 35498.66666,
+        mode: "Bytebeat",
+        sampleRate: 35498,
         stereo: 1,
         tags: ["big"],
         description: "",
@@ -3973,7 +3973,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Slide CHAOTIC Melódica Remake",
         author: "Decent-Manager-6169",
         mode: "Bytebeat",
-        sampleRate: 38229.333,
+        sampleRate: 38229,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3983,7 +3983,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "MELODIA DO LOUCURA Part",
         author: "Decent-Manager-6169",
         mode: "Floatbeat",
-        sampleRate: 35498.667,
+        sampleRate: 35498,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -3993,7 +3993,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Slide Melódica Bliss Recreate",
         author: "Decent-Manager-6169",
         mode: "Floatbeat",
-        sampleRate: 27306.667,
+        sampleRate: 27306,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -4002,7 +4002,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Pulse Thingy 2",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 24576,
         stereo: 0,
         tags: ["1k"],
@@ -4013,7 +4013,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Ogryzek Glory Thingy",
         author: "Decent-Manager-6169",
         mode: "Bytebeat",
-        sampleRate: 46421.333,
+        sampleRate: 46421,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -4023,7 +4023,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Ogryzek Empire Thingy",
         author: "Decent-Manager-6169",
         mode: "Bytebeat",
-        sampleRate: 33860.267,
+        sampleRate: 33860,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -4043,7 +4043,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "With Brazilian Bubble 2",
         author: "Decent-Manager-6169",
         mode: "Floatbeat",
-        sampleRate: 38229.333,
+        sampleRate: 38229,
         stereo: 0,
         tags: ["256"],
         description: "",
@@ -4052,8 +4052,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "oh man",
         author: "Decent-Manager-6169",
-        mode: "Funcbeat",
-        sampleRate: 26214.4,
+        mode: "Bytebeat",
+        sampleRate: 26214,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -4062,8 +4062,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "corhd 2",
         author: "Decent-Manager-6169",
-        mode: "Funcbeat",
-        sampleRate: 35498.668,
+        mode: "Bytebeat",
+        sampleRate: 35498,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -4072,7 +4072,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Blocked Forever Instrumental Revamp",
         author: "Decent-Manager-6169",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 36864,
         stereo: 0,
         tags: ["big"],
@@ -4083,7 +4083,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "У батарей thingy",
         author: "Decent-Manager-6169",
         mode: "Floatbeat",
-        sampleRate: 33860.266,
+        sampleRate: 33860,
         stereo: 1,
         tags: ["big"],
         description: "",
@@ -4093,7 +4093,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "𝑳𝒐𝒏𝒈 𝑾𝒂𝒓𝒎𝒕𝒉",
         author: "Decent-Manager-6169",
         mode: "Floatbeat",
-        sampleRate: 26214.4,
+        sampleRate: 26214,
         stereo: 1,
         tags: ["big", "slow"],
         description: "",
@@ -4122,7 +4122,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "a new adventure",
         author: "Demari Smith",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["1k"],
@@ -4232,7 +4232,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "The rings",
         author: "Diicorp95",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -4282,7 +4282,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Visitors from the Dark Side",
         author: "Dresdenboy",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -4312,7 +4312,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "crave",
         author: "emelchenko",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -4462,7 +4462,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "First Snow",
         author: "eSlashMachine",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -4472,7 +4472,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Cover of Alone by Marshmello",
         author: "eSlashMachine",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -4482,7 +4482,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "In the Hall of the Mountain King",
         author: "eSlashMachine",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -4573,7 +4573,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "128000 headspace clearer",
         author: "eSlashMachine",
         mode: "Floatbeat",
-        sampleRate: 128000,
+        sampleRate: 8000,
         stereo: 1,
         tags: ["256"],
         description: "",
@@ -4582,7 +4582,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "slumber",
         author: "eSlashMachine",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["1k"],
@@ -4592,7 +4592,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "slumber 2",
         author: "eSlashMachine",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["1k"],
@@ -4822,7 +4822,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "W A R M T H",
         author: "feeshbread",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -4832,7 +4832,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "W A V E S",
         author: "feeshbread",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["big"],
@@ -4872,7 +4872,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "W E L L / T H A T S / L O U D",
         author: "feeshbread",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["1k"],
@@ -4892,7 +4892,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Dead Data early wip",
         author: "feeshbread",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -4942,7 +4942,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "STORM",
         author: "feeshbread",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["big"],
@@ -4952,7 +4952,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bloobls",
         author: "feeshbread",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["1k"],
@@ -4982,7 +4982,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Byte_Tech",
         author: "fendoap",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -4992,7 +4992,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Sounds like distorted teleporter sound from HL2",
         author: "Fenix-F",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["256"],
@@ -5002,7 +5002,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "G Minor Bach Synthwave but faster",
         author: "Firstnameiskowitz",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -5022,7 +5022,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "New instrumental in the new year (happy mix #2)",
         author: "Firstnameiskowitz",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -5042,7 +5042,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "$tereophonic $ine",
         author: "Firstnameiskowitz",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 1,
         tags: ["256"],
@@ -5062,7 +5062,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Trackertime + Small Mouse (Stereo Mix)",
         author: "Firstnameiskowitz",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 1,
         tags: ["1k"],
@@ -5072,7 +5072,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "my headache generator",
         author: "frantic",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -5202,7 +5202,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bloop factory",
         author: "funute",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -5212,7 +5212,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bytebeat? how about bitbeat?",
         author: "funute",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -5222,7 +5222,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "tiny rave",
         author: "funute",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -5232,7 +5232,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "frequency machine",
         author: "funute",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "slow"],
@@ -5242,7 +5242,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "vgm engine",
         author: "funute",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -5252,7 +5252,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "signal stack α",
         author: "funute",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -5262,7 +5262,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "signal stack β",
         author: "funute",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -5392,7 +5392,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Steady On Tim, It's Only A Budget Game",
         author: "Gasman",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -5412,7 +5412,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sequencer",
         author: "GDPlayer_1035",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -5432,7 +5432,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "fire (max zoom)",
         author: "GDPlayer_1035",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -5452,7 +5452,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "thing 2",
         author: "GDPlayer_1035",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -5492,7 +5492,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sin function test",
         author: "GDPlayer_1035",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -5532,7 +5532,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "cool sine wopping music",
         author: "Glebguything",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -5542,7 +5542,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "a music made in school",
         author: "Glebguything",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -5552,7 +5552,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "a robotic voice",
         author: "Glebguything",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -5572,7 +5572,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "random 100c music i made",
         author: "Glebguything",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -5582,7 +5582,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Deurojunk",
         author: "Glebguything",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -5592,7 +5592,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Remix of kernkraft 400",
         author: "Glebguything",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -5622,7 +5622,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Building of metal",
         author: "Glebguything",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k", "console"],
@@ -5692,7 +5692,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Neurofunk, heavyAF breakbeat edition",
         author: "Greaserpirate",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["1k"],
@@ -5702,7 +5702,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Showing off the recombination better",
         author: "Greaserpirate",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -5712,7 +5712,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "I've refined my tools",
         author: "Greaserpirate",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["big"],
@@ -5722,7 +5722,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "THE MOTHERLODE",
         author: "Greaserpirate",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["big"],
@@ -5732,7 +5732,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "a limiter (that also removes offsets)",
         author: "Greaserpirate",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -5742,7 +5742,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Graceful Ache",
         author: "Greaserpirate",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["big"],
@@ -5752,7 +5752,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Step sequencer with interpolation",
         author: "Greaserpirate",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["big"],
@@ -5762,7 +5762,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "quick remix using my usual tech",
         author: "Greaserpirate",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["big"],
@@ -5792,7 +5792,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "how to do echo using array().fill()",
         author: "Greaserpirate",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -5812,7 +5812,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Remix",
         author: "Greaserpirate",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 1,
         tags: ["256"],
@@ -5822,7 +5822,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Remix 3",
         author: "Greaserpirate",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["1k"],
@@ -5842,7 +5842,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "slidy stereo",
         author: "Greaserpirate",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32768,
         stereo: 1,
         tags: ["1k"],
@@ -5882,7 +5882,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Motherlode V2",
         author: "Greaserpirate",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["big"],
@@ -5932,7 +5932,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sonic drowning ost",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -5962,7 +5962,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sketchy attempt of calce",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["256"],
@@ -6002,7 +6002,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "remix of \"Death chase\"",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -6032,7 +6032,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ARRAY 44100HZ SONG",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -6062,7 +6062,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "remix of short simple music",
         author: "hcdphobe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32400,
         stereo: 0,
         tags: ["1k"],
@@ -6072,7 +6072,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "DJ Adding sinewaves",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8100,
         stereo: 0,
         tags: ["256"],
@@ -6093,7 +6093,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Beyond Synthesis",
         author: "hcdphobe",
         mode: "Floatbeat",
-        sampleRate: 192000,
+        sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
         description: "",
@@ -6102,7 +6102,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Small Mouse Remixed",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32400,
         stereo: 0,
         tags: ["1k"],
@@ -6142,7 +6142,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Unfinished/Preview Attack of the Killer Beats",
         author: "hcdphobe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -6152,7 +6152,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Ito ang REBOLUSYON!",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -6202,7 +6202,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "remix of 3DIAL",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -6232,7 +6232,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "jackpost",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -6242,7 +6242,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "SOJRTSS.BYTEBEAT",
         author: "hcdphobe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -6262,7 +6262,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "SAWER-1-UNDEC",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -6272,7 +6272,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "let's go car meme",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -6302,7 +6302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "OH IZ ICE DELTA TIEM",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -6332,7 +6332,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "splatoon splattack song",
         author: "hcdphobe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -6342,7 +6342,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "LC-RESULT",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -6352,7 +6352,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Running breakbeat man",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["256"],
@@ -6362,7 +6362,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "shuric bytebeat scan",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -6372,7 +6372,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "slowlovania",
         author: "hcdphobe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -6392,7 +6392,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "polyphonic nokia bytetone",
         author: "hcdphobe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -6402,7 +6402,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "The Portana",
         author: "hcdphobe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -6412,7 +6412,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "got to remix this at the date ASAP",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -6422,7 +6422,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "svt melody-like interception 2",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -6432,7 +6432,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "VVC!!BIDS",
         author: "hcdphobe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 40000,
         stereo: 0,
         tags: ["1k"],
@@ -6532,7 +6532,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bytebeat cover of \"4mat - empty\"",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big", "console"],
@@ -6542,7 +6542,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "merry xmas bytebeat",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 28000,
         stereo: 0,
         tags: ["256"],
@@ -6582,7 +6582,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "castlevania prologue",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "console"],
@@ -6613,7 +6613,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "SOJRTSS.ARPEGGIOS.FUNCBEAT",
         author: "hcdphobe",
         mode: "Funcbeat",
-        sampleRate: 384000,
+        sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
         description: "",
@@ -6622,7 +6622,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "717c dance",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -6722,7 +6722,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "stereofied + remixed warm edm chords",
         author: "hcdphobe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["1k"],
@@ -6762,7 +6762,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "underbeats",
         author: "hrllobrothers4",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -6782,7 +6782,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "a little cover of versus",
         author: "hrllobrothers4",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -6792,7 +6792,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Simple chord",
         author: "hrllobrothers4",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -6802,7 +6802,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "a remix of atari thingy",
         author: "hrllobrothers4",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["1k"],
@@ -6812,7 +6812,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "CHAOTIC CASTLE",
         author: "hrllobrothers4",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["big", "console"],
@@ -6822,7 +6822,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "beethoven Virus mini cover",
         author: "hrllobrothers4",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -6832,7 +6832,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "MISTERIUM cave rework",
         author: "hrllobrothers4",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 1,
         tags: ["1k"],
@@ -6842,7 +6842,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Cave's mystery V2",
         author: "hrllobrothers4",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["big"],
@@ -6872,7 +6872,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "OVERTIME?! First melody cover",
         author: "hrllobrothers4",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -6882,7 +6882,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "spanish national anthem",
         author: "hrllobrothers4",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -6892,7 +6892,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "GetDolphinedLOL's Bytebeat Creations But Their Badly Remixed",
         author: "HypernovaHeathen",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -6912,7 +6912,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Before J.C.D.",
         author: "HypernovaHeathen",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "slow"],
@@ -6932,7 +6932,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "C. Allen Type Beat",
         author: "HypernovaHeathen",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -6942,7 +6942,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "The Best Bytebeat Song I Made!",
         author: "HypernovaHeathen",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -6952,7 +6952,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "I've Come To Make An Announcement",
         author: "HypernovaHeathen",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "slow"],
@@ -6962,7 +6962,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Terminal 82041 Fans Be Like...",
         author: "HypernovaHeathen",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "slow"],
@@ -6972,7 +6972,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "What Is This Dubstep",
         author: "HypernovaHeathen",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -6982,7 +6982,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "The PEAK Of Human Evolution!",
         author: "HypernovaHeathen",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big", "slow"],
@@ -6992,7 +6992,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Random Bytebeat Loop Song",
         author: "HypernovaHeathen",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -7012,7 +7012,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "hush",
         author: "Icycle-Bycicle-24",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 59000,
         stereo: 0,
         tags: ["big"],
@@ -7022,7 +7022,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Audisual",
         author: "Icycle-Bycicle-24",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -7032,7 +7032,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "filter thingy",
         author: "Icycle-Bycicle-24",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["256"],
@@ -7072,7 +7072,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "1-bit Chords (PrincessPriscillaPT's Amen Break Version)",
         author: "IncreaseRegular",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -7092,7 +7092,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "rain",
         author: "InfinitySnapz",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -7192,7 +7192,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Sine Music v2",
         author: "Jay-Arnett-97104",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["256"],
@@ -7202,7 +7202,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "damnit kf i have to do homework why'd you have to pick now to host a bytebeat ohb",
         author: "Jimmyoshi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["big"],
@@ -7212,7 +7212,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Daydreamer",
         author: "Jimmyoshi",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -7222,7 +7222,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "HITLER-CHANデートシム",
         author: "Jimmyoshi",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["1k"],
@@ -7232,7 +7232,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "511",
         author: "johanvandegriff",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -7302,7 +7302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Derived Greaserpirate's tech to make something really glitchy",
         author: "KaliTheCatgirl",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -7332,7 +7332,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "i made some music for 5 minutes",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -7342,7 +7342,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "cool sinusoidal beat",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -7362,7 +7362,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "fiery sine waveform",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -7392,7 +7392,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "b-trtrrrrrt-eat",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -7402,7 +7402,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ÿ&&",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -7452,7 +7452,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "NO ARRAY ARRAY SONG sin ver",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -7612,7 +7612,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Fault cassette",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -7642,7 +7642,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Noise",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -7652,7 +7652,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Crystal Cave",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -7702,7 +7702,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "engin't",
         author: "kOLbOSa_exe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -7712,7 +7712,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "kotofejka",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 16000,
         stereo: 0,
         tags: ["256"],
@@ -7722,7 +7722,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "TRCK v91623 - farmer type beat",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 16000,
         stereo: 0,
         tags: ["big"],
@@ -7732,7 +7732,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "xy logo",
         author: "kOLbOSa_exe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 63200,
         stereo: 0,
         tags: ["1k"],
@@ -7752,7 +7752,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "visual trackrr",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 16000,
         stereo: 0,
         tags: ["big", "console"],
@@ -7762,7 +7762,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "tracker could execute 3 channels at once",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 16000,
         stereo: 1,
         tags: ["big"],
@@ -7812,7 +7812,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "t&t>>8 waterfall",
         author: "kOLbOSa_exe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256", "console"],
@@ -7832,7 +7832,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bouncing ball",
         author: "kOLbOSa_exe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -7842,7 +7842,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "poor doom gateway",
         author: "kOLbOSa_exe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -7882,7 +7882,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "XO-Tracker: Tsukite Moonhand The Bananafox Theme",
         author: "Kouzerumatsu",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -7902,7 +7902,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bossabeat minified",
         author: "Kouzerumatsu",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -7912,7 +7912,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Adventure's Began - Kouzerumatsukite (v0.2)",
         author: "Kouzerumatsu",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -7922,7 +7922,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Multivoiced RTTTL Player",
         author: "Kouzerumatsu",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32768,
         stereo: 0,
         tags: ["big"],
@@ -8002,7 +8002,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Floatbeat to bytebeat",
         author: "lehandsomeguy",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -8112,7 +8112,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "oddsine",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -8152,7 +8152,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "CBRT-FILE R00TZ",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["1k"],
@@ -8172,7 +8172,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sine of power",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -8202,7 +8202,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "TTT (The Tonal Tone)",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -8212,7 +8212,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ᓯᑯ ᓯᓚ ᑖᖅᑐᒥ ᐆᒻᒪᑦ",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8222,7 +8222,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "octave transition",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -8242,7 +8242,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "CRZstepᑦ",
         author: "lhphr",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -8252,7 +8252,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Retrixtaria",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 4000,
         stereo: 0,
         tags: ["1k"],
@@ -8272,7 +8272,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Positronomia",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["1k"],
@@ -8282,7 +8282,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "wvConstruct",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["256"],
@@ -8292,7 +8292,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "$ine $tabilizer",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -8302,7 +8302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "$ine Ðecrement",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -8312,7 +8312,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "tempotacular!!!",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -8322,7 +8322,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Nocturnizf",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -8332,7 +8332,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Byte Me A Beat",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8362,7 +8362,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sketchy reverb attempt",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k", "slow"],
@@ -8372,7 +8372,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Pyramid Dungeon",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -8382,7 +8382,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "waver",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8422,7 +8422,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Time Is A Suggestion",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -8432,7 +8432,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "uni Firaz",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["256"],
@@ -8462,7 +8462,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "the lone system",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -8472,7 +8472,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Fidelity Tweak",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -8482,7 +8482,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "T!me Tr!al",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -8512,7 +8512,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "3DIAL",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -8522,7 +8522,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "T!me Tr!al EX",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8542,8 +8542,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ghost code",
         author: "lhphr",
-        mode: "Floatbeat",
-        sampleRate: 1e+38,
+        mode: "Bytebeat",
+        sampleRate: 8000,
         stereo: 0,
         tags: ["1k"],
         description: "Where's the visuals?",
@@ -8552,7 +8552,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Δ",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8562,7 +8562,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Penultimate Dawn of Time Stability",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8572,7 +8572,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "WICKED HEXATRNION",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -8592,7 +8592,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "polydimension",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["1k"],
@@ -8602,7 +8602,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Reminisce",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -8612,7 +8612,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ESC▲L▲↑OR P▲R↑Y",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8622,7 +8622,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bŽk",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8642,7 +8642,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Sequencemania",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8652,7 +8652,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ÐiskΩtroÑ",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 9930,
         stereo: 0,
         tags: ["256"],
@@ -8672,7 +8672,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "enemy spider",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8692,7 +8692,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "qai",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -8732,7 +8732,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Awaiting Connection",
         author: "lhphr",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8752,7 +8752,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Doomcall",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -8762,7 +8762,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Trackertime",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -8772,7 +8772,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Trackermystics",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8782,7 +8782,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "HARSHSLICE",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -8802,7 +8802,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "autochxrded",
         author: "lhphr",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -8812,7 +8812,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "C0D3R4V3",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -8822,7 +8822,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "skyrnpqriy",
         author: "lhphr",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -8862,7 +8862,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ventures",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -8872,7 +8872,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "name melody",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -8882,7 +8882,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Niarix Visions",
         author: "lhphr",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -8892,7 +8892,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Takitjää",
         author: "Lia",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -8902,7 +8902,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "here enjoy some choords I made :)",
         author: "LJ",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -8962,7 +8962,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Something New",
         author: "maj-6",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -8972,7 +8972,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "\"Something New\" using functions",
         author: "maj-6",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -8982,7 +8982,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "advanced technology",
         author: "maj-6",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["big"],
@@ -8992,7 +8992,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Kevvviiinnnn Stage 39",
         author: "MarioFan171",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48400,
         stereo: 1,
         tags: ["big"],
@@ -9022,7 +9022,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Ｓｙｎｔｈｗａｖｉｆｉｅｄ",
         author: "MarioFan171",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -9032,7 +9032,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Warm EDM Chords",
         author: "MarioFan171",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -9092,7 +9092,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Lyric Machine",
         author: "MarioFan171",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["big", "console"],
@@ -9102,7 +9102,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Lyric Machine v2.0",
         author: "MarioFan171",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["big", "console"],
@@ -9232,7 +9232,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Slowed \"Sine Melody\" down and added a chord progression",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 1,
         tags: ["1k"],
@@ -9242,7 +9242,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Stuck a Sierpinski bassline on \"Im Blue\"",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -9262,7 +9262,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bytebeat Concerto No. 1",
         author: "May_I_Change_My_Name",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["1k"],
@@ -9272,7 +9272,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Ievan Bytebeat Polkka",
         author: "May_I_Change_My_Name",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["1k"],
@@ -9302,7 +9302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Meet the Musician",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 10000,
         stereo: 0,
         tags: ["1k"],
@@ -9312,7 +9312,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "0xBADA441E",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 20000,
         stereo: 1,
         tags: ["big"],
@@ -9322,7 +9322,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Remix of \"My new instrumental in a new year\"",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -9332,7 +9332,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Poker Face",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -9342,7 +9342,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "CAT-GIRL Alternate Rhythm",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -9352,7 +9352,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ok",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -9362,7 +9362,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Empty 512 Chars",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 21500,
         stereo: 0,
         tags: ["1k"],
@@ -9382,7 +9382,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "0xBADA441E chiptune version",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 20000,
         stereo: 1,
         tags: ["big"],
@@ -9392,8 +9392,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bad Apple animation with melody",
         author: "May_I_Change_My_Name",
-        mode: "Funcbeat",
-        sampleRate: 256000,
+        mode: "Bytebeat",
+        sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
         description: "Implementation of the first frames. Set \"Points\" mode and zoom to 1/32 on monitors, or 1/64 on phones.",
@@ -9402,7 +9402,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "SID \"Autochord\" Effect",
         author: "May_I_Change_My_Name",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -9422,7 +9422,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Pizza Time",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -9432,7 +9432,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Trivial Interpolated Pitch",
         author: "May_I_Change_My_Name",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -9452,7 +9452,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Music Theorists Rejoice!",
         author: "May_I_Change_My_Name",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -9462,7 +9462,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "An Extended Instrumental in a Long Year",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -9472,7 +9472,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Pitch Fixer Function",
         author: "May_I_Change_My_Name",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -9492,7 +9492,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Every Breath You Take",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 40000,
         stereo: 1,
         tags: ["1k"],
@@ -9532,7 +9532,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Playback Speed Effect",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["big"],
@@ -9592,7 +9592,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sure",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["1k"],
@@ -9662,7 +9662,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bytebeat FFT",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["1k"],
@@ -9752,7 +9752,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "OVERTIME?! with the chords",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -9762,7 +9762,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "I got bored too",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -9792,7 +9792,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Doppler Effect",
         author: "May_I_Change_My_Name",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["256"],
@@ -9802,7 +9802,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "347 BEATSTEP INC.",
         author: "mega9man",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["1k"],
@@ -9872,7 +9872,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "hardcore bass",
         author: "mineralcoinboi224",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -9882,7 +9882,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "industrial doom",
         author: "mirageofher",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -9892,7 +9892,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Stimmer but i added drums",
         author: "MT2023",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["256"],
@@ -9902,7 +9902,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Very Hard Level",
         author: "MT2023",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -9962,7 +9962,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "distorsioned guitar",
         author: "MT2023",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -9992,7 +9992,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "42 melody with distorsioned guitar style",
         author: "MT2023",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -10042,7 +10042,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "i am in lil' panic",
         author: "MT2023",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -10102,7 +10102,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Good old fractal melody but it has a kick and drum and the pattern changes",
         author: "MT2023",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["1k", "console"],
@@ -10242,7 +10242,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "first bytebeat remixed",
         author: "NewFall2020",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -10332,7 +10332,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "TIRO Remixed#6 remastered",
         author: "NewFall2020",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -10342,7 +10342,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "simple step sequencer remix #2",
         author: "NewFall2020",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -10452,7 +10452,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "all 'board the ole steam boat",
         author: "Noah Lovotti",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -10522,8 +10522,8 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "samplerate detector",
         author: "orion_aboy",
-        mode: "Funcbeat",
-        sampleRate: 100000,
+        mode: "Bytebeat",
+        sampleRate: 8000,
         stereo: 0,
         tags: ["256", "console"],
         description: "",
@@ -10532,7 +10532,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "song chooser",
         author: "orion_aboy",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k", "console"],
@@ -10562,7 +10562,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Recreating a song by Maktone",
         author: "Own_Trust_5709",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 34200,
         stereo: 0,
         tags: ["big"],
@@ -10592,7 +10592,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Cracklebass [141 BPM bytebeat edit]",
         author: "Pestis",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -10602,7 +10602,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Excerpt from Uke Song",
         author: "Pestis",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -10642,7 +10642,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "War Tradition",
         author: "petet",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -10662,7 +10662,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Last Fountain",
         author: "pigdevil2010",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -10752,7 +10752,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "super creepy tornado sound effect with EAS included",
         author: "PortablePorcelain",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -10772,7 +10772,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Doom E1M1 theme recreation",
         author: "PortablePorcelain",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["1k"],
@@ -10802,7 +10802,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "TIRO remix",
         author: "PortablePorcelain",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -10813,7 +10813,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "remix of crude sinewave dubstep",
         author: "PortablePorcelain",
         mode: "Signed Bytebeat",
-        sampleRate: 169000,
+        sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
         description: "",
@@ -10822,7 +10822,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Second remix of Wiretapped",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 75000,
         stereo: 0,
         tags: ["256"],
@@ -10832,7 +10832,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bassline remix",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 72000,
         stereo: 0,
         tags: ["256"],
@@ -10842,7 +10842,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "\"squsinsaw\" remix",
         author: "PortablePorcelain",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -10852,7 +10852,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "some detective theme",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -10882,7 +10882,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "We are temporally deficient!",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 36000,
         stereo: 0,
         tags: ["256"],
@@ -10892,7 +10892,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "simple step sequencer remix",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -10932,7 +10932,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sparta remix chord progression",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -11022,7 +11022,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "heavyAF breakbeat + atari thingy + other Greaserpirate stuff",
         author: "PortablePorcelain",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 30000,
         stereo: 0,
         tags: ["1k"],
@@ -11052,7 +11052,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "midi test 4",
         author: "PortablePorcelain",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -11062,7 +11062,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "midi test 5 (sparta remix)",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8333,
         stereo: 0,
         tags: ["big"],
@@ -11072,7 +11072,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Poorly made Ryukenden",
         author: "PortablePorcelain",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["big"],
@@ -11132,7 +11132,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "tracker test",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
@@ -11252,7 +11252,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "filter thing",
         author: "PortablePorcelain",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -11262,7 +11262,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "filtered arpeg",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -11302,7 +11302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "fimmer (stimmer with resonance filter applied)",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -11352,7 +11352,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "the person that i am directly referring to is currently a visible hue with a high frequency wavelength",
         author: "PortablePorcelain",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -11392,7 +11392,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Polyrhythm thing",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -11412,7 +11412,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Electrobliterated",
         author: "PortablePorcelain",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -11442,7 +11442,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "messing with floating point precision",
         author: "PortablePorcelain",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 10000,
         stereo: 0,
         tags: ["1k"],
@@ -11452,7 +11452,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Another Xor-based Dubstep",
         author: "PortablePorcelain",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -11522,7 +11522,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ZX Spectrum Chasing Moonlight",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -11582,7 +11582,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Cheerful Transmission incoming !!!",
         author: "pouale",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -11643,7 +11643,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Turned it into 'Dance In Square Machine'",
         author: "PrincessPriscillaPT",
         mode: "Signed Bytebeat",
-        sampleRate: 67719.08866,
+        sampleRate: 67719,
         stereo: 0,
         tags: ["big"],
         description: "",
@@ -11652,7 +11652,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "My Remix of 'Hush'",
         author: "PrincessPriscillaPT",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 54612,
         stereo: 0,
         tags: ["big"],
@@ -11662,7 +11662,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bassline",
         author: "PrincessPriscillaPT",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 40959,
         stereo: 0,
         tags: ["1k"],
@@ -11693,7 +11693,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Famous 600k",
         author: "PrincessPriscillaPT",
         mode: "Signed Bytebeat",
-        sampleRate: 60073.387,
+        sampleRate: 60073,
         stereo: 1,
         tags: ["big"],
         description: "A Battle for BFDI/BFB song",
@@ -11743,7 +11743,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Pitch Interpolation Tutorial",
         author: "PrincessPriscillaPT",
         mode: "Signed Bytebeat",
-        sampleRate: 67719.086,
+        sampleRate: 67719,
         stereo: 0,
         tags: ["big"],
         description: "",
@@ -11763,7 +11763,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "BFDI Ep.3 w/ Pitch Interpolation",
         author: "PrincessPriscillaPT",
         mode: "Signed Bytebeat",
-        sampleRate: 34951.789,
+        sampleRate: 34951,
         stereo: 0,
         tags: ["256"],
         description: "",
@@ -11773,7 +11773,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "useless1 but in Slide Meodica Bliss",
         author: "PrincessPriscillaPT",
         mode: "Floatbeat",
-        sampleRate: 67719.086,
+        sampleRate: 67719,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -11813,7 +11813,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "good old fractal melody with zackx tech",
         author: "PrincessPriscillaPT",
         mode: "Signed Bytebeat",
-        sampleRate: 39824.254,
+        sampleRate: 39824,
         stereo: 1,
         tags: ["256"],
         description: "",
@@ -11883,7 +11883,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "G R A N D D A D ? !",
         author: "PrincessPriscillaPT",
         mode: "Bytebeat",
-        sampleRate: 39824.254,
+        sampleRate: 39824,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -11923,7 +11923,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Sure thing!",
         author: "PrincessPriscillaPT",
         mode: "Signed Bytebeat",
-        sampleRate: 38229.333,
+        sampleRate: 38229,
         stereo: 0,
         tags: ["1k"],
         description: "",
@@ -12012,7 +12012,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "good old fractal melody but sin version",
         author: "psubscirbe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -12042,7 +12042,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "mkh",
         author: "psubscirbe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["256"],
@@ -12102,7 +12102,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "im actually proud of this one",
         author: "psubscirbe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["256"],
@@ -12132,7 +12132,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ayyturned seven hundred seventy-seven realmix",
         author: "psubscirbe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -12172,7 +12172,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "enjoy some drums *_*",
         author: "psubscirbe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -12182,7 +12182,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "folded 100%",
         author: "psubscirbe",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -12222,7 +12222,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Brain aneurysm",
         author: "psubscirbe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -12252,7 +12252,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bubble Bobble (NES) - Invincibility",
         author: "psubscirbe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -12262,7 +12262,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "slow bomberman",
         author: "psubscirbe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -12272,7 +12272,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Desert Land - Super Mario Bros. 3 (w/o DPCM/DMC)",
         author: "psubscirbe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -12292,7 +12292,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "innocent",
         author: "psubscirbe",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -12302,7 +12302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Megalovania - Undertale",
         author: "PurpuroNovo",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
@@ -12312,7 +12312,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bora tomar uma",
         author: "PurpuroNovo",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -12452,7 +12452,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Trill",
         author: "r/bytebeat",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -12462,7 +12462,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "horror echo sounds",
         author: "r/bytebeat",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -12492,7 +12492,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "I could not explain this to the IT dept",
         author: "radian",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["1k"],
@@ -12512,7 +12512,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "the cute bytebeast ^o^",
         author: "raphaelgoulart",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["big"],
@@ -12522,7 +12522,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "1k dance",
         author: "raphaelgoulart",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["1k"],
@@ -12542,7 +12542,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ripthisentry.txt, tune#3",
         author: "raphaelgoulart",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -12572,7 +12572,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "cool loop i guess",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -12602,7 +12602,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "dubstep_thingy",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -12612,7 +12612,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "another cool loop i guess",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -12622,7 +12622,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "cool dubstep song",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -12642,7 +12642,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "probably the best song i ever made",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -12702,7 +12702,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "better remix of \"The time is running out!\"",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -12712,7 +12712,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "remix of \"first bytebeat remixed\"",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -12722,7 +12722,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "fm synth, i guess...?",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -12752,7 +12752,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "\"wow that was pretty cool\" remixed",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -12782,7 +12782,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "zynx92 type beat remixed",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -12802,7 +12802,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "goofy ahh noises",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -12872,7 +12872,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "1-bit chords",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -12882,7 +12882,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "1-bit chords (amen break version)",
         author: "RealZynx92",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -13032,7 +13032,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bots",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -13182,7 +13182,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "pootis",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -13212,7 +13212,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "f",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -13222,7 +13222,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "w",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -13262,7 +13262,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "chocolate chip bytebeat code",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -13272,7 +13272,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "( ͡° ͜ʖ ͡°)",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["256"],
@@ -13282,7 +13282,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "grogrogilla",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -13302,7 +13302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "l(ast)",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -13312,7 +13312,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "snaerasrakd",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -13322,7 +13322,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "music ...yes",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 40000,
         stereo: 0,
         tags: ["256"],
@@ -13332,7 +13332,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Vegal *A N G E R Y*",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 12288,
         stereo: 0,
         tags: ["256"],
@@ -13342,7 +13342,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "funni music",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -13372,7 +13372,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "a$$ music",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -13402,7 +13402,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "the platonic solids",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -13472,7 +13472,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "frodo and the magic weed",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -13492,7 +13492,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "moj pas je se popiškija u cijelu moju kuču",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 6000,
         stereo: 0,
         tags: ["256"],
@@ -13502,7 +13502,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "remix of sthephanshi's thing",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32768,
         stereo: 0,
         tags: ["256"],
@@ -13512,7 +13512,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "his name gort",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["256"],
@@ -13522,7 +13522,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "cool music",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 10500,
         stereo: 0,
         tags: ["256"],
@@ -13552,7 +13552,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "łłŁŁŁłł",
         author: "rubi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -13662,7 +13662,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "7 Channels",
         author: "Salty_Formal5291",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -13682,7 +13682,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "menacing",
         author: "SArpnt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -13692,7 +13692,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "arpeggiator fun",
         author: "SArpnt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -13702,7 +13702,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Sync noise synth",
         author: "SArpnt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -13732,7 +13732,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "nose grind",
         author: "SArpnt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -13822,7 +13822,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "alright fine",
         author: "SArpnt",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -13852,7 +13852,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bit-Shift Melodies",
         author: "Savestate",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -13862,7 +13862,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Earl Grey Groove",
         author: "Savestate",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
@@ -13902,7 +13902,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "factory settings",
         author: "sean",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -13912,7 +13912,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sleepmode stasis",
         author: "sean",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["1k"],
@@ -13982,7 +13982,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Minor Frere Jaques",
         author: "Senzou4770",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -14182,7 +14182,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "i mashed my keyboard",
         author: "SleepingLugia",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -14982,7 +14982,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Frozen Planet",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -14992,7 +14992,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Antarctica",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -15002,7 +15002,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "End of Ice Age",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -15012,7 +15012,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Dancing Moon",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -15022,7 +15022,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "\"Something New\" synchronized",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -15042,7 +15042,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Dark Forest",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -15052,7 +15052,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Chase in the Forest",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -15062,7 +15062,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Small Mouse",
         author: "SthephanShi",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -15072,7 +15072,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Mouse Festival",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -15142,7 +15142,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Trip to Otherworld",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -15152,7 +15152,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Through the Star System",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["big", "slow"],
@@ -15222,7 +15222,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Wanderer",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -15232,7 +15232,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Space Bandits",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -15242,7 +15242,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Snowstorm",
         author: "SthephanShi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -15342,7 +15342,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bytebeat cover of \"Noisy Pillars tune 1\" by Jeroen Tel",
         author: "Sychamis",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -15352,7 +15352,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "An attempt at covering Cocktail Hour by FΛDE",
         author: "Sychamis",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -15362,7 +15362,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Commando High Score",
         author: "Sychamis",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -15462,7 +15462,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Feel the Bit!",
         author: "TomCat",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -15512,7 +15512,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "tetris cover",
         author: "TrashImpossible3699",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -15522,7 +15522,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "165 char bytebeat code",
         author: "TrashImpossible3699",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 16000,
         stereo: 0,
         tags: ["256"],
@@ -15542,7 +15542,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "airpod shotty",
         author: "TrashImpossible3699",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -15552,7 +15552,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "let there be silence",
         author: "TrashImpossible3699",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -15562,7 +15562,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "this runs perfectly",
         author: "TrashImpossible3699",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -15572,7 +15572,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Depp - bytebeat cover",
         author: "TrashImpossible3699",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 16000,
         stereo: 0,
         tags: ["big"],
@@ -15582,7 +15582,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "3-stringed FM guitar",
         author: "TrashImpossible3699",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -15592,7 +15592,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Simple Cross Sequencer demo",
         author: "TrashImpossible3699",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -15602,7 +15602,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Q",
         author: "TrashImpossible3699",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -15622,7 +15622,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Whoopsie Beepers!",
         author: "TrashImpossible3699",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -15652,7 +15652,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "alf theme (orchestra ver.)",
         author: "TrashImpossible3699",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -15682,7 +15682,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "still landing",
         author: "troubleshootcorps",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 49152,
         stereo: 0,
         tags: ["1k"],
@@ -15952,7 +15952,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Epic scene of war",
         author: "Two2Fall",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -15972,7 +15972,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "That time is not running out",
         author: "Two2Fall",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -15982,7 +15982,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "a cover of a song i made on beepbox",
         author: "Two2Fall",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 33000,
         stereo: 0,
         tags: ["big"],
@@ -15992,7 +15992,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Bad ending theme",
         author: "Two2Fall",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 33000,
         stereo: 0,
         tags: ["1k"],
@@ -16012,7 +16012,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Chords",
         author: "Two2Fall",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 33000,
         stereo: 0,
         tags: ["256"],
@@ -16183,7 +16183,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "cave",
         author: "Weird_Arg2",
         mode: "Floatbeat",
-        sampleRate: 100000,
+        sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
         description: "",
@@ -16302,7 +16302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Cascade",
         author: "WoolWL",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -16312,7 +16312,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Electric anthem",
         author: "WoolWL",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -16382,7 +16382,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Constructing a Melody in One Line",
         author: "Yamden",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
@@ -16412,7 +16412,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Lovely Tune",
         author: "Yamden",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
@@ -16482,7 +16482,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "happybeat",
         author: "Yung Gotenks",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "slow"],
@@ -16492,7 +16492,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Synthwave G minor Bach",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 26900,
         stereo: 0,
         tags: ["1k"],
@@ -16542,7 +16542,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Adding sinewave",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -16552,7 +16552,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bytesnare",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -16572,7 +16572,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Adding beat",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -16582,7 +16582,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "PWM MUISC remix",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -16632,7 +16632,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "My new instrumental in new year",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -16682,7 +16682,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "the coolest song",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -16732,7 +16732,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "DJ running man",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -16742,7 +16742,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "DJ running man#3",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -16752,7 +16752,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "DJ kernkraft 400",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 10000,
         stereo: 0,
         tags: ["256"],
@@ -16772,7 +16772,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "remix of \"Cat-girl\". Nya (＾• ω •＾)",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -16782,7 +16782,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Workout Ctrl+V",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -16792,7 +16792,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "DJ \"Fanfare?\"",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["256"],
@@ -16802,7 +16802,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "ПΣЦЯӨBΣΛƬ",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -16812,7 +16812,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "VL-tone rhythm with beat",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -16832,7 +16832,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "inside castle",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -16842,7 +16842,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "battle castle",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["big"],
@@ -16852,7 +16852,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "DJ harmony",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 10000,
         stereo: 0,
         tags: ["256"],
@@ -16872,7 +16872,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Works as evil",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -16882,7 +16882,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "City night",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 1,
         tags: ["1k"],
@@ -16892,7 +16892,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Synthwave remis",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -16902,7 +16902,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "PWM",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -16912,7 +16912,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "X100X",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 40000,
         stereo: 0,
         tags: ["256"],
@@ -16922,7 +16922,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "epic coolest",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -16932,7 +16932,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "squ + delay effect",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 70997,
         stereo: 0,
         tags: ["1k"],
@@ -16942,7 +16942,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "DJ techno",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 13000,
         stereo: 0,
         tags: ["256"],
@@ -16952,7 +16952,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "nightmare in castle",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -16962,7 +16962,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "what i making in midnight (harmony)",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -16972,7 +16972,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "what i making in midnight (squarewave)",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 55600,
         stereo: 0,
         tags: ["1k"],
@@ -16982,7 +16982,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "time leap",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -16992,7 +16992,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "( ͡° ͜ʖ ͡°) #2",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["1k"],
@@ -17002,7 +17002,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "crazy noise beat + ( ͡° ͜ʖ ͡°) #2 stereo mix",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 1,
         tags: ["1k"],
@@ -17022,7 +17022,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "LET'S PARTY EVERYONE!!!!!!!!!!",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -17052,7 +17052,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "a remix of \"PARTY!\"",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 37500,
         stereo: 0,
         tags: ["256"],
@@ -17062,7 +17062,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "funny hardcore song",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 38000,
         stereo: 0,
         tags: ["256"],
@@ -17072,7 +17072,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "hardcore bass",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -17082,7 +17082,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "the ryg",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -17092,7 +17092,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "STAY",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -17102,7 +17102,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "happy thing with long sierpinski harmony",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["1k"],
@@ -17112,7 +17112,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Still Don't Know The Name + drums",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -17122,7 +17122,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "unnamed song hardcore remix",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -17132,7 +17132,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "drums detail",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -17142,7 +17142,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "BЯΣΛKXӨЯᄃӨЯΣ",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -17152,7 +17152,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Morning day",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 1,
         tags: ["1k"],
@@ -17172,7 +17172,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Melody XOR breakcore",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -17242,7 +17242,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "BM9 harmony speed up with drum",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44400,
         stereo: 0,
         tags: ["256"],
@@ -17252,7 +17252,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "( ͡° ͜ʖ ͡°) breakcore",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44400,
         stereo: 0,
         tags: ["1k"],
@@ -17262,7 +17262,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "neurobreakcore",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -17272,7 +17272,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Hard level with drum",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["1k"],
@@ -17292,7 +17292,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Discobreakcore",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 39720,
         stereo: 0,
         tags: ["1k"],
@@ -17302,7 +17302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "halloween G minor bach",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 38000,
         stereo: 0,
         tags: ["1k"],
@@ -17312,7 +17312,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Future car",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -17322,7 +17322,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "multi channel with function",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["256"],
@@ -17342,7 +17342,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "U.N. owen was her? (melody)",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -17352,7 +17352,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "we land on mars (SID machine)",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -17362,7 +17362,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "night of nights (flowering night)",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -17372,7 +17372,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "o(^▽^)┛",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -17382,7 +17382,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Megalovania remix",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 35500,
         stereo: 0,
         tags: ["1k"],
@@ -17402,7 +17402,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "START!",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -17422,7 +17422,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Frère Jacques/Brother John",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -17442,7 +17442,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Spring park",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 40000,
         stereo: 0,
         tags: ["256"],
@@ -17452,7 +17452,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "some rave",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 50000,
         stereo: 0,
         tags: ["256"],
@@ -17462,7 +17462,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "boss incoming!",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["1k"],
@@ -17482,7 +17482,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bad apple + mrbeast sample (PCM)",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 16000,
         stereo: 0,
         tags: ["big", "sample"],
@@ -17522,7 +17522,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "MӨӨПƧᄃΛППΣЯ",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -17572,7 +17572,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sleepless nights",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -17582,7 +17582,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "cherry blossom",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -17592,7 +17592,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "stars racing",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -17602,7 +17602,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "exsynth sequences song",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -17692,7 +17692,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Falling snow",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -17702,7 +17702,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Blue Da Ba Dee",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 38000,
         stereo: 0,
         tags: ["256"],
@@ -17712,7 +17712,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "frodo and the magic weed disco remix",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -17722,7 +17722,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "TECH2054",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -17752,7 +17752,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Techno Syndrome - MORTAL KOMBAT!",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -17762,7 +17762,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "fly into sky",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["256"],
@@ -17772,7 +17772,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "return on the earth",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 34200,
         stereo: 0,
         tags: ["1k"],
@@ -17802,7 +17802,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "return on the earth (extended mix)",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -17822,7 +17822,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Desire drive (early version)",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["256"],
@@ -17862,7 +17862,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Desire drive",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 42000,
         stereo: 0,
         tags: ["1k"],
@@ -17892,7 +17892,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Remix of \"credits song for my death\"",
         author: "Zackx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["1k"],
@@ -18232,7 +18232,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bitcrushed amen break (44100hz version)",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "sample"],
@@ -18242,7 +18242,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "sparta remix with amen break",
         author: "awogler9124812041",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 16000,
         stereo: 0,
         tags: ["big", "sample"],
@@ -18252,7 +18252,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "pcm support to the midi to bytebeat tool",
         author: "awogler9124812041",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "sample"],
@@ -18282,7 +18282,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "gTrackerNSST: Bad apple port",
         author: "Chasyxx",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big", "console"],
@@ -18292,7 +18292,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Messing around with PCM",
         author: "D3nschøt",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -18302,7 +18302,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "byte-sized rhapsody",
         author: "damifortune",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -18312,7 +18312,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "another pcm test",
         author: "GDPlayer_1035",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["big"],
@@ -18322,7 +18322,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Spring Fever",
         author: "Jimmyoshi",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "slow"],
@@ -18332,7 +18332,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "I Wanna Byte You",
         author: "kleeder",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["big", "slow"],
@@ -18342,7 +18342,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Pixel Rainfall",
         author: "kleeder",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -18382,7 +18382,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Badder Apple",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 61440,
         stereo: 1,
         tags: ["big"],
@@ -18392,7 +18392,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Thrown Apple",
         author: "May_I_Change_My_Name",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 30720,
         stereo: 1,
         tags: ["big", "console"],
@@ -18443,7 +18443,7 @@ export const BYTEBEAT_LIBRARY = [
         name: "Bad Apple Gift Cards",
         author: "PortablePorcelain",
         mode: "Bytebeat",
-        sampleRate: 128000,
+        sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
         description: "Bad Apple animation. Set \"Points\" mode and zoom to 1/4 on monitors, or 1/8 on phones.",
@@ -18452,7 +18452,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Famicom Disk System registers in Bytebeat",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -18462,7 +18462,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "IBM PC Speaker",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -18472,7 +18472,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Silver Surfer NES - Stage 1",
         author: "PortablePorcelain",
-        mode: "Funcbeat",
+        mode: "Bytebeat",
         sampleRate: 48000,
         stereo: 0,
         tags: ["big"],
@@ -18482,7 +18482,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Multi-voice ByteBeat",
         author: "Radnyx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 8000,
         stereo: 0,
         tags: ["big"],
@@ -18492,7 +18492,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "Impromptu (Diatom)",
         author: "Radnyx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big"],
@@ -18502,7 +18502,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bossabeat",
         author: "raphaelgoulart",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big"],
@@ -18512,7 +18512,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bytefunk",
         author: "raphaelgoulart",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 22050,
         stereo: 0,
         tags: ["big"],
@@ -18522,7 +18522,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "shy smile",
         author: "raphaelgoulart",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 44100,
         stereo: 0,
         tags: ["big", "slow"],
@@ -18632,7 +18632,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "the bit shuffle",
         author: "Yung Gotenks",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 11025,
         stereo: 0,
         tags: ["big", "slow"],
@@ -18652,7 +18652,7 @@ export const BYTEBEAT_LIBRARY = [
     {
         name: "bomb has been planted",
         author: "Zackx",
-        mode: "Floatbeat",
+        mode: "Bytebeat",
         sampleRate: 32000,
         stereo: 0,
         tags: ["big", "sample"],
