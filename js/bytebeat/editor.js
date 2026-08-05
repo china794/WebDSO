@@ -152,21 +152,32 @@ export function initBytebeatEditor(ta, nums, hl, minHeight = 160) {
     const CHAR_W = 7.801;
     const WRAP_SAFETY = 0.92; // 实测 848px 宽实际每行 ~100 字符, 理论 108.7, 系数 ~0.92
 
+    /** 容器内容宽度: textarea clientWidth - padding 左右 (46 + 10) */
+    function contentWidth() {
+        return Math.max(80, (ta.clientWidth || 280) - 56);
+    }
+
+    /** 每行可容纳字符数 (基于容器宽度 + 等宽字符宽 + 安全系数) */
+    function charsPerVisualLine() {
+        return Math.max(10, Math.floor(contentWidth() / CHAR_W * WRAP_SAFETY));
+    }
+
+    /** 单行的视觉折行数 (长行 wrap 成多行, 至少 1) */
+    function visualRowsOfLine(line) {
+        const cpl = charsPerVisualLine();
+        // 按字符数估算折行 (tab 按 4 字符算, 中文等宽字符忽略)
+        const eff = line.length + (line.match(/\t/g) || []).length * 3;
+        return Math.max(1, Math.ceil(eff / cpl));
+    }
+
     /**
-     * 估算每行的视觉折行数: 长行会 wrap 成多行, 光数 \n 不够。
+     * 估算整段代码的视觉行总数: 长行会 wrap 成多行, 光数 \n 不够。
      * 基于容器实际宽度 + 等宽字符宽 + 安全系数, 保证长行粘贴后输入框撑够高度。
      */
     function visualLineCount(text) {
-        // 容器内容宽度: textarea clientWidth - padding 左右 (46 + 10)
-        const availW = Math.max(80, (ta.clientWidth || 280) - 56);
-        const charsPerLine = Math.max(10, Math.floor(availW / CHAR_W * WRAP_SAFETY));
         let count = 0;
         const lines = text.split('\n');
-        for (const line of lines) {
-            // 按字符数估算折行 (tab 按 4 字符算, 中文等宽字符忽略)
-            const eff = line.length + (line.match(/\t/g) || []).length * 3;
-            count += Math.max(1, Math.ceil(eff / charsPerLine));
-        }
+        for (const line of lines) count += visualRowsOfLine(line);
         return count;
     }
 
@@ -179,17 +190,28 @@ export function initBytebeatEditor(ta, nums, hl, minHeight = 160) {
         ta.style.height = h + 'px';
     }
 
-    /** 渲染行号 + 高亮 */
+    /** 渲染行号 + 高亮
+     * 行号栏按视觉折行渲染: 每行折成 N 个视觉行, 行号栏对应 N 个元素
+     * (首个显示行号, 后续折行空占位), 保证行号与视觉行垂直对齐不错位。 */
     function render() {
         // 高亮
         hl.innerHTML = tokenizeToHtml(ta.value);
 
-        // 行号
+        // 行号 (按视觉折行)
         const lines = ta.value.split('\n');
         let numsHtml = '';
         const caretLine = getCaretLine();
+        let visualRow = 0;
         for (let i = 0; i < lines.length; i++) {
-            numsHtml += '<span class="bb-ln' + (i === caretLine ? ' current' : '') + '">' + (i + 1) + '</span>';
+            const rows = visualRowsOfLine(lines[i]);
+            for (let r = 0; r < rows; r++) {
+                const isFirstOfRow = r === 0;
+                const isCaret = (i === caretLine && r === 0);
+                numsHtml += '<span class="bb-ln' + (isCaret ? ' current' : '') + '">'
+                    + (isFirstOfRow ? (i + 1) : '&nbsp;')
+                    + '</span>';
+                visualRow++;
+            }
         }
         nums.innerHTML = numsHtml;
     }
