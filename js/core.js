@@ -113,11 +113,6 @@ const uiState = {
         x: 0,
         y: 0
     },
-    math: {
-        enabled: false,
-        operation: 'add',
-        data: null
-    },
     refWave: {
         active: false,
         ch: 1,

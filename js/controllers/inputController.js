@@ -164,25 +164,6 @@ export function initInputController() {
         if (STATE.cursor.mode === 0) this.classList.remove('active'); else this.classList.add('active');
     });
 
-    // Math 数学运算
-    if (DOM.btnMath) {
-        DOM.btnMath.addEventListener('click', function () {
-            STATE.math.enabled = !STATE.math.enabled;
-            this.innerText = STATE.math.enabled ? '🧮 数学运算: 开' : '🧮 数学运算: 关';
-            this.classList.toggle('active', STATE.math.enabled);
-            document.getElementById('math-controls').style.display = STATE.math.enabled ? 'flex' : 'none';
-        });
-    }
-    if (DOM.mathOpSel) {
-        DOM.mathOpSel.addEventListener('change', (e) => { STATE.math.operation = e.target.value; });
-    }
-    if (DOM.mathSrcA) {
-        DOM.mathSrcA.addEventListener('change', (e) => { STATE.math.srcA = parseInt(e.target.value); });
-    }
-    if (DOM.mathSrcB) {
-        DOM.mathSrcB.addEventListener('change', (e) => { STATE.math.srcB = parseInt(e.target.value); });
-    }
-
     // 参考波形
     if (DOM.btnRefSave) {
         DOM.btnRefSave.addEventListener('click', function () {

@@ -12,7 +12,7 @@ import { STATE, CONFIG, DOM, CACHE, CHANNEL_COUNT, Buffers } from '../core.js';
 import { BUFFER, RENDER, UI, WEBGL } from '../constants.js';
 import { vsSource, fsSource, vsBloom, fsBloom, vsComposite, fsComposite, vsFade, fsFade } from '../shaders.js';
 import { AudioState, getCurrentTime } from '../audio.js';
-import { processData, updateMeasurements, updateMathData } from '../signal.js';
+import { processData, updateMeasurements } from '../signal.js';
 import { SerialEngine } from '../serial.js';
 
 // 渲染上下�?�?从独�?context 模块导入，消除循环依�?
@@ -30,7 +30,6 @@ import { renderGrid } from './gridRenderer.js';
 import { renderWaveforms, applyBloom } from './webglRenderer.js';
 import { renderFFT } from './fftRenderer.js';
 import { renderCursors, renderHover, renderTriggerLine, renderMinimap } from './cursorRenderer.js';
-import { renderMathWaveform } from './mathRenderer.js';
 import { renderRefWaveform } from './refWaveRenderer.js';
 import { renderPerfMonitor, startFrame, endFrame, markPhase } from './perfMonitor.js';
 import { renderXYZAxes } from './xyzRenderer.js';
@@ -173,10 +172,6 @@ function updateAnalysisChannels(viewCtx) {
     const viewRange = viewCtx ? { startIdx: viewCtx.startIdxInt, endIdx: viewCtx.endIdxInt } : null;
     updateMeasurements(Buffers.data1, Buffers.data2, Buffers.data3, Buffers.data4, Buffers.data5, Buffers.data6, Buffers.data7, Buffers.data8, viewRange);
 
-    if (STATE.math && STATE.math.enabled) {
-        updateMathData(STATE.math, Buffers.data1, Buffers.data2, Buffers.data3, Buffers.data4, Buffers.data5, Buffers.data6, Buffers.data7, Buffers.data8);
-    }
-    
     if (!STATE.current.isSerial && AudioState.audioCtx) {
         const timebaseStr = STATE.secPerDiv.toFixed(1) + 'ms';
         const rate = AudioState.audioCtx.sampleRate;
@@ -319,7 +314,6 @@ export function draw({ processPausedData = false } = {}) {
         renderHover(w, h, stepX, theme, viewCtx);
     }
     renderCursors(w, h, theme);
-    if (STATE.mode !== 'XY') renderMathWaveform(w, h, theme, viewCtx);
     renderRefWaveform(w, h, theme, viewCtx);
     markPhase('canvas2d');
 

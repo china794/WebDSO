@@ -223,10 +223,6 @@
     font-size: 10px;
 }
 
-.math-full-row {
-    grid-column: 1 / -1;
-}
-
 /* ===== 通道切换网格 ===== */
 .ch-toggle-grid {
     display: grid;
