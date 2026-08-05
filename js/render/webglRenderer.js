@@ -103,6 +103,11 @@ export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLi
     let uSize = isLight ? 0.002 : ((STATE.current && STATE.current.lineSize) ? STATE.current.lineSize : 0.002);
     let uIntensity = isXY ? 1.0 : 2.0;
     const densityAlpha = 1.0;
+    // XYZ 3D: 用更细的线 (避免粗线叠加过曝成白)
+    if (customLength !== undefined && customLength > 0) {
+        uSize = uSize * 0.6;
+        uIntensity = 0.7;
+    }
 
     const pushV = (vx, vy, lx, ly, len, depth) => {
         glDataArray[vIdx++] = vx; glDataArray[vIdx++] = vy;
@@ -161,22 +166,20 @@ export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLi
             }
         }
     } else if (customLength !== undefined && customLength > 0) {
-        // ==== 3D XYZ：直接渲染投影数据，不使用 ALPHA_LUT 索引 ====
-        // 因为投影数据在 buffer 中的位置索引与 ALPHA_LUT 不完全匹配
+        // ==== 3D XYZ：直接渲染投影数据 ====
+        // 所有点均匀可见 (不再用 pow(i/len,26) 过度淡出 —— 那会让
+        // 前 99% 的点几乎全透明, 波形几乎不可见)。
+        // 透明度完全由 shader 的深度衰减 (u_depthFade) 控制。
+        // 坐标已由 renderWaveforms 自动适配缩放+居中, 不再乘 aspect。
         const len = customLength;
         const yData = pData2_XY;
-        // 直接从索引0开始绘制，不用 sIdx 偏移
-        // 用 len 内的位置生成透明度：与 ALPHA_LUT 等价的 pow(i/len, 30)
-        // 这样不受固定缓冲区位置的限制
         for (let i = 1; i < len - 1; i++) {
-            const a = Math.pow(i / len, 26);
-            if (a < COLOR.MIN_ALPHA) continue;
             // 深度感知: 传 customDepth 数组 (投影深度), 由 shader 做远近衰减
             const d0 = customDepth ? customDepth[i] : 0;
             const d1 = customDepth ? customDepth[i + 1] : 0;
             const depth = Math.max(d0, d1);
-            addPt(dataBuffer[i] * aspect, yData ? yData[i] : 0,
-                  dataBuffer[i + 1] * aspect, yData ? yData[i + 1] : 0, depth);
+            addPt(dataBuffer[i], yData ? yData[i] : 0,
+                  dataBuffer[i + 1], yData ? yData[i + 1] : 0, depth);
         }
     } else {
         // ==== 标准 2D XY 模式（去重 + Catmull-Rom 样条插值） ====
@@ -264,8 +267,15 @@ export function renderGLTrace(dataBuffer, colorArr, isXY, pData2_XY, theme, isLi
         gl.uniform1f(densityAlphaUni, densityAlpha);
         gl.uniform1f(gainUni, STATE.phosphor?.gain ?? 1.0);
         gl.uniform3fv(colorUni, colorArr);
-        // 深度衰减: XYZ 模式启用 (customDepth 存在时), 否则 0 (不衰减)
-        gl.uniform1f(depthFadeUni, customDepth ? 6.0 : 0.0);
+        // 深度衰减: XYZ 模式启用 (customDepth 存在时), 柔和衰减 (近处清晰, 远处可见)
+        // 用较小的 fade 值避免远处全暗; 同时降 gain 防叠加饱和
+        if (customDepth) {
+            gl.uniform1f(depthFadeUni, 1.2);
+            gl.uniform1f(gainUni, 1.0);
+        } else {
+            gl.uniform1f(depthFadeUni, 0.0);
+            gl.uniform1f(gainUni, STATE.phosphor?.gain ?? 1.0);
+        }
         gl.drawArrays(gl.TRIANGLES, 0, pointCount);
     }
 }
@@ -283,8 +293,18 @@ export function renderWaveforms(theme, isLight, viewCtx) {
 
     const phosphorOn = STATE.phosphor && STATE.phosphor.on;
     const decay = phosphorOn ? (STATE.phosphor.decay ?? getPhosphorDecay()) : 1;
+    // XYZ 3D 模式检测: 3 通道激活且 XY 模式
+    let _isXYZ = false;
+    if (STATE.mode === 'XY') {
+        let xyzCnt = 0;
+        for (let i = 1; i <= 8; i++) if (STATE['ch' + i]?.on) xyzCnt++;
+        _isXYZ = xyzCnt >= 3 && STATE['ch1']?.on && STATE['ch2']?.on && STATE['ch3']?.on;
+    }
+    // XYZ 3D 绕过余辉 FBO: 3D 波形是动态的, 直接画屏幕,
+    // 避免余辉叠加过曝成白 + 旋转拖影。
+    const usePhosphor = phosphorOn && !_isXYZ;
 
-    if (phosphorOn && fbo && fboTexture && compositeProgram) {
+    if (usePhosphor && fbo && fboTexture && compositeProgram) {
         // ==== 余辉模式: 画进累积 FBO ====
         gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
         gl.viewport(0, 0, currentFboWidth, currentFboHeight);
@@ -344,6 +364,11 @@ export function renderWaveforms(theme, isLight, viewCtx) {
         gl.viewport(0, 0, currentFboWidth, currentFboHeight);
         gl.clearColor(theme.bg[0], theme.bg[1], theme.bg[2], theme.bg[3]);
         gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.enable(gl.BLEND);
+        // XYZ 3D: 用普通 alpha 混合保持波形原色 (不加色, 避免 RGB 叠加饱和成白)
+        // YT 模式: 保持加色混合 (原有行为)
+        gl.blendFunc(_isXYZ ? gl.SRC_ALPHA : gl.ONE,
+                     _isXYZ ? gl.ONE_MINUS_SRC_ALPHA : (isLight ? gl.ONE_MINUS_SRC_ALPHA : gl.ONE));
 
         drawAllChannels(theme, isLight, viewCtx);
     }
@@ -370,18 +395,34 @@ function drawAllChannels(theme, isLight, viewCtx) {
             // XYZ 3D
             const proj = projectXYZ(Buffers.pData1, Buffers.pData2, Buffers.pData3);
             if (proj && proj.length >= 20) {
+                // 自动适配边界: 计算有效点范围, 缩放+居中让波形填满屏幕 ~78%
+                // (避免超出边界或缩成一团)
+                let xmin = 2, xmax = -2, ymin = 2, ymax = -2;
+                for (let i = 0; i < proj.length; i++) {
+                    if (proj.xArr[i] === 0 && proj.yArr[i] === 0 && proj.depthArr[i] === 1) continue; // 裁剪点
+                    const x = proj.xArr[i], y = proj.yArr[i];
+                    if (x < xmin) xmin = x; if (x > xmax) xmax = x;
+                    if (y < ymin) ymin = y; if (y > ymax) ymax = y;
+                }
+                if (xmax <= xmin || ymax <= ymin) return;
+                // 缩放到 [−0.78, 0.78] 范围 (留边)
+                const targetHalf = 0.78;
+                const sx = 2 * targetHalf / (xmax - xmin);
+                const sy = 2 * targetHalf / (ymax - ymin);
+                const scale = Math.min(sx, sy); // 等比缩放保持 3D 形状
+                const cx = (xmin + xmax) / 2;
+                const cy = (ymin + ymax) / 2;
                 const cycles = STATE.view3d?.trailLen || 3;
-                // 优化轨迹窗口: 用固定比例采样尾部 (基于视角空间轨迹长度, 而非假设周期)
-                // tailSamples = 投影点数的 cycles/4 (每周期约 len/4 点, 由 trailLen 控制)
+                // 轨迹窗口: 只画最近几个周期的点 (闭合 Lissajous 的尾段)
                 const tailSamples = Math.max(4, Math.min(proj.length, Math.floor(proj.length * cycles / 4)));
                 const srcOff = proj.length - tailSamples;
-                if (tailSamples < 4) return;
                 const xData = new Float32Array(tailSamples);
                 const yData = new Float32Array(tailSamples);
                 const depthData = new Float32Array(tailSamples);
                 for (let k = 0; k < tailSamples; k++) {
-                    xData[k] = proj.xArr[srcOff + k];
-                    yData[k] = proj.yArr[srcOff + k];
+                    // 应用自动缩放 + 居中
+                    xData[k] = (proj.xArr[srcOff + k] - cx) * scale;
+                    yData[k] = (proj.yArr[srcOff + k] - cy) * scale;
                     depthData[k] = proj.depthArr[srcOff + k];
                 }
                 renderGLTrace(xData, theme.cM || theme.cXY, true, yData, theme, isLight, null, tailSamples, null, depthData);
