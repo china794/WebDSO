@@ -22,4 +22,11 @@ WebDSO_final_*/
 # Python
 __pycache__/
 *.pyc
+
+# 本地素材（部署在服务器上，不进仓库）
+audio/
+background/
+
+# 本地工具文件
 avatar.png
+.agents/
