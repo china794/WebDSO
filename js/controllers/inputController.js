@@ -5,7 +5,6 @@
  * 负责处理所有用户输入事件绑定
  */
 
-// TODO: 实现输入事件处理逻辑
 import { STATE, DOM, CONFIG, updateTriggerUI, showSysModal, Buffers, CHANNEL_COUNT } from '../core.js';
 import { MEASUREMENT, TIMEBASE, GENERATOR, CURSOR, GRID, RENDER, BUFFER } from '../constants.js';
 

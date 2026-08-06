@@ -1,11 +1,10 @@
 /**
  * ==========================================
- * Serial Controller - 串口控制噀
+ * Serial Controller - 串口控制器
  * ==========================================
- * 负责处理串口通信、协议解枀
+ * 负责处理串口通信、协议解析
  */
 
-// TODO: 实现串口控制逻辑
 import { STATE, DOM, showSysModal } from '../core.js';
 import { SerialEngine } from '../serial.js';
 import { initAudio, AudioState } from '../audio.js';
@@ -31,12 +30,12 @@ export function initSerialController() {
         DOM.serialBaud.addEventListener('change', () => {
             const baud = parseInt(DOM.serialBaud.value);
             // 波特率已选择: ${baud} bps
-            // 只记录日志，不改变任何状怀
+            // 只记录日志，不改变任何状态
             // 真正的模式切换在点击连接按钮时进血
         });
     }
     
-    // 串口连接状态变曀ↀ控制波特率选择器启甀禁用
+    // 串口连接状态变化控制波特率选择器启用禁用
     const updateBaudUI = (connected) => {
         if (DOM.serialBaud) {
             DOM.serialBaud.disabled = connected;

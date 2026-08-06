@@ -2,12 +2,9 @@
  * ==========================================
  * Render Module Index - 渲染模块入口
  * ==========================================
- * 统一导出所有渲染器，管理渲染流�?
+ * 统一导出所有渲染器，管理渲染流程
  */
 
-// TODO: 导入并导出所有渲染器
-// TODO: 实现主渲染流程控�?
-// js/render/index.js
 import { STATE, CONFIG, DOM, CACHE, CHANNEL_COUNT, Buffers } from '../core.js';
 import { BUFFER, RENDER, UI, WEBGL } from '../constants.js';
 import { vsSource, fsSource, vsBloom, fsBloom, vsComposite, fsComposite, vsFade, fsFade } from '../shaders.js';
@@ -16,14 +13,14 @@ import { processData, updateMeasurements } from '../signal.js';
 import { SerialEngine } from '../serial.js';
 import { detectQuality, getQuality, getEffectiveDpr } from './quality.js';
 
-// 渲染上下�?�?从独�?context 模块导入，消除循环依�?
+// 渲染上下文从独立的 context 模块导入，消除循环依赖
 import {
     ctx2d, gl,
     shaderProgram,
     initRenderContext, checkResizeFBO
 } from './context.js';
 
-// 脏标记系�?
+// 脏标记系统
 import { dirty, LAYER } from './dirty.js';
 
 // 导入拆分的子模块
@@ -42,10 +39,10 @@ import { calculateTimebaseAndTrigger } from './canvasRenderer.js';
  * ==========================================
  */
 
-// 在渲染上下文初始化前加载着色器到全局�?context.js 使用
+// 在渲染上下文初始化前加载着色器到全局（context.js 使用）
 window.__WEBDSO_SHADERS = { vsSource, fsSource, vsBloom, fsBloom, vsComposite, fsComposite, vsFade, fsFade };
 
-// 缓存上次的尺�?& 主题，用于检测变�?
+// 缓存上次的尺寸 & 主题，用于检测变化
 let _lastGridConfig = { w: 0, h: 0, isLight: false };
 
 /**
@@ -58,7 +55,7 @@ export function initRenderContexts() {
 }
 
 /**
- * 响应窗口尺寸变化，更�?Canvas 分辨率与 DPR
+ * 响应窗口尺寸变化，更新 Canvas 分辨率与 DPR
  * 使用质量档位的 DPR 上限 (移动端高 DPR 手机限制像素量)
  */
 export function resize() {
@@ -66,7 +63,7 @@ export function resize() {
     const wrapper = document.querySelector('.screen-wrapper');
     if (!wrapper) return;
 
-    // 确保渲染上下文已初始�?
+    // 确保渲染上下文已初始化
     if (!gl || !ctx2d) {
         if (!initRenderContexts()) return;
     }
@@ -147,7 +144,7 @@ function updateFPS() {
 let _acquireTemp = null;
 
 function acquireData() {
-    // 优先使用当前活动的数据源（由STATE.current.isSerial控制�?
+    // 优先使用当前活动的数据源（由 STATE.current.isSerial 控制）
     if (STATE.current.isSerial && STATE.serial && STATE.serial.connected) {
         SerialEngine.fillData(Buffers.data1, Buffers.data2, Buffers.data3, Buffers.data4, Buffers.data5, Buffers.data6, Buffers.data7, Buffers.data8);
     } else if (AudioState.audioCtx && AudioState.analyser1_DC) {
@@ -163,7 +160,7 @@ function acquireData() {
                     _acquireTemp = new Float32Array(fftSize);
                 }
                 analyser.getFloatTimeDomainData(_acquireTemp.subarray(0, fftSize));
-                // 复制到Buffers - 只复制前fftSize个元�?
+                // 复制到Buffers - 只复制前fftSize个元素
                 Buffers['data' + i].set(_acquireTemp.subarray(0, fftSize), 0);
                 // 剩余部分清零
                 Buffers['data' + i].fill(0, fftSize);
@@ -252,7 +249,7 @@ function updateAudioSeekbar() {
 }
 
 /** =========================================
- * 主渲染循�?
+ * 主渲染循环
  * 每帧全量渲染——Canvas 2D 即时模式 + WebGL 保留模式
  * ========================================= */
 export function draw({ processPausedData = false } = {}) {
@@ -261,7 +258,7 @@ export function draw({ processPausedData = false } = {}) {
 
     if (!DOM.glCanvas || DOM.glCanvas.width <= 0 || DOM.glCanvas.height <= 0) return;
 
-    // 确保渲染上下文已初始�?
+    // 确保渲染上下文已初始化
     if (!gl || !ctx2d) {
         if (!initRenderContexts()) return;
     }
@@ -269,7 +266,7 @@ export function draw({ processPausedData = false } = {}) {
     const theme = CONFIG.colors;
     const isLight = document.body.getAttribute('data-theme') === 'light';
 
-    // 尺寸变化时重新分�?FBO
+    // 尺寸变化时重新分配 FBO
     checkResizeFBO(DOM.glCanvas.width, DOM.glCanvas.height);
 
     // WebGL 混合模式
@@ -284,14 +281,14 @@ export function draw({ processPausedData = false } = {}) {
     const stepX = stepY;
     CONFIG.gridX = w / stepX;
 
-    // ==== Canvas 2D 层（即时模式——每帧清�?全量重绘�?===
+    // ==== Canvas 2D 层（即时模式——每帧清除、全量重绘）===
     ctx2d.clearRect(0, 0, w, h);
     const renderGridOn = !STATE.render || STATE.render.grid !== false;
     if (renderGridOn && STATE.mode === 'XY') {
         let ac = 0;
         for (let i = 1; i <= 8; i++) if (STATE['ch' + i]?.on) ac++;
         if (ac >= 3) {
-            // XYZ 模式：不画网格，只透明白背�?
+            // XYZ 模式：不画网格，只透明白背景
             ctx2d.fillStyle = 'transparent';
         } else {
             renderGrid(w, h, stepX, stepY, theme);
@@ -317,7 +314,7 @@ export function draw({ processPausedData = false } = {}) {
     }
     markPhase('process');
 
-    // ==== Canvas 2D 叠加层（每帧重绘�?===
+    // ==== Canvas 2D 叠加层（每帧重绘）===
     updateTriggerOSD(viewCtx.triggerIndexFloat);
     const overlaysOn = !STATE.render || STATE.render.overlays !== false;
     if (overlaysOn) {
@@ -328,7 +325,7 @@ export function draw({ processPausedData = false } = {}) {
     renderRefWaveform(w, h, theme, viewCtx);
     markPhase('canvas2d');
 
-    // ==== WebGL 波形（每帧重绘——内部自�?gl.clear�?===
+    // ==== WebGL 波形（每帧重绘——内部自动 gl.clear）===
     renderWaveforms(theme, isLight, viewCtx);
     // 辉光叠加 (可选, 低档位自动关闭)
     const q = getQuality();
@@ -337,7 +334,7 @@ export function draw({ processPausedData = false } = {}) {
     }
     markPhase('webgl');
 
-    // ==== 小地�?====
+    // ==== 小地图 ====
     if (!STATE.render || STATE.render.minimap !== false) {
         renderMinimap(theme, viewCtx);
     }
@@ -351,7 +348,7 @@ export function draw({ processPausedData = false } = {}) {
         renderFFT(w, h, theme, isLight);
     }
 
-    // XYZ 3D 坐标轴（仅在 XY 模式�?3 频道激活时�?
+    // XYZ 3D 坐标轴（仅在 XY 模式 + 3 频道激活时）
     // 用 webglRenderer 存的统一视口变换, 保证线框和波形对齐
     if (STATE.mode === 'XY') {
         let activeCnt = 0;

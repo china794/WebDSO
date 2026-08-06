@@ -1,6 +1,6 @@
 /**
  * ==========================================
- * Bytebeat AudioWorklet Processor
+ * Bytebeat AudioWorklet 处理器
  * ==========================================
  * 从 dollchan.net/bytebeat (MIT) 移植的 bytebeat 引擎。
  * 在 AudioWorklet 线程逐样本求值 bytebeat 公式，实时生成音频。

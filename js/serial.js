@@ -13,12 +13,12 @@ import { createAudioMonitorState, feedAudioMonitor, resetAudioMonitor } from './
  * ==========================================
  */
 export const SerialEngine = {
-    // ---- 基础串口状怀----
+    // ---- 基础串口状态----
     port: null,
     reader: null,
     keepReading: false,
 
-    // ---- 连接状态回调（替代轮询＀---
+    // ---- 连接状态回调（替代轮询）---
     _onConnect: null,
     _onDisconnect: null,
 
@@ -53,7 +53,7 @@ export const SerialEngine = {
     _lastReadIdx: -1,
     _lastHead: -1,
 
-    // ---- 降采样缓孀----
+    // ---- 降采样缓存 ----
     _cacheState: null,
 
     // ---- 音频监听 ----
@@ -127,7 +127,7 @@ export const SerialEngine = {
     },
 
     /**
-     * Clear all channel ring buffers and linear render buffers.
+     * 清空所有通道的环形缓冲区与线性渲染缓冲区。
      */
     clearAllRings: function () {
         for (let i = 1; i <= CHANNEL_COUNT; i++) {
@@ -174,7 +174,7 @@ export const SerialEngine = {
         }
         this.head = (this.head + 1) % this.ringSize;
 
-        // 真实采样率打炀
+        // 真实采样率打印
         if (STATE.realSampleMeasurer) {
             STATE.realSampleMeasurer.frameCount += 1;
         }
@@ -215,12 +215,12 @@ export const SerialEngine = {
             }
         }
 
-        // 异步更新降采样缓孀
+        // 异步更新降采样缓存
         if (!this._cacheUpdatePending) {
             this._cacheUpdatePending = true;
             setTimeout(() => {
                 if (this._cacheState) {
-                    // 获取所最ring 通道
+                    // 获取所有 ring 通道
                     const rings = {};
                     for (let i = 1; i <= CHANNEL_COUNT; i++) rings['ring' + i] = this['ring' + i];
                     updateCache(this._cacheState, rings, this.ringSize);
@@ -317,7 +317,7 @@ export const SerialEngine = {
     },
 
     /**
-     * 更新串口状怀UI
+     * 更新串口状态UI
      */
     updateUI: function (c) {
         DOM.serialStatusDot.innerText = c ? '●CONNECTED' : '●DISCONNECTED';
@@ -327,7 +327,7 @@ export const SerialEngine = {
     },
 
     /**
-     * 重置所有通道到默认状怀
+     * 重置所有通道到默认状态
      */
     resetChannelsToDefault: function () {
         for (let i = 1; i <= CHANNEL_COUNT; i++) {

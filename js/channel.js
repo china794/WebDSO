@@ -1,8 +1,8 @@
 /**
  * ==========================================
- * Channel Management Module
+ * 通道管理模块 (Channel Management)
  * ==========================================
- * Provides Channel and ChannelManager classes for channel state management
+ * 提供 Channel / ChannelManager 类，管理通道状态与参数
  */
 
 import {

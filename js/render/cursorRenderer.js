@@ -5,11 +5,6 @@
  * 负责绘制光标线和测量信息
  */
 
-// TODO: 实现电压光标线绘制
-// TODO: 实现时间光标线绘制
-// TODO: 实现光标测量值显示
-// TODO: 实现光标拖拽交互
-// js/render/cursorRenderer.js
 import { STATE, CONFIG, CHANNEL_COUNT, DOM, Buffers } from '../core.js';
 import { GRID, UI, TIMEBASE, BUFFER } from '../constants.js';
 import { ctx2d } from './context.js';

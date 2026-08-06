@@ -10,6 +10,9 @@ export const AudioState = {
     audioCtx: null, splitter: null, merger: null,
     awgSplitter: null, stereoMerger: null,
     micSource: null, micStream: null, micMonitorGain: null,
+    sysAudioSource: null, sysAudioStream: null, sysAudioMonitorGain: null,
+    sysAudioUpmixer: null,   // mono→stereo 上混节点 (仅系统音频为 mono 时存在)
+    sysAudioChannelCount: 0, // 采集轨实际声道数 (诊断用)
     fileSourceNode: null, musicGainNode: null,
     awgSpeakerGain: null,
     audioBuffer: null, bufferSource: null, startTime: 0, startOffset: 0,
@@ -97,7 +100,14 @@ export function initAudio() {
         AudioState.micMonitorGain = AudioState.audioCtx.createGain();
         AudioState.micMonitorGain.gain.value = 0;
         AudioState.micMonitorGain.connect(AudioState.audioCtx.destination);
-        
+
+        // 系统音频监听路径 (sysAudioMonitorGain → destination), 默认静音。
+        // 独立于 mic/AWG 监听, 由 SYSTEM AUDIO 卡 ♪ 监听按钮控制。
+        // 监听音量 0.5 防啸叫——系统音频通常不进扬声器, 若输出设备开着会有回声。
+        AudioState.sysAudioMonitorGain = AudioState.audioCtx.createGain();
+        AudioState.sysAudioMonitorGain.gain.value = 0;
+        AudioState.sysAudioMonitorGain.connect(AudioState.audioCtx.destination);
+
         AudioState.musicGainNode = AudioState.audioCtx.createGain();
         AudioState.musicGainNode.gain.value = 1;
         AudioState.musicGainNode.connect(AudioState.splitter);
@@ -145,6 +155,13 @@ export function setMicMonitor(on) {
     if (!AudioState.micMonitorGain) return;
     const t = AudioState.audioCtx.currentTime;
     AudioState.micMonitorGain.gain.setTargetAtTime(on ? 0.5 : 0, t, 0.02);
+}
+
+/** 切换系统音频监听 (独立路径 sysAudioMonitorGain → destination, 默认静音) */
+export function setSystemAudioMonitor(on) {
+    if (!AudioState.sysAudioMonitorGain) return;
+    const t = AudioState.audioCtx.currentTime;
+    AudioState.sysAudioMonitorGain.gain.setTargetAtTime(on ? 0.5 : 0, t, 0.02);
 }
 
 /**

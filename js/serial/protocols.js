@@ -1,13 +1,15 @@
 /**
- * Serial protocol parsers.
- * Supports JustFloat binary frames, FireWater text, CSV, and JSON Lines.
+ * ==========================================
+ * 串口协议解析 (Serial Protocols)
+ * ==========================================
+ * 支持 JustFloat 二进制帧、FireWater 文本、CSV、JSON Lines
  */
 
 const JUSTFLOAT_SYNC = [0x00, 0x00, 0x80, 0x7F];
 const MAX_TEXT_BUFFER_LENGTH = 65536;
 
 /**
- * Find the JustFloat sync marker (00 00 80 7F) in a byte array.
+ * 在字节数组中查找 JustFloat 同步头 (00 00 80 7F)。
  * @param {Uint8Array} buffer
  * @param {number} start
  * @returns {number}
@@ -27,7 +29,7 @@ export function findSyncInArray(buffer, start) {
 }
 
 /**
- * Convert little-endian IEEE-754 bytes to float values.
+ * 将小端 IEEE-754 字节转换为浮点数值。
  * @param {Uint8Array} b
  * @returns {number[]}
  */
@@ -45,10 +47,10 @@ export function bytesToFloats(b) {
 }
 
 /**
- * Append a decoded text chunk to the pending text buffer.
- * Uses the shared TextDecoder in streaming mode so multi-byte UTF-8
- * split across serial chunks is preserved. Caps the buffer length so a
- * device sending an endless line cannot grow memory unbounded.
+ * 将解码后的文本块追加到待处理文本缓冲区。
+ * 使用共享的 TextDecoder 流式解码，保证跨串口分块的
+ * 多字节 UTF-8 字符完整保留；限制缓冲区长度，防止
+ * 设备无限发送超长行导致内存无限增长。
  * @param {string} textBuffer
  * @param {Uint8Array} data
  * @param {TextDecoder} decoder
@@ -59,7 +61,7 @@ function appendTextChunk(textBuffer, data, decoder) {
     try {
         str = decoder.decode(data, { stream: true });
     } catch (e) {
-        // Fall back to a fresh decoder if the shared one lost its state.
+        // 若共享 decoder 状态丢失，则回退到新 decoder。
         str = new TextDecoder().decode(data, { stream: true });
     }
     let buf = textBuffer + str;
@@ -95,7 +97,7 @@ function hasAnyValue(values) {
 }
 
 /**
- * Parse JustFloat binary frames. The returned buffer is the unconsumed tail.
+ * 解析 JustFloat 二进制帧。返回值为未消费的尾部数据。
  * @param {Uint8Array} data
  * @param {Uint8Array} linearBuffer
  * @param {Function} onFrame
@@ -144,7 +146,7 @@ export function parseJustFloat(data, linearBuffer, onFrame) {
 }
 
 /**
- * Parse FireWater text protocol.
+ * 解析 FireWater 文本协议。
  * @param {Uint8Array} data
  * @param {string} textBuffer
  * @param {TextDecoder} decoder
@@ -167,7 +169,7 @@ export function parseFireWater(data, textBuffer, decoder, onFrame) {
 }
 
 /**
- * Parse CSV while preserving empty channel positions.
+ * 解析 CSV，保留空的通道位置。
  */
 export function parseCSV(data, textBuffer, decoder, onFrame) {
     textBuffer = appendTextChunk(textBuffer, data, decoder);
@@ -184,7 +186,7 @@ export function parseCSV(data, textBuffer, decoder, onFrame) {
 }
 
 /**
- * Parse JSON Lines. Supports [ch1, ch2] and {"ch1": value, "ch2": value}.
+ * 解析 JSON Lines。支持 [ch1, ch2] 与 {"ch1": value, "ch2": value} 格式。
  */
 export function parseJSONLines(data, textBuffer, decoder, onFrame) {
     textBuffer = appendTextChunk(textBuffer, data, decoder);

@@ -5,10 +5,6 @@
  * 负责使用 Canvas 2D 渲染叠加层（网格、光标、文字等）
  */
 
-// TODO: 实现 Canvas 2D 上下文初始化
-// TODO: 实现叠加层渲染
-// TODO: 实现文字和标签渲染
-// js/render/canvasRenderer.js
 import { STATE, CONFIG, Buffers, CHANNEL_COUNT } from '../core.js';
 import { TIMEBASE, BUFFER, GRID, CURSOR } from '../constants.js';
 import { findTriggerIndex } from '../signal.js';

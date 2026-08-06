@@ -20,18 +20,18 @@ const createChannelState = () => ({
 
 /**
  * 全局状态树 (STATE)
- * 集中管理示波器运行时的所有可调参数与 UI 状怀
+ * 集中管理示波器运行时的所有可调参数与 UI 状态
  */
 /** * ==========================================
- * 状态管理模址(State Management)
+ * 状态管理模块(State Management)
  * ==========================================
- * 将原本庞大的上帝对象按功能域拆分，最后组合导净
+ * 将原本庞大的上帝对象按功能域拆分，最后组合导出
  */
 
-// 1. 系统核心与时基状怀(Core & Timebase)
+// 1. 系统核心与时基状态(Core & Timebase)
 const coreState = {
-    power: true, 
-    run: true, 
+    power: true,
+    run: true,
     mode: 'YT',
     hpos: 50,
     secPerDiv: TIMEBASE.DEFAULT_MS,
@@ -43,22 +43,22 @@ const coreState = {
     // 真实采样率测量器 - 只数实际收到的有效帧
     realSampleMeasurer: {
         lastTime: performance.now(),
-        frameCount: 0,       // 真正收到的有效数据帧敀
-        actualRate: 0        // 计算出来的真实频玀(Hz)
+        frameCount: 0,       // 真正收到的有效数据帧数
+        actualRate: 0        // 计算出来的真实频率(Hz)
     }
 };
 
-// 2. 通道状怀(Channels 1-8)
+// 2. 通道状态(Channels 1-8)
 const createChannelsState = () => {
     const channels = {};
     for (let i = 1; i <= 8; i++) {
-        // 默认只开吀ch1 咀ch2
+        // 默认只开启 ch1 和 ch2
         channels[`ch${i}`] = { ...createChannelState(), on: i <= 2 };
     }
     return channels;
 };
 
-// 3. I/O 路由与串口状怀(I/O & Serial)
+// 3. I/O 路由与串口状态(I/O & Serial)
 const ioState = {
     awgOutL: 1,
     awgOutR: 2,
@@ -71,7 +71,7 @@ const ioState = {
     }
 };
 
-// 4. UI 组件与交互状怀(UI, Cursors & Hover)
+// 4. UI 组件与交互状态(UI, Cursors & Hover)
 const uiState = {
     measure: false,
     awgMonitor: false,
@@ -94,19 +94,19 @@ const uiState = {
         level: 0.0,
         enabled: false,
         frozenIdx: -1,
-        holdoff: 0,        // 触发释抑 (采样炀
+        holdoff: 0,        // 触发释抑 (采样数)
         hfReject: false,   // 高频抑制
         lfReject: false,   // 低频抑制
-        pulseWidth: 0,     // 脉宽触发 (0=兀 >0=脉宽倀
+        pulseWidth: 0,     // 脉宽触发 (0=关, >0=脉宽)
         pulseMode: '>'     // '>' 大于, '<' 小于
     },
-    cursor: { 
-        mode: CURSOR.DEFAULT_MODE, 
-        v1: CURSOR.DEFAULT_V1, 
-        v2: CURSOR.DEFAULT_V2, 
-        t1: CURSOR.DEFAULT_T1, 
-        t2: CURSOR.DEFAULT_T2, 
-        dragging: null 
+    cursor: {
+        mode: CURSOR.DEFAULT_MODE,
+        v1: CURSOR.DEFAULT_V1,
+        v2: CURSOR.DEFAULT_V2,
+        t1: CURSOR.DEFAULT_T1,
+        t2: CURSOR.DEFAULT_T2,
+        dragging: null
     },
     hover: {
         active: false,
@@ -138,10 +138,15 @@ const uiState = {
         denoise: MIC.DENOISE_DEFAULT,
         strength: MIC.DENOISE_STRENGTH,
         monitor: false,   // 扬声器监听 (默认关, 防啸叫)
+    },
+    // 系统音频采集 (getDisplayMedia 桌面音频)
+    systemAudio: {
+        capture: false,   // 是否正在采集
+        monitor: false,   // 扬声器监听 (默认关)
     }
 };
 
-// 5. 分析工具状怀(FFT)
+// 5. 分析工具状态(FFT)
 const createFFTState = () => {
     const fft = {
         on: false,
@@ -164,7 +169,7 @@ const createFFTState = () => {
 
 
 // ==========================================
-// 最终组裀
+// 最终组合
 // ==========================================
 const _rawState = {
     ...coreState,
@@ -175,27 +180,27 @@ const _rawState = {
 };
 
 /**
- * 响应开Store 实例
- * 通过 store.watch(path, cb) 订阅状态变曀
+ * 响应式 Store 实例
+ * 通过 store.watch(path, cb) 订阅状态变化
  * 通过 store.batch(fn) 批量更新
  *
- * 注意：Store 是一个可选工具，取代旀STATE 直达对象的重枀
- * 是一个渐进过程。目剀STATE 仍是快速普通对象（避免 Proxy
- * 在渲染循环热路径上的性能开销）　
- * 当需要观察某个状态变化时，使甀store.set(path, val) 代替
- * STATE.path = val，然后用 store.watch 订阅　
+ * 注意：Store 是一个可选工具，取代 STATE 直达对象的重构
+ * 是一个渐进过程。目前 STATE 仍是快速普通对象（避免 Proxy
+ * 在渲染循环热路径上的性能开销）
+ * 当需要观察某个状态变化时，使用 store.set(path, val) 代替
+ * STATE.path = val，然后用 store.watch 订阅
  */
 export const store = new Store(_rawState);
 
 /**
- * 状态对豀 当前使用普通对象（热路径性能优先＀
- * 后续可逐步迁移一store Proxy，但渲染循环中的频繁读取
- * 需要避兀Proxy 开销　
+ * 状态对象：当前使用普通对象（热路径性能优先）
+ * 后续可逐步迁移到 store Proxy，但渲染循环中的频繁读取
+ * 需要避免 Proxy 开销
  */
 export const STATE = _rawState;
 
 /**
- * 系统常量与动态色彩配罀
+ * 系统常量与动态色彩配置
  */
 // 颜色配置数据 - 浅色模式
 const LIGHT_COLORS = {
@@ -233,19 +238,19 @@ import { hexToRgba } from './utils.js';
 function generateChannelColors(cfg) {
     const result = {};
     const isLight = cfg === LIGHT_COLORS;
-    
+
     for (let i = 0; i < 8; i++) {
         const n = i + 1;
         const hexColor = cfg.hex[i];
-        
+
         result['c' + n] = cfg.channels[i];
         result['c' + n + 'Hex'] = hexColor;
-        
-        // FFT颜色：浅色模式使甀.95透明度，深色模式使用0.8
+
+        // FFT颜色：浅色模式使用.95透明度，深色模式使用0.8
         const fftAlpha = isLight ? 0.95 : 0.8;
         result['fftC' + n] = hexToRgba(hexColor, fftAlpha);
-        
-        // 小地图轨迹颜色统一使用0.8透明庀
+
+        // 小地图轨迹颜色统一使用0.8透明度
         result['miniTrace' + n] = hexToRgba(hexColor, 0.8);
     }
     return result;
@@ -275,17 +280,17 @@ export const CONFIG = {
 };
 
 /**
- * 根据当前采样率计算FFT最大频率（奈奎斯特频率的一半，留有余量＀
- * @returns {number} 最大频玀Hz)
+ * 根据当前采样率计算FFT最大频率（奈奎斯特频率的一半，留有余量）
+ * @returns {number} 最大频率 (Hz)
  */
 export function getMaxFreqForCurrentMode() {
     const currentRate = STATE.current.sampleRate || CONFIG.sampleRate;
-    // 奈奎斯特频率是采样率的一半，但留一些余釀
-    // 使用采样率的0.6倍（毀.5夀0%），确保能显示到奈奎斯特频率附近
+    // 奈奎斯特频率是采样率的一半，但留一些余量
+    // 使用采样率的 0.6 倍（约 0.5~0.6 倍），确保能显示到奈奎斯特频率附近
     return Math.floor(currentRate * 0.6);
 }
 
-/** X-Y 模式下李萨如图形的采样点敀*/
+/** X-Y 模式下李萨如图形的采样点数*/
 export const XY_PTS = BUFFER.XY_POINTS;
 /** X-Y 模式下用于渐变透明度的查找血(越新越亮) */
 export const ALPHA_LUT = new Float32Array(XY_PTS);
@@ -294,23 +299,23 @@ for (let i = 0; i < XY_PTS; i++) {
     ALPHA_LUT[i] = Math.pow(i / XY_PTS, COLOR.ALPHA_LUT_EXP);
 }
 
-/** WebGL 顶点缓冲布局常量 (每顶炀20 字节: 2*float pos + 3*float data) */
+/** WebGL 顶点缓冲布局常量 (每顶点 20 字节: 2*float pos + 3*float data) */
 export const GL_CONST = {
     BYTES_PER_VERTEX: 20,
     POS_OFFSET: 0,
     DATA_OFFSET: 8
 };
 
-/** 全局 DOM 引用表：尀id 转为驼峰命名并缓孀*/
+/** 全局 DOM 引用表：以id 转为驼峰命名并缓存*/
 export const DOM = {};
 
-/** 全局事件管理噀- 避免内存泄漏 */
+/** 全局事件管理器 - 避免内存泄漏 */
 import { EventManager } from './utils.js';
 import { Store, createStateProxy } from './store.js';
 export const eventManager = new EventManager();
 
 /**
- * 初始化DOM引用 - 应在DOM加载完成后调甀
+ * 初始化DOM引用 - 应在DOM加载完成后调用
  * 这个函数会被main.js调用，确保DOM已准备好
  */
 export function initDOM() {
@@ -323,7 +328,7 @@ export function initDOM() {
 /** 渲染缓存：避免重复写 DOM 造成闪烁 */
 export const CACHE = {
     tStateTxt: '', tStateColor: '',
-    // CH1-CH8 测量值缓孀(Vpp, Freq, Vmax, Vmin, Vavg, Duty, RMS, Period)
+    // CH1-CH8 测量值缓存(Vpp, Freq, Vmax, Vmin, Vavg, Duty, RMS, Period)
     mCh1Vpp: '', mCh1Freq: '', mCh1Vmax: '', mCh1Vmin: '', mCh1Vavg: '', mCh1Duty: '', mCh1Rms: '', mCh1Period: '',
     mCh2Vpp: '', mCh2Freq: '', mCh2Vmax: '', mCh2Vmin: '', mCh2Vavg: '', mCh2Duty: '', mCh2Rms: '', mCh2Period: '',
     mCh3Vpp: '', mCh3Freq: '', mCh3Vmax: '', mCh3Vmin: '', mCh3Vavg: '', mCh3Duty: '', mCh3Rms: '', mCh3Period: '',
@@ -351,7 +356,7 @@ export const Buffers = {
 };
 
 /**
- * 根据当前通道档位更新触发电平滑块的量稀
+ * 根据当前通道档位更新触发电平滑块的范围
  * 确保触发电平始终在有效范围内
  */
 export const updateTriggerUI = () => {
@@ -389,34 +394,34 @@ export function showSysModal(title, text, onConfirm) {
         console.error('Modal DOM elements not found');
         return;
     }
-    
-    DOM.sysModalTitleText.innerText = title; 
-    DOM.sysModalText.innerText = text; 
+
+    DOM.sysModalTitleText.innerText = title;
+    DOM.sysModalText.innerText = text;
     DOM.sysModal.classList.add('show');
-    
-    // 清理旧的事件监听器（通过替换按钮实现＀
-    const oldBtn = DOM.sysModalBtn; 
-    const newBtn = oldBtn.cloneNode(true); 
-    
+
+    // 清理旧的事件监听器（通过替换按钮实现
+    const oldBtn = DOM.sysModalBtn;
+    const newBtn = oldBtn.cloneNode(true);
+
     // 移除旧按钮的所有事件监听器
     const oldBtnClone = oldBtn.cloneNode(false);
     oldBtnClone.innerHTML = oldBtn.innerHTML;
-    
-    oldBtn.replaceWith(newBtn); 
+
+    oldBtn.replaceWith(newBtn);
     DOM.sysModalBtn = newBtn;
-    
-    // 添加新的事件监听噀
+
+    // 添加新的事件监听器
     const clickHandler = () => {
         DOM.sysModal.classList.remove('show');
-        // 移除事件监听器防止内存泄漀
+        // 移除事件监听器防止内存泄漏
         DOM.sysModalBtn.removeEventListener('click', clickHandler);
         if (onConfirm) {
             setTimeout(onConfirm, 50);
         }
     };
-    
+
     DOM.sysModalBtn.addEventListener('click', clickHandler);
-    
+
     // 点击遮罩层关闭模态框
     const backdropClickHandler = (e) => {
         if (e.target === DOM.sysModal) {
@@ -424,8 +429,8 @@ export function showSysModal(title, text, onConfirm) {
             DOM.sysModal.removeEventListener('click', backdropClickHandler);
         }
     };
-    
-    // 移除旧的遮罩层监听器并添加新皀
+
+    // 移除旧的遮罩层监听器并添加新的
     DOM.sysModal.removeEventListener('click', backdropClickHandler);
     DOM.sysModal.addEventListener('click', backdropClickHandler);
 }

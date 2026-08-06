@@ -5,10 +5,9 @@
  * 负责处理音频输入、信号发生器、音频文件播放
  */
 
-// TODO: 实现音频控制逻辑
 import { STATE, DOM, CONFIG, showSysModal, CHANNEL_COUNT } from '../core.js';
 import { GENERATOR, MATH, MIC } from '../constants.js';
-import { AudioState, initAudio, rebuildChannel, updateAWG, rebuildStereoRouting, playBuffer, getLogSpeed, getCurrentTime, setMicMonitor } from '../audio.js';
+import { AudioState, initAudio, rebuildChannel, updateAWG, rebuildStereoRouting, playBuffer, getLogSpeed, getCurrentTime, setMicMonitor, setSystemAudioMonitor } from '../audio.js';
 import { refreshInputCard, getInputCh } from './inputController.js';
 
 // 降噪 worklet 节点 (懒加载)
@@ -45,6 +44,33 @@ async function ensureNoiseSuppressor() {
 /** 向降噪 worklet 发消息 */
 function postToNoiseSuppressor(msg) {
     if (_noiseSuppressorNode) _noiseSuppressorNode.port.postMessage(msg);
+}
+
+/**
+ * 将系统音频流接入采集管线 (splitter) 与监听路径。
+ * 关键坑: Chrome 的 getDisplayMedia 音频捕获 (tab/屏幕分享) 是 mono,
+ * 不存在真 L/R 分离 —— 系统音频是各路音频的混音, 浏览器会混成单声道。
+ * MediaStreamAudioSourceNode.channelCount 是只读的, 设了不生效。
+ * 因此无条件把源声道 0 复制到 L/R, 确保 CH1/CH2 都有波形:
+ *   - 源为 stereo 时浏览器已混音, 复制不会损失分离 (本来就无分离)
+ *   - 源为 mono 时同信号双份, 双通道均布
+ * 若将来要真立体声 (loopback 采集), 需要改用户态捕获, 不在此范畴。
+ * @returns {MediaStreamAudioSourceNode}
+ */
+function connectSystemAudioSource(stream) {
+    const ctx = AudioState.audioCtx;
+    const src = ctx.createMediaStreamSource(stream);
+    AudioState.sysAudioChannelCount = src.channelCount;
+
+    const merger = ctx.createChannelMerger(2);
+    // 源声道 0 复制到 merger 输入 0 和 1 (即输出 L 和 R)
+    src.connect(merger, 0, 0);
+    src.connect(merger, 0, 1);
+    merger.connect(AudioState.splitter);
+    if (AudioState.sysAudioMonitorGain) merger.connect(AudioState.sysAudioMonitorGain);
+    // 保留引用, 防止 merger 被 GC
+    AudioState.sysAudioUpmixer = merger;
+    return src;
 }
 
 /**
@@ -105,6 +131,47 @@ export function initAudioController() {
         initAudio();
         setMicMonitor(STATE.mic.monitor);
         if (STATE.mic.monitor) { this.innerText = '♪ 监听: 开'; this.classList.add('active'); }
+        else { this.innerText = '♪ 监听'; this.classList.remove('active'); }
+    });
+
+    // 系统音频采集 (getDisplayMedia 桌面音频 — 采集电脑正在播放的声音)
+    if (DOM.btnSystemAudio) DOM.btnSystemAudio.addEventListener('click', async function () {
+        await initAudio();
+        if (AudioState.audioCtx.state === 'suspended') await AudioState.audioCtx.resume();
+
+        // 正在采集 → 断开并停止
+        if (AudioState.sysAudioSource) {
+            AudioState.sysAudioSource.disconnect();
+            if (AudioState.sysAudioUpmixer) {
+                try { AudioState.sysAudioUpmixer.disconnect(); } catch (e) { }
+                AudioState.sysAudioUpmixer = null;
+            }
+            if (AudioState.sysAudioStream) AudioState.sysAudioStream.getTracks().forEach(t => t.stop());
+            AudioState.sysAudioSource = null; AudioState.sysAudioStream = null;
+            STATE.systemAudio.capture = false;
+            this.classList.remove('active'); this.innerText = '💻 系统音频';
+            // 采集停止时同步关闭监听，避免残留信号
+            STATE.systemAudio.monitor = false;
+            setSystemAudioMonitor(false);
+            if (DOM.btnSystemAudioMonitor) { DOM.btnSystemAudioMonitor.innerText = '♪ 监听'; DOM.btnSystemAudioMonitor.classList.remove('active'); }
+            return;
+        }
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) return showSysModal('环境不支持', '当前浏览器不支持 getDisplayMedia。');
+        try {
+            const stream = await navigator.mediaDevices.getDisplayMedia({ audio: { channelCount: { ideal: 2 } }, video: true, systemAudio: 'include' });
+            AudioState.sysAudioStream = stream;
+            AudioState.sysAudioSource = connectSystemAudioSource(stream);
+            STATE.systemAudio.capture = true;
+            this.classList.add('active'); this.innerText = '💻 已连接';
+        } catch (e) { showSysModal('采集失败', e.message); }
+    });
+
+    // 系统音频监听开关 (独立 tap 路径, 默认静音)
+    if (DOM.btnSystemAudioMonitor) DOM.btnSystemAudioMonitor.addEventListener('click', function () {
+        STATE.systemAudio.monitor = !STATE.systemAudio.monitor;
+        initAudio();
+        setSystemAudioMonitor(STATE.systemAudio.monitor);
+        if (STATE.systemAudio.monitor) { this.innerText = '♪ 监听: 开'; this.classList.add('active'); }
         else { this.innerText = '♪ 监听'; this.classList.remove('active'); }
     });
 

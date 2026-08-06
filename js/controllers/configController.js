@@ -1,11 +1,10 @@
 /**
  * ==========================================
- * Config Controller - 配置管理控制噀
+ * Config Controller - 配置管理控制器
  * ==========================================
- * 负责处理配置导入导出、状态保孀
+ * 负责处理配置导入导出、状态保存
  */
 
-// TODO: 实现配置管理逻辑
 import { STATE, DOM, Buffers, CHANNEL_COUNT, showSysModal } from '../core.js';
 import { AudioState } from '../audio.js';
 import { SerialEngine } from '../serial.js';
@@ -57,7 +56,7 @@ export function initConfigController() {
                     const importData = JSON.parse(event.target.result);
                     if (!importData.config || !importData.channels) throw new Error('Invalid configuration file format');
 
-                    // 清除原有状怀
+                    // 清除原有状态
                     if (AudioState.isMusicPlaying) {
                         if (AudioState.bufferSource) { try { AudioState.bufferSource.stop(); } catch (e) { } AudioState.bufferSource.disconnect(); AudioState.bufferSource = null; }
                         AudioState.isMusicPlaying = false; if (DOM.btnAudioToggle) DOM.btnAudioToggle.innerText = 'Play';
@@ -69,7 +68,7 @@ export function initConfigController() {
 
                     for (let i = 1; i <= CHANNEL_COUNT; i++) { Buffers['data' + i].fill(0); Buffers['pData' + i].fill(0); }
 
-                    // 应用新配罀
+                    // 应用新配置
                     const cfg = importData.config;
                     STATE.power = cfg.power ?? STATE.power; STATE.run = false; STATE.mode = cfg.mode ?? STATE.mode;
                     STATE.hpos = cfg.hpos ?? STATE.hpos; STATE.secPerDiv = cfg.secPerDiv ?? STATE.secPerDiv;
@@ -136,7 +135,7 @@ export function initConfigController() {
         });
     }
 
-    // 导出截图 (PNG)  使用 readPixels 什GPU 读像紀
+    // 导出截图 (PNG) - 使用 readPixels 从 GPU 读像素
     const btnExportPng = document.getElementById('btn-export-png');
     if (btnExportPng) {
         btnExportPng.addEventListener('click', () => {

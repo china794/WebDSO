@@ -5,11 +5,6 @@
  * 负责绘制示波器网格背景
  */
 
-// TODO: 实现网格线绘制
-// TODO: 实现刻度标记绘制
-// TODO: 实现中心十字准星绘制
-// js/render/webglRenderer.js
-// js/render/gridRenderer.js
 import { CONFIG } from '../core.js';
 import { RENDER } from '../constants.js';
 import { ctx2d } from './context.js';

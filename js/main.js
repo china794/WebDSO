@@ -1,3 +1,10 @@
+/**
+ * ==========================================
+ * 引导入口 (Bootstrap)
+ * ==========================================
+ * 初始化所有模块：DOM 引用、渲染上下文、数据缓冲区、各控制器
+ */
+
 import { DOM, Buffers, updateTriggerUI, CONFIG, STATE, initDOM } from './core.js';
 import { resize, resizeDebounced, startRenderLoop, initRenderContexts } from './render/index.js';
 import { detectQuality, getQuality } from './render/quality.js';
@@ -19,20 +26,20 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
     });
 }
 
-// 初始化DOM引用 - 确保DOM已加载完戀
+// 初始化DOM引用 - 确保DOM已加载完成
 initDOM();
 
-// 初始化渲染上下文（WebGL/Canvas＀
+// 初始化渲染上下文（WebGL/Canvas）
 initRenderContexts();
 
-// 重新收集所有的 DOM 引用（挂载所最[id] 元素，转换为 camelCase 对象键）
-// 这会补充可能遗漏的动态元紀
+// 重新收集所有的 DOM 引用（挂载所有 [id] 元素，转换为 camelCase 对象键）
+// 这会补充可能遗漏的动态元素
 document.querySelectorAll('[id]').forEach(el => {
     const camelCaseId = el.id.replace(/-([a-z0-9])/g, (g) => g[1].toUpperCase());
     if (!DOM[camelCaseId]) DOM[camelCaseId] = el;
 });
 
-// 绑定通道缓冲区（解决循环依赖＀
+// 绑定通道缓冲区（解决循环依赖）
 channelManager.forEach((channel) => channel.bindBuffers(Buffers));
 
 // 初始化所有控制器
@@ -53,7 +60,7 @@ window.addEventListener('resize', resizeDebounced);
 detectQuality();
 resize();
 
-// 恢复初始 UI 状怀
+// 恢复初始 UI 状态
 if (DOM.cplChSel) DOM.cplChSel.dispatchEvent(new Event('change'));
 updateTriggerUI();
 refreshVerticalCard(1);

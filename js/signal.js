@@ -1,3 +1,10 @@
+/**
+ * ==========================================
+ * 信号处理模块 (Signal Processing)
+ * ==========================================
+ * 触发搜索、AC/DC 耦合、测量计算、FFT、数学运算通道
+ */
+
 import { STATE, CONFIG, CHANNEL_COUNT } from './core.js';
 import { FFT } from './lib/fft.js';
 import { BUFFER, TRIGGER, MEASUREMENT, GRID, RENDER } from './constants.js';
