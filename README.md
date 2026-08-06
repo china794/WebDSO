@@ -3,8 +3,6 @@
 > 基于 **Web Audio API / Web Serial API / WebGL** 的 8 通道数字存储示波器
 > **零外部依赖**，开箱即用，仅需一个浏览器
 
-![WebDSO](./background/1.jpg)
-
 **无需安装、无需编译** —— 打开 `index.html` 即可使用。嵌入式调试、信号可视化、音频分析、教学演示皆宜。
 
 [🚀 在线体验](https://wanghaohan.com/rubbish/WebDSO)
