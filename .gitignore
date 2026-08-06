@@ -11,14 +11,6 @@ Thumbs.db
 .vscode/
 *.sublime-*
 
-# Claude
-.claude/
-
-# Backups
-WebDSO_backup_*/
-WebDSO_final_*/
-.backup-*/
-
 # Python
 __pycache__/
 *.pyc
@@ -27,6 +19,5 @@ __pycache__/
 audio/
 background/
 
-# 本地工具文件
+# 本地临时文件
 avatar.png
-.agents/
